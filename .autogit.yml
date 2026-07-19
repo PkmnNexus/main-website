@@ -1,76 +1,71 @@
 #######################################################################################
 # Autogit - config and deploy hooks                                                   #
 #######################################################################################
-# Laravel deployment configuration for TransIP AutoGit                                #
-#######################################################################################
 
-# Shared files are preserved between deployments.
-# These files are not stored in Git and are linked into every release.
-#
-# The Laravel .env file contains production secrets and database credentials.
-# It should never be committed to Git.
+# Laravel production secrets should not be stored in Git.
+# This file is stored outside the releases and linked into every deployment.
 
 shared_files:
   - .env
 
 
-# Laravel uses the public folder as webroot.
-# TransIP AutoGit expects a www folder.
-#
-# During deployment:
-#
-# www -> public
-#
-# This keeps the Laravel structure intact while allowing TransIP
-# to serve the correct public directory.
+#######################################################################################
+# Hooks                                                                            #
+#######################################################################################
 
 hooks:
 
 
 # SETUP: Create folder structure for newest release
   setup_before: |
-    # Nothing required before setup
     exit 0
 
 
   setup_after: |
-    # Create Laravel public webroot symlink
+    # Laravel requires the public folder as webroot.
+    # TransIP AutoGit expects a www folder.
     #
-    # $3 = current release folder
-    #
+    # Create:
+    # release/www -> release/public
+
     ln -sfn "$3/public" "$3/www"
 
     exit 0
 
 
 
-# INSTALL: Put code in release folder
+# INSTALL: Install application dependencies
   install_before: |
-    # Nothing required before install
     exit 0
 
 
   install_after: |
-    # Install PHP dependencies
-    composer install --no-dev --optimize-autoloader
+
+    echo "Installing Composer dependencies..."
+
+    composer install \
+      --no-dev \
+      --prefer-dist \
+      --optimize-autoloader
 
 
-    # Install frontend dependencies from package-lock.json
+    echo "Installing NPM dependencies..."
+
     npm ci
 
 
-    # Build production frontend assets
+    echo "Building frontend assets..."
+
     npm run build
 
 
-    # Run database migrations
+    echo "Running database migrations..."
+
+    # Updates database structure.
+    # Existing data stays untouched.
     #
-    # IMPORTANT:
-    # migrate updates the database structure only.
-    # It does NOT remove existing data.
-    #
-    # Never use migrate:fresh in production.
-    #
+    # NEVER use migrate:fresh here.
+
     php artisan migrate --force
 
 
@@ -79,38 +74,48 @@ hooks:
 
 
 # SHAREDSYMLINK:
-# Create symlink to shared files and folders
-# present at every release.
+# Shared files are linked here.
 #
-# Example:
-# - .env
-# - storage
+# .env will be linked automatically from:
 #
+# ~/shared/.env
+#
+# into:
+#
+# release/.env
+
   sharedsymlink_before: |
     exit 0
 
 
   sharedsymlink_after: |
-    # .env will automatically be linked here by AutoGit
+
+    echo "Shared files linked"
+
     exit 0
 
 
 
-# SYMLINK: Set current symlink to newest release
+# SYMLINK:
+# Switch current release
+
   symlink_before: |
     exit 0
 
 
   symlink_after: |
-    # Rebuild Laravel caches after deployment
+
+    echo "Optimizing Laravel..."
+
     php artisan optimize
 
     exit 0
 
 
 
-# CLEANUP: Cleanup old releases
-# Two most recent releases remain available.
+# CLEANUP:
+# Keep recent releases
+
   cleanup_before: |
     exit 0
 
