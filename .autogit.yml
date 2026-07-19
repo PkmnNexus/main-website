@@ -5,40 +5,99 @@
 # in the root folder of your codebase                                                 #
 #######################################################################################
 
-# Example shared files and folders:
-# shared_files: [ etc/config.yml ]
-# shared_folders: [ var/log ]
+# Laravel note:
+# The webserver should only expose the "public" folder.
+# TransIP AutoGit expects a "www" folder as the public webroot.
+# During deployment we create a symlink:
+#
+# www -> public
+#
+# This keeps the Laravel structure intact while allowing TransIP to serve the site.
 
 # Hooks should be Bash shell scripts and get executed at different stages during deploy
-# Arguments: $1 = branch, $2 = commit id, $3 = checkout folder
+# Arguments:
+# $1 = branch
+# $2 = commit id
+# $3 = checkout folder (current release folder)
+
 hooks:
+
 # SETUP: Create folder structure for newest release
   setup_before: |
+    # Runs before the release folder is prepared.
+    # Nothing required for Laravel at this stage.
     exit 0
+
   setup_after: |
+    # Laravel needs the public folder as document root.
+    # AutoGit expects a www folder, so create a symlink:
+    #
+    # /release/www -> /release/public
+    #
+    # -s = create symbolic link
+    # -f = replace existing link if present
+    # -n = treat existing symlink as a normal file
+    ln -sfn "$3/public" "$3/www"
+
     exit 0
+
 
 # INSTALL: Put code in release folder
   install_before: |
-    exit 0
-  install_after: |
+    # Runs before the code is installed.
     exit 0
 
-# SHAREDSYMLINK: Create symlink to shared files and folders
-#                present at every release (config, logs, ...)
+  install_after: |
+    # Install Laravel dependencies after deployment.
+    #
+    # Uncomment these when you want TransIP to build your application:
+    #
+    # composer install --no-dev --optimize-autoloader
+    #
+    # npm install
+    # npm run build
+    #
+    # For now we only create the webroot.
+    exit 0
+
+
+# SHAREDSYMLINK:
+# Create symlink to shared files and folders
+# present at every release (config, logs, ...)
   sharedsymlink_before: |
     exit 0
+
   sharedsymlink_after: |
+    # Good place later for shared Laravel folders:
+    #
+    # storage
+    # .env
+    #
+    # Example:
+    # ln -s /shared/.env "$3/.env"
+    #
     exit 0
+
 
 # SYMLINK: Set current symlink to newest release
   symlink_before: |
     exit 0
+
   symlink_after: |
+    # Runs after the active release is switched.
+    #
+    # Possible Laravel optimisations later:
+    #
+    # php artisan config:cache
+    # php artisan route:cache
+    # php artisan view:cache
+    #
     exit 0
+
 
 # CLEANUP: Cleanup old releases, two most recent releases remaining
   cleanup_before: |
     exit 0
+
   cleanup_after: |
     exit 0
