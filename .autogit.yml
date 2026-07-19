@@ -1,103 +1,119 @@
 #######################################################################################
 # Autogit - config and deploy hooks                                                   #
 #######################################################################################
-# This YAML file, named as ".autogit.yml" should be present                           #
-# in the root folder of your codebase                                                 #
+# Laravel deployment configuration for TransIP AutoGit                                #
 #######################################################################################
 
-# Laravel note:
-# The webserver should only expose the "public" folder.
-# TransIP AutoGit expects a "www" folder as the public webroot.
-# During deployment we create a symlink:
+# Shared files are preserved between deployments.
+# These files are not stored in Git and are linked into every release.
+#
+# The Laravel .env file contains production secrets and database credentials.
+# It should never be committed to Git.
+
+shared_files:
+  - .env
+
+
+# Laravel uses the public folder as webroot.
+# TransIP AutoGit expects a www folder.
+#
+# During deployment:
 #
 # www -> public
 #
-# This keeps the Laravel structure intact while allowing TransIP to serve the site.
-
-# Hooks should be Bash shell scripts and get executed at different stages during deploy
-# Arguments:
-# $1 = branch
-# $2 = commit id
-# $3 = checkout folder (current release folder)
+# This keeps the Laravel structure intact while allowing TransIP
+# to serve the correct public directory.
 
 hooks:
 
+
 # SETUP: Create folder structure for newest release
   setup_before: |
-    # Runs before the release folder is prepared.
-    # Nothing required for Laravel at this stage.
+    # Nothing required before setup
     exit 0
 
+
   setup_after: |
-    # Laravel needs the public folder as document root.
-    # AutoGit expects a www folder, so create a symlink:
+    # Create Laravel public webroot symlink
     #
-    # /release/www -> /release/public
+    # $3 = current release folder
     #
-    # -s = create symbolic link
-    # -f = replace existing link if present
-    # -n = treat existing symlink as a normal file
     ln -sfn "$3/public" "$3/www"
 
     exit 0
 
 
+
 # INSTALL: Put code in release folder
   install_before: |
-    # Runs before the code is installed.
+    # Nothing required before install
     exit 0
 
+
   install_after: |
-    # Install Laravel dependencies after deployment.
+    # Install PHP dependencies
+    composer install --no-dev --optimize-autoloader
+
+
+    # Install frontend dependencies from package-lock.json
+    npm ci
+
+
+    # Build production frontend assets
+    npm run build
+
+
+    # Run database migrations
     #
-    # Uncomment these when you want TransIP to build your application:
+    # IMPORTANT:
+    # migrate updates the database structure only.
+    # It does NOT remove existing data.
     #
-    # composer install --no-dev --optimize-autoloader
+    # Never use migrate:fresh in production.
     #
-    # npm install
-    # npm run build
-    #
-    # For now we only create the webroot.
+    php artisan migrate --force
+
+
     exit 0
+
 
 
 # SHAREDSYMLINK:
 # Create symlink to shared files and folders
-# present at every release (config, logs, ...)
+# present at every release.
+#
+# Example:
+# - .env
+# - storage
+#
   sharedsymlink_before: |
     exit 0
 
+
   sharedsymlink_after: |
-    # Good place later for shared Laravel folders:
-    #
-    # storage
-    # .env
-    #
-    # Example:
-    # ln -s /shared/.env "$3/.env"
-    #
+    # .env will automatically be linked here by AutoGit
     exit 0
+
 
 
 # SYMLINK: Set current symlink to newest release
   symlink_before: |
     exit 0
 
+
   symlink_after: |
-    # Runs after the active release is switched.
-    #
-    # Possible Laravel optimisations later:
-    #
-    # php artisan config:cache
-    # php artisan route:cache
-    # php artisan view:cache
-    #
+    # Rebuild Laravel caches after deployment
+    php artisan optimize
+
     exit 0
 
 
-# CLEANUP: Cleanup old releases, two most recent releases remaining
+
+# CLEANUP: Cleanup old releases
+# Two most recent releases remain available.
   cleanup_before: |
     exit 0
+
 
   cleanup_after: |
     exit 0
