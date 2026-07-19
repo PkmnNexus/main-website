@@ -1,55 +1,79 @@
 #######################################################################################
 # Autogit - config and deploy hooks                                                   #
 #######################################################################################
+# Laravel deployment configuration for TransIP AutoGit                                #
+#######################################################################################
 
-# Laravel production secrets should not be stored in Git.
-# This file is stored outside the releases and linked into every deployment.
+# Shared files are preserved between deployments.
+# These files are not stored in Git.
+#
+# The .env file contains:
+# - database credentials
+# - APP_KEY
+# - production settings
+#
+# Never commit .env to Git.
 
 shared_files:
   - .env
 
 
 #######################################################################################
-# Hooks                                                                            #
+# Laravel webroot                                                                      #
 #######################################################################################
+#
+# Laravel uses /public as the document root.
+# TransIP AutoGit expects a /www folder.
+#
+# We create:
+#
+# www -> public
+#
+# This keeps the Laravel structure intact.
 
 hooks:
 
 
-# SETUP: Create folder structure for newest release
+#######################################################################################
+# SETUP                                                                                 #
+# Create folder structure for newest release                                            #
+#######################################################################################
+
   setup_before: |
+    # Nothing required before setup
     exit 0
 
 
   setup_after: |
-    # Laravel requires the public folder as webroot.
-    # TransIP AutoGit expects a www folder.
+    # Create Laravel public webroot symlink
     #
-    # Create:
-    # release/www -> release/public
-
+    # $3 = current release folder
+    #
     ln -sfn "$3/public" "$3/www"
 
     exit 0
 
 
 
-# INSTALL: Install application dependencies
+#######################################################################################
+# INSTALL                                                                               #
+# Install application code and dependencies                                             #
+#######################################################################################
+
   install_before: |
+    # Nothing required before install
     exit 0
 
 
   install_after: |
-
     echo "Installing Composer dependencies..."
 
     composer install \
       --no-dev \
-      --prefer-dist \
       --optimize-autoloader
 
 
-    echo "Installing NPM dependencies..."
+    echo "Installing frontend dependencies..."
 
     npm ci
 
@@ -61,60 +85,81 @@ hooks:
 
     echo "Running database migrations..."
 
-    # Updates database structure.
-    # Existing data stays untouched.
+    # IMPORTANT:
+    # migrate only runs NEW migrations.
     #
-    # NEVER use migrate:fresh here.
+    # It does NOT:
+    # - delete tables
+    # - remove data
+    # - reset database
+    #
+    # Never use migrate:fresh in production.
 
     php artisan migrate --force
+
+
+    echo "Creating storage link..."
+
+    php artisan storage:link || true
 
 
     exit 0
 
 
 
-# SHAREDSYMLINK:
-# Shared files are linked here.
-#
-# .env will be linked automatically from:
-#
-# ~/shared/.env
-#
-# into:
-#
-# release/.env
+#######################################################################################
+# SHAREDSYMLINK                                                                         #
+# Link shared files/folders into every release                                          #
+#######################################################################################
 
   sharedsymlink_before: |
     exit 0
 
 
   sharedsymlink_after: |
-
-    echo "Shared files linked"
-
+    # .env is automatically linked by AutoGit.
+    #
+    # Example shared folders:
+    #
+    # storage
+    # logs
+    #
     exit 0
 
 
 
-# SYMLINK:
-# Switch current release
+#######################################################################################
+# SYMLINK                                                                               #
+# Switch current release to newest release                                              #
+#######################################################################################
 
   symlink_before: |
     exit 0
 
 
   symlink_after: |
-
     echo "Optimizing Laravel..."
 
+
+    # Rebuild Laravel caches:
+    #
+    # - config cache
+    # - route cache
+    # - view cache
+    # - events cache
+
     php artisan optimize
+
 
     exit 0
 
 
 
-# CLEANUP:
-# Keep recent releases
+#######################################################################################
+# CLEANUP                                                                               #
+# Remove old releases                                                                   #
+# AutoGit keeps the newest releases                                                     #
+#######################################################################################
 
   cleanup_before: |
     exit 0
