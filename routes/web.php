@@ -9,6 +9,4 @@ Route::middleware(['under-construction'])->group(function () {
 
 });
 
-Route::get('/under-construction', function () {
-    return view('frontend.under-construction');
-})->name('under-construction');
+Route::get('/under-construction', function () { return view('frontend.under-construction'); })->name('under-construction');
