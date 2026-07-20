@@ -13,7 +13,7 @@ class UnderConstruction
             return $next($request);
         }
 
-        $allowedIps = config('site.whitelist');
+        $allowedIps = config('website.whitelist');
 
         if (in_array($request->ip(), $allowedIps)) {
             return $next($request);
