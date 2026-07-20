@@ -9,7 +9,7 @@ class UnderConstruction
 {
     public function handle(Request $request, Closure $next)
     {
-        if (! config('site.under_construction')) {
+        if (! config('website.under_construction')) {
             return $next($request);
         }
 
