@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Middleware\UnderConstruction;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Sentry\Laravel\Integration;
-use App\Http\Middleware\UnderConstruction;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,9 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-    Integration::handles($exceptions);
+        Integration::handles($exceptions);
 
-    $exceptions->shouldRenderJsonWhen(
-        fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
-    );
-})->create();
+        $exceptions->shouldRenderJsonWhen(
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
+        );
+    })->create();
