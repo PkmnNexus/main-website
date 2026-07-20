@@ -2,10 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+use App\Http\Controllers\Frontend\HomeController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-});
+Route::get('/under-development', function () { return view('frontend.under-development'); })->name('under-construction');
 
-require __DIR__.'/settings.php';
+Route::get('/', [HomeController::class, 'index'])->name('home');
