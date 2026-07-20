@@ -64,7 +64,11 @@ a {
     }
 
     p {
-        margin-bottom: 20px;
+        color: var(--color-secondary);
+        line-height: 175%;
+        font-size: 18px;
+        font-weight: 300;
+        margin-bottom: 15px;
     }
 }
 

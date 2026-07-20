@@ -28,7 +28,7 @@
                 <img src="{{ asset('images/PkmnNexus-Logo.svg') }}"  alt="PkmnNexus Logo" />
             </figure>
 
-            <h1 class="mt-5 mb-5">Welcome to PkmnNexus!</h1>
+            <h1 class="mt-5">Welcome to PkmnNexus!</h1>
 
             <p>PkmnNexus is currently under development, but we're working hard to bring you a place where every Pokémon fan feels at home.</p>
             <p>Once we launch, you'll find the latest Pokémon TCG news and set releases, Pokémon GO event coverage, and updates on the newest Pokémon video games. We're also preparing pack openings and pack rips, videos, guides, articles, and much more to keep you up to date with everything happening in the Pokémon world.</p>
