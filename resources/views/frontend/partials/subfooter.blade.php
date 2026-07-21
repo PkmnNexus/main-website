@@ -5,7 +5,7 @@
     itemtype="https://schema.org/WPFooter"
 >
 
-    <div class="sub-footer-inner flex flex-col max-w-lg md:max-w-5xl xl:max-w-6xl mx-auto px-6 py-6 md:py-8 2xl:px-0 justify-between w-full">
+    <div class="sub-footer-inner flex flex-col max-w-lg max-w-xl md:max-w-6xl xl:max-w-7xl mx-auto px-6 py-6 md:py-8 2xl:px-0 justify-between w-full">
 
         <div class="flex flex-col flex-wrap md:flex-row">
 

@@ -3,9 +3,9 @@
         @close-menu.window="open = false"
         class="flex flex-col">
 
-    <div class="mobile-social-top bg-(--color-primary)">
+    <div class="mobile-social-top bg-gradient">
 
-        <div class="flex lg:hidden max-w-lg md:max-w-5xl xl:max-w-6xl mx-auto px-6 py-3 2xl:px-0 justify-end items-center h-full w-full">
+        <div class="flex lg:hidden max-w-xl md:max-w-6xl xl:max-w-7xl mx-auto px-6 py-3 2xl:px-0 justify-end items-center h-full w-full">
 
             <x-social-media 
                 size="icon-sm"
@@ -17,13 +17,13 @@
 
     <div class="main-navigation-wrapper">
 
-        <div class="main-navigation flex max-w-lg md:max-w-5xl xl:max-w-6xl mx-auto px-6 xl:px-0 h-full w-full">
+        <div class="main-navigation flex max-w-xl md:max-w-6xl xl:max-w-7xl mx-auto px-6 xl:px-0 h-full w-full">
 
             <div class="flex md:hidden w-1/2">
 
                 <button 
                     @click="open = true"
-                    class="self-center bg-[var(--color-primary)] text-white p-2 rounded-md"
+                    class="self-center bg-gradient text-white p-2 rounded-md"
                     aria-label="Open mobile menu"
                     :aria-expanded="open.toString()"
                 >
@@ -37,7 +37,19 @@
 
             </div>
 
-            <nav class="hidden md:flex h-full justify-between items-center w-1/2 lg:w-1/3"
+            <div class="flex justify-end xl:justify-start items-center w-1/2 md:w-2/12">
+
+                <a href="{{ route('home') }}">
+                    <figure>
+                        <img src="{{ asset('images/PkmnNexus-Logo.svg') }}" 
+                             alt="Logo PkmnNexus" 
+                             class="h-8 w-auto"/>
+                    </figure>
+                </a>
+
+            </div>
+
+            <nav class="hidden md:flex h-full justify-end lg:justify-center items-center md:w-10/12 lg:w-8/12"
                  role="navigation" 
                  aria-label="Main navigation"
                  itemscope 
@@ -58,7 +70,7 @@
                                 itemprop="url"
                                 class="px-4 py-2 rounded-sm transition-colors duration-200
                                 {{ $isActive 
-                                    ? 'bg-[var(--color-primary)] text-white' 
+                                    ? 'bg-gradient text-white' 
                                     : 'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' }}">
                                 
                                 {{ $item['label'] }}
@@ -69,19 +81,7 @@
 
             </nav>
 
-            <div class="flex justify-end lg:justify-center items-center w-1/2 lg:w-1/3">
-
-                <a href="{{ route('home') }}">
-                    <figure>
-                        <img src="{{ asset('images/PkmnNexus-Logo.svg') }}" 
-                             alt="Logo PkmnNexus" 
-                             class="h-8 w-auto"/>
-                    </figure>
-                </a>
-
-            </div>
-
-            <div class="hidden lg:flex justify-end items-center w-1/3">
+            <div class="hidden lg:flex justify-end items-center w-2/12">
 
                 <x-social-media />
 
@@ -91,7 +91,6 @@
 
     </div>
 
-    {{-- BACKDROP --}}
     <div 
         x-show="open"
         x-transition.opacity
@@ -102,7 +101,6 @@
         aria-hidden="true"
     ></div>
 
-    {{-- MOBILE MENU --}}
     <div 
         x-show="open"
         x-cloak
@@ -123,7 +121,7 @@
 
             <a href="{{ route('home') }}">
                 <img 
-                    src="{{ asset('images/pkmninsider-logo.svg') }}" 
+                    src="{{ asset('images/PkmnNexus-Logo.svg') }}" 
                     alt="Logo PkmnInsider"
                     class="h-8 w-auto"
                 />
@@ -131,7 +129,7 @@
 
             <button 
                 @click="open = false"
-                class="bg-[var(--color-primary)] text-white p-2 rounded-md 
+                class="bg-gradient text-white p-2 rounded-md 
                     hover:opacity-90 transition-all duration-200"
                 aria-label="Close mobile menu"
             >

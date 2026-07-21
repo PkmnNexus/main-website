@@ -1,11 +1,11 @@
 <footer 
-    class="bg-[var(--color-primary)] text-white"
+    class="bg-gradient text-white"
     role="contentinfo"
     itemscope 
     itemtype="https://schema.org/WPFooter"
 >
 
-    <div class="footer-inner flex flex-col md:flex-row max-w-3xl xl:max-w-6xl mx-auto px-6 py-6 md:py-3 2xl:px-0 justify-between w-full">
+    <div class="footer-inner flex flex-col md:flex-row max-w-xl md:max-w-6xl xl:max-w-7xl mx-auto px-6 py-6 md:py-3 2xl:px-0 justify-between w-full">
 
         {{-- COPYRIGHT --}}
         <div 

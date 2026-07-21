@@ -25,6 +25,42 @@ class PageSeeder extends Seeder
                     'is_active' => true,
                 ],
             ],
+            [
+                'slug' => 'articles',
+                'data' => [
+                    'page' => 'Articles',
+                    'title' => 'Pokémon Articles - PkmnInsider',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
+                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_description' => 'Explore detailed Pokémon articles and guides.',
+                    'is_active' => true,
+                ],
+            ],
+            [
+                'slug' => 'tag',
+                'data' => [
+                    'page' => 'Tag',
+                    'title' => 'Pokémon Articles - PkmnInsider',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
+                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_description' => 'Explore detailed Pokémon articles and guides.',
+                    'is_active' => true,
+                ],
+            ],
+            [
+                'slug' => 'category',
+                'data' => [
+                    'page' => 'Category',
+                    'title' => 'Pokémon Articles - PkmnInsider',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
+                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_description' => 'Explore detailed Pokémon articles and guides.',
+                    'is_active' => true,
+                ],
+            ],
         ];
 
         foreach ($pages as $page) {

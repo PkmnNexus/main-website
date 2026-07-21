@@ -78,3 +78,8 @@ a {
     height: 1px;
     overflow: hidden;
 }
+
+.bg-gradient {
+    background: #5541F0;
+    background: linear-gradient(115deg,rgba(85, 65, 240, 1) 10%, rgba(71, 204, 189, 1) 100%);
+}
