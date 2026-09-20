@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Illuminate\Database\Eloquent\Builder;
+
 use App\Contracts\Seoable;
 
 use Spatie\MediaLibrary\HasMedia;
@@ -75,6 +77,35 @@ class Article extends Model implements Seoable, HasMedia
             'reading_time' => 'integer',
             'views' => 'integer',
         ];
+    }
+
+    // Scopes
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query
+            ->where('status', ArticleStatus::Published)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->where(function (Builder $query) {
+                $query
+                    ->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            });
+    }
+
+    public function scopeFeatured(Builder $query): Builder
+    {
+        return $query->where('is_featured', true);
+    }
+
+    public function scopeBreaking(Builder $query): Builder
+    {
+        return $query->where('is_breaking', true);
+    }
+
+    public function scopePokemonGoFeatured(Builder $query): Builder
+    {
+        return $query->where('is_pokemon_go_featured', true);
     }
 
     // Relations
