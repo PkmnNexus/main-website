@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/scss/app.scss',
                 'resources/js/app.js',
                 'resources/js/passkeys.js',
+                'resources/css/filament/admin/theme.css',
             ],
             refresh: true,
             fonts: [

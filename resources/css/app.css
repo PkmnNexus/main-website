@@ -28,7 +28,11 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
-
+.test-red {
+    background: red;
+    color: white;
+    padding: 1rem;
+}
 /* Default styles */
 [x-cloak] {
     display: none !important;

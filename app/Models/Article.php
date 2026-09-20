@@ -7,22 +7,102 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Contracts\Seoable;
 
-use Spatie\Tags\HasTags;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+use App\Enums\ArticleStatus;
+
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Article extends Model implements Seoable, HasMedia
 {
-    use HasFactory, HasTags, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
 
+    protected static function booted(): void
+    {
+        static::saving(function (Article $article) {
+            $article->reading_time = self::calculateReadingTime($article->content);
+        });
+    }
+
+    // Eloquent
     protected $guarded = [];
 
-    protected $with = ['tags'];
-
-    protected $casts = [
-        'published_at' => 'datetime'
+    protected $fillable = [
+        'title',
+        'slug',
+        'excerpt',
+        'content',
+        'category_id',
+        'hero_asset_id',
+        'video_url',
+        'is_breaking',
+        'is_featured',
+        'is_pokemon_go_featured',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'canonical',
+        'robots_index',
+        'robots_follow',
+        'og_title',
+        'og_description',
+        'og_type',
+        'user_id',
+        'status',
+        'published_at',
+        'expires_at',
+        'reading_time',
     ];
 
+    // Casts
+    protected function casts(): array
+    {
+        return [
+            'status' => ArticleStatus::class,
+
+            'is_breaking' => 'boolean',
+            'is_featured' => 'boolean',
+            'is_pokemon_go_featured' => 'boolean',
+
+            'meta_keywords' => 'array',
+            'robots_index' => 'boolean',
+            'robots_follow' => 'boolean',
+
+            'published_at' => 'datetime',
+            'expires_at' => 'datetime',
+
+            'reading_time' => 'integer',
+            'views' => 'integer',
+        ];
+    }
+
+    // Relations
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function heroImage(): BelongsTo
+    {
+        return $this->belongsTo(Asset::class, 'hero_asset_id');
+    }
+
+    public static function calculateReadingTime(string $content): int
+    {
+        $text = strip_tags($content);
+
+        $wordCount = str_word_count($text);
+
+        return max(1, (int) ceil($wordCount / 200));
+    }
+
+    // SEO Contracts
     public function getSeoTitleSource(): ?string
     {
         return $this->title;
@@ -76,35 +156,5 @@ class Article extends Model implements Seoable, HasMedia
     public function getSeoImageSource(): ?string
     {
         return $this->getFirstMediaUrl('ogImage');
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function author()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function sources()
-    {
-        return $this->belongsToMany(Source::class);
-    }
-
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
-
-    public function scopePublished($query)
-    {
-        return $query->where('status', 'published');
-    }
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('hero_image')->singleFile();
     }
 }
