@@ -22,3 +22,12 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Storage (alles)
+storage/
+
+# Database seed images
+/public/database/
