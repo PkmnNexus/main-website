@@ -28,7 +28,6 @@ class SyncAssetMetadata
             'height' => $height,
             'file_size' => $media->size,
             'mime_type' => $media->mime_type,
-            'extension' => pathinfo($media->file_name, PATHINFO_EXTENSION),
         ]);
     }
 }

@@ -8,6 +8,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Image\Enums\Fit;
+use Spatie\Image\Enums\Format;
 
 class Asset extends Model implements HasMedia
 {
@@ -87,7 +88,6 @@ class Asset extends Model implements HasMedia
 
         $this->forceFill([
             'mime_type' => $media->mime_type,
-            'extension' => pathinfo($media->file_name, PATHINFO_EXTENSION),
             'file_size' => $media->size,
             'width' => $width,
             'height' => $height,
