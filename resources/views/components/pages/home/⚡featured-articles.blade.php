@@ -208,7 +208,7 @@ new class extends Component {
                 >
 
                     <a
-                        href="{{ route('article.show', ['category' => $article->category->slug, 'article' => $article->slug]) }}"
+                        href="{{ route('article.show', ['category' => $article->category->slug, 'slug' => $article->slug]) }}"
                         itemprop="url"
                     >
 

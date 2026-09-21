@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             MediaFolderSeeder::class,
             AssetSeeder::class,
+            ArticleSeeder::class,
         ]);
     }
 }
