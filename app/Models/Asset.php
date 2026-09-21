@@ -8,7 +8,6 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Image\Enums\Fit;
-use Spatie\Image\Enums\Format;
 
 class Asset extends Model implements HasMedia
 {
@@ -39,7 +38,10 @@ class Asset extends Model implements HasMedia
 
     public function folder(): BelongsTo
     {
-        return $this->belongsTo(MediaFolder::class, 'media_folder_id');
+        return $this->belongsTo(
+            MediaFolder::class,
+            'media_folder_id'
+        );
     }
 
     public function registerMediaCollections(): void
@@ -49,31 +51,70 @@ class Asset extends Model implements HasMedia
             ->singleFile();
     }
 
-    public function registerMediaConversions(?Media $media = null): void
+    public function registerMediaConversions(
+        ?Media $media = null
+    ): void {
+        $this->registerImageConversions(
+            'thumb',
+            300,
+            300
+        );
+
+        $this->registerImageConversions(
+            'card',
+            640,
+            360
+        );
+
+        $this->registerImageConversions(
+            'hero',
+            1600,
+            900
+        );
+
+        $this->registerImageConversions(
+            'og',
+            1200,
+            630
+        );
+    }
+
+    protected function registerImageConversions(
+        string $name,
+        int $width,
+        int $height
+    ): void {
+        $conversion = $this
+            ->addMediaConversion("{$name}-webp")
+            ->fit(Fit::Crop, $width, $height)
+            ->format('webp')
+            ->performOnCollections('asset')
+            ->nonQueued();
+
+        if ($name === 'hero') {
+            $conversion->withResponsiveImages();
+        }
+
+        /*
+        $this
+            ->addMediaConversion("{$name}-avif")
+            ->fit(Fit::Crop, $width, $height)
+            ->format('avif')
+            ->performOnCollections('asset')
+            ->nonQueued();
+        */
+    }
+
+    public function addResponsiveMedia(string $path): Media
     {
-        $this
-            ->addMediaConversion('thumb')
-            ->fit(Fit::Crop, 300, 300)
-            ->performOnCollections('asset')
-            ->nonQueued();
+        $media = $this
+            ->addMedia($path)
+            ->withResponsiveImages()
+            ->toMediaCollection('asset');
 
-        $this
-            ->addMediaConversion('card')
-            ->fit(Fit::Crop, 640, 360)
-            ->performOnCollections('asset')
-            ->nonQueued();
+        $this->syncMediaMetadata();
 
-        $this
-            ->addMediaConversion('hero')
-            ->fit(Fit::Crop, 1600, 900)
-            ->performOnCollections('asset')
-            ->nonQueued();
-
-        $this
-            ->addMediaConversion('og')
-            ->fit(Fit::Crop, 1200, 630)
-            ->performOnCollections('asset')
-            ->nonQueued();
+        return $media;
     }
 
     public function syncMediaMetadata(): void
@@ -84,13 +125,14 @@ class Asset extends Model implements HasMedia
             return;
         }
 
-        [$width, $height] = getimagesize($media->getPath());
+        $path = $media->getPath();
+        $dimensions = @getimagesize($path);
 
         $this->forceFill([
             'mime_type' => $media->mime_type,
             'file_size' => $media->size,
-            'width' => $width,
-            'height' => $height,
+            'width' => $dimensions[0] ?? null,
+            'height' => $dimensions[1] ?? null,
         ])->saveQuietly();
     }
 }

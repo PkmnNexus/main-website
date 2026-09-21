@@ -17,37 +17,38 @@ class AssetForm
         return $schema
             ->components([
                 Section::make('Image')
-                    ->description('Upload an image.')
-                    ->schema([
-                        SpatieMediaLibraryFileUpload::make('asset')
-                            ->label('Image')
-                            ->collection('asset')
-                            ->image()
-                            ->imageEditor()
-                            ->required()
-                            ->maxSize(10240)
-                            ->acceptedFileTypes([
-                                'image/jpeg',
-                                'image/png',
-                                'image/webp',
-                                'image/avif',
-                            ])
-                            ->live()
-                            ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                                if (! $state || filled($get('title'))) {
-                                    return;
-                                }
+                ->description('Upload an image.')
+                ->schema([
+                    SpatieMediaLibraryFileUpload::make('asset')
+                        ->label('Image')
+                        ->collection('asset')
+                        ->image()
+                        ->imageEditor()
+                        ->responsiveImages()
+                        ->required()
+                        ->maxSize(10240)
+                        ->acceptedFileTypes([
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                            'image/avif',
+                        ])
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                            if (! $state || filled($get('title'))) {
+                                return;
+                            }
 
-                                if (method_exists($state, 'getClientOriginalName')) {
-                                    $filename = pathinfo(
-                                        $state->getClientOriginalName(),
-                                        PATHINFO_FILENAME
-                                    );
+                            if (method_exists($state, 'getClientOriginalName')) {
+                                $filename = pathinfo(
+                                    $state->getClientOriginalName(),
+                                    PATHINFO_FILENAME
+                                );
 
-                                    $set('title', Str::headline($filename));
-                                }
-                            }),
-                    ]),
+                                $set('title', Str::headline($filename));
+                            }
+                        }),
+                ]),
 
                 Section::make('Metadata')
                     ->description('General information.')
