@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Image\Enums\Fit;
+
+use App\Support\Media\ResponsiveImage;
 
 class Asset extends Model implements HasMedia
 {
@@ -134,5 +137,20 @@ class Asset extends Model implements HasMedia
             'width' => $dimensions[0] ?? null,
             'height' => $dimensions[1] ?? null,
         ])->saveQuietly();
+    }
+
+    public function responsiveImage(
+        string $conversion = 'hero-webp'
+    ): ?ResponsiveImage {
+        $media = $this->getFirstMedia('asset');
+
+        if (! $media) {
+            return null;
+        }
+
+        return new ResponsiveImage(
+            $media,
+            $conversion,
+        );
     }
 }
