@@ -16,6 +16,12 @@ class Asset extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent
+    |--------------------------------------------------------------------------
+    */
+
     protected $fillable = [
         'media_folder_id',
         'title',
@@ -30,6 +36,17 @@ class Asset extends Model implements HasMedia
         'height',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Casts
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the model's attribute casts.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -39,6 +56,15 @@ class Asset extends Model implements HasMedia
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the media folder that owns the asset.
+     */
     public function folder(): BelongsTo
     {
         return $this->belongsTo(
@@ -47,6 +73,15 @@ class Asset extends Model implements HasMedia
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Media Collections
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Register the media collections for the asset.
+     */
     public function registerMediaCollections(): void
     {
         $this
@@ -54,6 +89,15 @@ class Asset extends Model implements HasMedia
             ->singleFile();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Media Conversions
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Register the media conversions for the asset.
+     */
     public function registerMediaConversions(
         ?Media $media = null
     ): void {
@@ -82,6 +126,9 @@ class Asset extends Model implements HasMedia
         );
     }
 
+    /**
+     * Register an image conversion with the given dimensions.
+     */
     protected function registerImageConversions(
         string $name,
         int $width,
@@ -108,6 +155,15 @@ class Asset extends Model implements HasMedia
         */
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Media
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Add media with responsive images to the asset.
+     */
     public function addResponsiveMedia(string $path): Media
     {
         $media = $this
@@ -120,6 +176,9 @@ class Asset extends Model implements HasMedia
         return $media;
     }
 
+    /**
+     * Synchronize the asset metadata with its attached media.
+     */
     public function syncMediaMetadata(): void
     {
         $media = $this->getFirstMedia('asset');
@@ -139,6 +198,15 @@ class Asset extends Model implements HasMedia
         ])->saveQuietly();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Responsive Images
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get a responsive image for the asset.
+     */
     public function responsiveImage(
         string $conversion = 'hero-webp'
     ): ?ResponsiveImage {

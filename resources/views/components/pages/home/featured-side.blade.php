@@ -30,6 +30,8 @@
                         itemprop="image"
                     />
 
+                    <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-sm font-black font-display uppercase rounded">{{ $article->category->name }}</span>
+
                     <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 via-[var(--color-primary)]/40 to-transparent"></div>
 
                     <figcaption class="absolute bottom-0 p-4 text-white z-10">
