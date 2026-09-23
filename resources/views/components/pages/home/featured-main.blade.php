@@ -1,11 +1,9 @@
-<article
-    class="md:col-span-2 group h-full"
-    itemscope
-    itemtype="https://schema.org/Article"
-    itemprop="itemListElement">
+<article class="md:col-span-2 group h-full"
+         itemscope
+         itemtype="https://schema.org/Article"
+         itemprop="itemListElement">
 
-    <a
-        href="{{ route('article.show', [
+    <a  href="{{ route('article.show', [
             'category' => $articles->category->slug,
             'slug' => $articles->slug,
         ]) }}"

@@ -2,15 +2,13 @@
 
     @foreach($articles as $article)
 
-        <article
-            class="group"
-            wire:key="featured-bottom-{{ $article->id }}"
-            itemscope
-            itemtype="https://schema.org/Article"
-            itemprop="itemListElement">
+        <article class="group"
+                 wire:key="featured-bottom-{{ $article->id }}"
+                 itemscope
+                 itemtype="https://schema.org/Article"
+                 itemprop="itemListElement">
 
-            <a
-                href="{{ route('article.show', [
+            <a  href="{{ route('article.show', [
                     'category' => $article->category->slug,
                     'slug' => $article->slug,
                 ]) }}"

@@ -2,10 +2,7 @@
 
     @if($image->srcset())
 
-        <source
-            type="image/webp"
-            srcset="{{ $image->srcset() }}"
-            sizes="{{ $sizes }}">
+        <source type="image/webp" srcset="{{ $image->srcset() }}" sizes="{{ $sizes }}">
 
     @endif
 

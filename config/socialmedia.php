@@ -22,7 +22,7 @@ return [
         'url' => 'https://www.tiktok.com/@pkmnnexus',
     ],
     [
-        'label' => 'YoutTube',
+        'label' => 'YouTube',
         'icon' => 'youtube',
         'url' => 'https://www.youtube.com/@PkmnNexus',
     ],

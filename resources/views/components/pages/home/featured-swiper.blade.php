@@ -13,11 +13,10 @@
 
                 <div class="swiper-slide" wire:key="featured-mobile-{{ $article->id }}">
 
-                    <article
-                        class="group"
-                        itemscope
-                        itemtype="https://schema.org/Article"
-                        itemprop="itemListElement">
+                    <article class="group"
+                             itemscope
+                             itemtype="https://schema.org/Article"
+                             itemprop="itemListElement">
 
                         <a href="{{ route('article.show', ['category' => $article->category->slug, 'slug' => $article->slug]) }}" itemprop="url">
 
@@ -33,16 +32,15 @@
 
                                         @endif
 
-                                        <img
-                                            src="{{ $responsiveImage->src() }}"
-                                            alt="{{ $article->heroImage->alt ?: $article->title }}"
-                                            width="1600"
-                                            height="900"
-                                            class="w-full h-80 md:h-100 object-cover group-hover:scale-105 transition duration-300"
-                                            loading="{{ $isPriority ? 'eager' : 'lazy' }}"
-                                            fetchpriority="{{ $isPriority ? 'high' : 'auto' }}"
-                                            decoding="async"
-                                            itemprop="image">
+                                        <img src="{{ $responsiveImage->src() }}"
+                                             alt="{{ $article->heroImage->alt ?: $article->title }}"
+                                             width="1600"
+                                             height="900"
+                                             class="w-full h-80 md:h-100 object-cover group-hover:scale-105 transition duration-300"
+                                             loading="{{ $isPriority ? 'eager' : 'lazy' }}"
+                                             fetchpriority="{{ $isPriority ? 'high' : 'auto' }}"
+                                             decoding="async"
+                                             itemprop="image">
                                             
                                     </picture>
 
