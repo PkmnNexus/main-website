@@ -11,6 +11,7 @@ use App\Contracts\Seoable;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Tags\HasTags;
 
 use App\Enums\ArticleStatus;
 
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Article extends Model implements Seoable, HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, HasTags;
 
     /*
     |--------------------------------------------------------------------------
@@ -43,6 +44,8 @@ class Article extends Model implements Seoable, HasMedia
     */
 
     protected $guarded = [];
+
+    protected $with = ['tags'];
 
     protected $fillable = [
         'title',

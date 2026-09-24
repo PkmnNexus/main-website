@@ -80,17 +80,17 @@ class ArticlesTable
                     ->preload(),
 
                 SelectFilter::make('user')
-                    ->label('Auteur')
+                    ->label('Author')
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
 
                 Filter::make('featured')
-                    ->label('Alleen featured')
+                    ->label('Only featured')
                     ->query(fn (Builder $query): Builder => $query->where('is_featured', true)),
 
                 Filter::make('pokemon_go_featured')
-                    ->label('Alleen Pokémon GO featured')
+                    ->label('Only Pokémon GO featured')
                     ->query(fn (Builder $query): Builder => $query->where('is_pokemon_go_featured', true)),
             ])
             ->recordActions([

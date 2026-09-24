@@ -29,6 +29,7 @@ new class extends Component {
     }
 };
 ?>
+
 <section
     class="lg:max-w-4xl xl:max-w-6xl mx-auto py-12"
     aria-labelledby="featured-heading"
@@ -37,7 +38,7 @@ new class extends Component {
         itemtype="https://schema.org/ItemList"
     @endif>
 
-    <x-pages.section-heading title="Featured Articles" id="feature-heading" />
+    <x-pages.section-heading title="Featured Articles" id="feature-heading" :sr-only="true" />
 
     @if($articles->isNotEmpty())
 

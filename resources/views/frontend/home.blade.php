@@ -4,4 +4,6 @@
 
     <livewire:pages.home.latest-video />
 
+    <livewire:pages.home.latest-news />
+
 </x-app>

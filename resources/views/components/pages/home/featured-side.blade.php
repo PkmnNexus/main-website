@@ -17,7 +17,7 @@
 
                 <figure class="relative overflow-hidden rounded-lg h-full transition-all duration-300 group-hover:shadow-xl">
 
-                    <x-pages.home.featured-picture
+                    <x-pages.responsive-picture
                         :image="$article->heroImage?->responsiveImage()"
                         :alt="$article->heroImage->alt ?: $article->title"
                         sizes="(min-width: 1280px) 768px, (min-width: 1024px) 55vw, 100vw"

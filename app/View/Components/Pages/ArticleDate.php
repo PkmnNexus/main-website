@@ -2,20 +2,19 @@
 
 namespace App\View\Components\Pages;
 
+use Carbon\CarbonInterface;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class SectionHeading extends Component
+class ArticleDate extends Component
 {
     public function __construct(
-        public string $title,
-        public string $id,
-        public bool $srOnly = false,
+        public ?CarbonInterface $date = null,
     ) {}
 
     public function render(): View|Closure|string
     {
-        return view('components.pages.section-heading');
+        return view('components.pages.article-date');
     }
 }

@@ -115,6 +115,29 @@ class ArticleForm
                                     'redo',
                                     'assetBrowser',
                                 ]),
+
+                                TagsInput::make('tags')
+                                    ->label('Tags')
+                                    ->placeholder('Add a tag')
+                                    ->separator(',')
+                                    ->helperText('Press Enter after each tag.')
+                                    ->afterStateHydrated(function (TagsInput $component, $record): void {
+                                        $component->state(
+                                            $record?->tags
+                                                ->map(function ($tag) {
+                                                    $name = $tag->name;
+
+                                                    if (is_array($name)) {
+                                                        $name = $name['en'] ?? reset($name);
+                                                    }
+
+                                                    return $name;
+                                                })
+                                                ->filter()
+                                                ->values()
+                                                ->toArray() ?? []
+                                        );
+                                    })
                             ])
                             ->columnSpan([
                                 'default' => 1,
