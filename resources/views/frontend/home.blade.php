@@ -6,4 +6,6 @@
 
     <livewire:pages.home.latest-news />
 
+    <livewire:pages.home.pokemon-tcg />
+
 </x-app>
