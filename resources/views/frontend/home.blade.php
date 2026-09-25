@@ -8,4 +8,6 @@
 
     <livewire:pages.home.pokemon-tcg />
 
+    <livewire:pages.home.deep-dive />
+
 </x-app>
