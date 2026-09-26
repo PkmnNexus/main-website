@@ -291,6 +291,6 @@ class Article extends Model implements Seoable, HasMedia
      */
     public function getSeoImageSource(): ?string
     {
-        return $this->getFirstMediaUrl('ogImage');
+        return $this->heroImage?->getFirstMediaUrl('asset', 'og-jpg');
     }
 }

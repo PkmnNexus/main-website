@@ -14,17 +14,20 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('hero_asset_id')->nullable()->constrained('assets')->nullOnDelete();
+            
             // routing
             $table->string('page')->unique();
             $table->string('slug')->unique();
+            $table->longText('content');
 
             // SEO
             $table->string('title');
             $table->text('meta_description');
             $table->string('meta_keywords');
+            $table->string('canonical')->nullable();
             $table->boolean('robots_index')->default(true);
             $table->boolean('robots_follow')->default(true);
-            $table->string('canonical')->unique()->nullable();
 
             // Open Graph
             $table->string('og_title')->nullable();

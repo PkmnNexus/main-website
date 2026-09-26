@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Page extends Model implements HasMedia, Seoable
 {
     use InteractsWithMedia;
@@ -18,8 +20,10 @@ class Page extends Model implements HasMedia, Seoable
     */
 
     protected $fillable = [
+        'hero_asset_id',
         'title',
         'slug',
+        'content',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -58,6 +62,20 @@ class Page extends Model implements HasMedia, Seoable
         $this
             ->addMediaCollection('ogImage')
             ->singleFile();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the hero image that belongs to the article.
+     */
+    public function heroImage(): BelongsTo
+    {
+        return $this->belongsTo(Asset::class, 'hero_asset_id');
     }
 
     /*
@@ -165,6 +183,6 @@ class Page extends Model implements HasMedia, Seoable
      */
     public function getSeoImageSource(): ?string
     {
-        return $this->getFirstMediaUrl('ogImage');
+        return $this->heroImage?->getFirstMediaUrl('asset', 'og-jpg');
     }
 }

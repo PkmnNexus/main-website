@@ -18,6 +18,7 @@ class PageSeeder extends Seeder
                 'data' => [
                     'page' => 'Home',
                     'title' => 'PkmnInsider - Pokémon News & Guides',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
                     'meta_description' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
                     'meta_keywords' => 'pokemon, news, guides, tcg, pokedex',
                     'og_title' => 'Og Title Test',
@@ -30,6 +31,7 @@ class PageSeeder extends Seeder
                 'data' => [
                     'page' => 'Articles',
                     'title' => 'Pokémon Articles - PkmnInsider',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
                     'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
                     'og_title' => 'Pokémon Articles - PkmnInsider',
@@ -42,6 +44,7 @@ class PageSeeder extends Seeder
                 'data' => [
                     'page' => 'Tag',
                     'title' => 'Pokémon Articles - PkmnInsider',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
                     'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
                     'og_title' => 'Pokémon Articles - PkmnInsider',
@@ -54,6 +57,20 @@ class PageSeeder extends Seeder
                 'data' => [
                     'page' => 'Category',
                     'title' => 'Pokémon Articles - PkmnInsider',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
+                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_description' => 'Explore detailed Pokémon articles and guides.',
+                    'is_active' => true,
+                ],
+            ],
+            [
+                'slug' => 'disclaimer',
+                'data' => [
+                    'page' => 'Disclaimer',
+                    'title' => 'Pokémon Articles - PkmnInsider',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
                     'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
                     'og_title' => 'Pokémon Articles - PkmnInsider',

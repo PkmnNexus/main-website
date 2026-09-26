@@ -134,10 +134,13 @@ class Asset extends Model implements HasMedia
         int $width,
         int $height
     ): void {
+        $format = $name === 'og' ? 'jpg' : 'webp';
+        $conversionName = "{$name}-{$format}";
+
         $conversion = $this
-            ->addMediaConversion("{$name}-webp")
+            ->addMediaConversion($conversionName)
             ->fit(Fit::Crop, $width, $height)
-            ->format('webp')
+            ->format($format)
             ->performOnCollections('asset')
             ->nonQueued();
 

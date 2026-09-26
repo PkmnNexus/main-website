@@ -57,7 +57,7 @@ return [
     'footer' => [
         [
             'label' => 'Disclaimer',
-            'route' => 'home'
+            'route' => 'page.disclaimer'
         ],
         [
             'label' => 'Cookie Policy',
