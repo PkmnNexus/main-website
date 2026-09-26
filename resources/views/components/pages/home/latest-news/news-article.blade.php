@@ -5,15 +5,10 @@
 
     <meta itemprop="position" content="{{ $position }}">
 
-    <a href="{{ route('article.show', [
-            'category' => $article->category->slug,
-            'slug' => $article->slug,
-        ]) }}"
-        class="group"
-        itemprop="url">
+    <x-pages.links.article-link :article="$article" class="group">
 
         {{ $slot }}
 
-    </a>
+    </x-pages.links.article-link>
 
 </article>

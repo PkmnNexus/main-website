@@ -23,8 +23,12 @@ new class extends Component
     }
 };
 ?>
-
-<section class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-6xl mx-auto px-6 xl:px-0 pb-12">
+<section class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-6xl mx-auto px-6 xl:px-0 pb-12" 
+         aria-labelledby="latest-video"
+         @if($article !== null)
+            itemscope
+            itemtype="https://schema.org/ItemList"
+         @endif>
 
     @if($article !== null)
 

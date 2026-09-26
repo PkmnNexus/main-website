@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Models\Article;
@@ -22,37 +21,32 @@ new class extends Component {
 
         return [
             'articles' => $articles,
-            'main' => $articles->take(1)->first(),
-            'top' => $articles->skip(1)->take(2),
-            'bottom' => $articles->skip(3)->take(4),
         ];
     }
 };
 ?>
-
-<section
-    class="lg:max-w-4xl xl:max-w-6xl mx-auto py-12"
-    aria-labelledby="featured-heading"
-    @if($articles->isNotEmpty())
-        itemscope
-        itemtype="https://schema.org/ItemList"
-    @endif>
+<section class="lg:max-w-4xl xl:max-w-6xl mx-auto py-12"
+         aria-labelledby="featured-heading"
+         @if($articles->isNotEmpty())
+            itemscope
+            itemtype="https://schema.org/ItemList"
+         @endif>
 
     <x-pages.section-heading title="Featured Articles" id="feature-heading" :sr-only="true" />
 
     @if($articles->isNotEmpty())
 
-        <x-pages.home.featured-swiper :articles="$articles" />
+        <x-pages.home.featured.swiper :articles="$articles" />
 
         <div class="hidden px-6 xl:px-0 lg:grid grid-cols-3 gap-4">
 
-            <x-pages.home.featured-main :articles="$main" :responsiveImage="$main->heroImage?->responsiveImage()" />
+            <x-pages.home.featured.main :article="$articles->take(1)->first()" />
 
-            <x-pages.home.featured-side :articles="$top" />
+            <x-pages.home.featured.side :articles="$articles->skip(1)->take(2)" />
 
         </div>
 
-        <x-pages.home.featured-bottom :articles="$bottom" />
+        <x-pages.home.featured.bottom :articles="$articles->skip(3)->take(4)" />
 
     @else
 

@@ -19,18 +19,15 @@ new class extends Component
              ->latest('published_at')
              ->take(6)
              ->get();
-
-        $this->main = $this->articles->take(2);
-
-        $this->side = $this->articles->skip(2)->take(5);
     }
 };
 ?>
-
 <section class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-6xl mx-auto px-6 xl:px-0 py-12"
-         aria-labelledby="news-heading"
-         itemscope 
-         itemtype="https://schema.org/ItemList">
+         aria-labelledby="headlines"
+         @if($articles->isNotEmpty())
+            itemscope
+            itemtype="https://schema.org/ItemList"
+         @endif>
 
     @if($articles->isNotEmpty())
 
@@ -38,9 +35,9 @@ new class extends Component
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
 
-            <x-pages.home.latest-news-main :articles="$main" />
+            <x-pages.home.latest-news.main :articles="$this->articles->take(2)" />
 
-            <x-pages.home.latest-news-side :articles="$side" />
+            <x-pages.home.latest-news.side :articles="$this->side = $this->articles->skip(2)->take(5)" />
 
         </div>
 

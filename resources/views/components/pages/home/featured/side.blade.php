@@ -8,24 +8,16 @@
                  itemtype="https://schema.org/Article"
                  itemprop="itemListElement">
 
-            <a  href="{{ route('article.show', [
-                    'category' => $article->category->slug,
-                    'slug' => $article->slug,
-                ]) }}"
-                class="block h-full"
-                itemprop="url">
+            <x-pages.links.article-link :article="$article" class="block h-full">
 
                 <figure class="relative overflow-hidden rounded-lg h-full transition-all duration-300 group-hover:shadow-xl">
 
                     <x-pages.responsive-picture
-                        :image="$article->heroImage?->responsiveImage()"
-                        :alt="$article->heroImage->alt ?: $article->title"
+                        :article="$article"
                         sizes="(min-width: 1280px) 768px, (min-width: 1024px) 55vw, 100vw"
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         loading="lazy"
                         fetchpriority="auto"
-                        decoding="async"
-                        itemprop="image"
                     />
 
                     <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-sm font-black font-display uppercase rounded">{{ $article->category->name }}</span>
@@ -40,7 +32,7 @@
 
                 </figure>
 
-            </a>
+            </x-pages.links.article-link>
 
         </article>
 

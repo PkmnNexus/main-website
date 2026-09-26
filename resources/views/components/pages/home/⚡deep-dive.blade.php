@@ -20,7 +20,6 @@ new class extends Component {
     }
 };
 ?>
-
 @if($article)
 
     <section class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-6 xl:px-0 py-12"
@@ -28,10 +27,7 @@ new class extends Component {
              itemscope
              itemtype="https://schema.org/ItemList">
 
-        <x-pages.section-heading
-            id="deep-dive-heading"
-            title="Deep Dive"
-        />
+        <x-pages.section-heading title="Deep Dive" id="deep-dive-heading" />
 
         <article class="group relative overflow-hidden rounded-xl shadow-lg transition duration-300 hover:shadow-2xl"
                  itemscope
@@ -40,23 +36,16 @@ new class extends Component {
 
             <meta itemprop="position" content="1">
 
-            <a  href="{{ route('article.show', [
-                    'category' => $article->category->slug,
-                    'slug' => $article->slug,
-                ]) }}"
-                itemprop="url"
-                class="block cursor-pointer">
+            <x-pages.links.article-link :article="$article" class="block cursor-pointer">
 
                 <figure class="relative">
 
                     <x-pages.responsive-picture
-                        :image="$article->heroImage?->responsiveImage('hero-webp')"
-                        :alt="$article->title"
+                        :article="$article"
                         sizes="(min-width: 1280px) 1024px, (min-width: 768px) 768px, 100vw"
                         class="w-full h-[420px] object-cover transition duration-300 group-hover:scale-105"
-                        loading="lazy"
+                        loading="eager"
                         fetchpriority="auto"
-                        itemprop="image"
                     />
 
                     <div class="absolute inset-y-0 right-0 w-full bg-gradient-to-l from-[var(--color-primary)]/100 via-[var(--color-primary)]/75 to-transparent"></div>
@@ -69,11 +58,9 @@ new class extends Component {
 
                             <h2 class="text-2xl md:text-4xl !text-white">{{ $article->title }}</h2>
 
-                                <p class="mt-4 mb-2 text-xl font-light opacity-90" itemprop="description">{{ $article->excerpt }}</p>
+                            <p class="mt-4 mb-2 text-xl font-light opacity-90" itemprop="description">{{ $article->excerpt }}</p>
 
-                            <x-pages.article-date
-                                :date="$article->published_at"
-                            />
+                            <x-pages.article-date :date="$article->published_at" class="text-sm font-bold text-white mb-2" />
 
                         </div>
 
@@ -81,7 +68,7 @@ new class extends Component {
 
                 </figure>
 
-            </a>
+            </x-pages.links.article-link>
 
         </article>
 

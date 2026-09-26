@@ -21,6 +21,6 @@ class LatestNewsSide extends Component
 
     public function render(): View|Closure|string
     {
-        return view('components.pages.home.latest-news-side');
+        return view('components.pages.home.latest-news.side');
     }
 }

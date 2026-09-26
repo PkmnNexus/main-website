@@ -2,25 +2,21 @@
 
     @foreach($articles as $index => $article)
 
-        <x-pages.home.latest-news-article
+        <x-pages.home.latest-news.news-article
             :article="$article"
             :position="$index + 3"
-            class="shadow-lg rounded-lg"
-        >
+            class="shadow-lg rounded-lg">
 
             <div class="group flex items-center gap-4 p-3 bg-white text-[var(--color-secondary)] rounded-lg transition hover:bg-[var(--color-primary)]">
 
                 <div class="w-20 h-20 overflow-hidden rounded-lg flex-shrink-0">
 
                     <x-pages.responsive-picture
-                        :image="$responsiveImage($article)"
-                        :alt="$article->title"
+                        :article="$article"
                         sizes="80px"
                         class="w-full h-full object-cover"
-                        loading="lazy"
+                        loading="eager"
                         fetchpriority="auto"
-                        decoding="async"
-                        itemprop="image"
                     />
 
                 </div>

@@ -10,4 +10,6 @@
 
     <livewire:pages.home.deep-dive />
 
+    <livewire:pages.home.article-overview />
+
 </x-app>
