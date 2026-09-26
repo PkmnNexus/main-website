@@ -14,8 +14,7 @@ return [
             'route' => 'article.index',
             'active_routes' => [
                 'article.*',
-                'category.*',
-                'tag.*',
+                'articles.*',
             ],
         ],
     ],

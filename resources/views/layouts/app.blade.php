@@ -15,7 +15,7 @@
     
     @include('frontend.partials.navigation.main')
 
-    <main class="flex-1">
+    <main class="flex-1 page-transition">
 
         {{ $slot }}
 

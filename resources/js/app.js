@@ -46,6 +46,18 @@ function initSwiper() {
 }
 
 // =======================
+// Scroll
+// =======================
+document.addEventListener('livewire:init', () => {
+    Livewire.on('scrollToTop', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+
+// =======================
 // Page init
 // =======================
 function initPage() {

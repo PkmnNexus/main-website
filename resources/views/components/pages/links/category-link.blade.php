@@ -1,5 +1,4 @@
-<a href="{{ route('category.show', $category->slug) }}"
-   {{ $attributes }}>
+<a href="{{ route('articles.category', $category->slug) }}" {{ $attributes }}>
 
     {{ $slot }}
 
