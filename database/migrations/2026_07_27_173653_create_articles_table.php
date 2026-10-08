@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
+            $table->text('summary')->nullable();
             $table->longText('content');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('hero_asset_id')->nullable()->constrained('assets')->nullOnDelete();

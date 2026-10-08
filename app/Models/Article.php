@@ -51,6 +51,7 @@ class Article extends Model implements Seoable, HasMedia
         'title',
         'slug',
         'excerpt',
+        'summary',
         'content',
         'category_id',
         'hero_asset_id',

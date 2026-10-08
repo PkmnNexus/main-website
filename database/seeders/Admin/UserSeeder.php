@@ -2,10 +2,10 @@
 
 namespace Database\Seeders\Admin;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -21,8 +21,12 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => env('ADMIN_NAME'),
+                'username' => 'admin',
+                'slug' => 'admin',
+                'bio' => 'PKMN Nexus administrator.',
                 'password' => Hash::make(env('ADMIN_PASSWORD')),
                 'email_verified_at' => now(),
+                'is_active' => true,
             ]
         );
 
@@ -31,7 +35,7 @@ class UserSeeder extends Seeder
         }
 
         // Editor
-        $editorPassword = \Str::password();
+        $editorPassword = Str::password();
 
         $editor = User::updateOrCreate(
             [
@@ -39,8 +43,12 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Editor',
+                'username' => 'editor',
+                'slug' => 'editor',
+                'bio' => 'PKMN Nexus editor.',
                 'password' => Hash::make($editorPassword),
                 'email_verified_at' => now(),
+                'is_active' => true,
             ]
         );
 
@@ -49,7 +57,7 @@ class UserSeeder extends Seeder
         }
 
         // Author
-        $authorPassword = \Str::password();
+        $authorPassword = Str::password();
 
         $author = User::updateOrCreate(
             [
@@ -57,8 +65,12 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Author',
+                'username' => 'author',
+                'slug' => 'author',
+                'bio' => 'PKMN Nexus author.',
                 'password' => Hash::make($authorPassword),
                 'email_verified_at' => now(),
+                'is_active' => true,
             ]
         );
 

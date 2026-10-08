@@ -25,8 +25,6 @@
 
     @include('frontend.partials.footer')
 
-    @stack('scripts')
-
     @livewireScripts
 
 </body>

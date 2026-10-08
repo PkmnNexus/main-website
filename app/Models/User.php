@@ -14,17 +14,19 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-
 use Spatie\Permission\Traits\HasRoles;
-
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property string $name
+ * @property string $username
+ * @property string $slug
+ * @property string|null $bio
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
+ * @property bool $is_active
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -32,12 +34,54 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+#[Fillable([
+    'name',
+    'username',
+    'slug',
+    'bio',
+    'email',
+    'password',
+    'is_active',
+])]
+#[Hidden([
+    'password',
+    'two_factor_secret',
+    'two_factor_recovery_codes',
+    'remember_token',
+])]
 class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable, HasRoles;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Booted
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (blank($user->slug) && filled($user->name)) {
+                $user->slug = Str::slug($user->name);
+            }
+        });
+
+        static::updating(function (User $user) {
+            if ($user->isDirty('name') && ! $user->isDirty('slug')) {
+                $user->slug = Str::slug($user->name);
+            }
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent
+    |--------------------------------------------------------------------------
+    */
+
+    protected $with = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +99,22 @@ class User extends Authenticatable implements PasskeyUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Scope the query to active users.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 
     /*

@@ -22,6 +22,7 @@ use Filament\Facades\Filament;
 use App\Filament\Forms\Components\Media\AssetPicker;
 use App\Services\ArticleMetadataGenerator;
 use App\Services\ArticleKeywordGenerator;
+use App\Services\ArticleSummaryGenerator;
 
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -69,6 +70,48 @@ class ArticleForm
                                     ->helperText('Used on article overviews and as the default meta description.')
                                     ->live()
                                     ->hint(fn (?string $state) => strlen($state ?? '') . ' / 225'),
+
+                                Textarea::make('summary')
+                                    ->label('Summary')
+                                    ->rows(4)
+                                    ->maxLength(600)
+                                    ->columnSpanFull()
+                                    ->placeholder('A concise summary of the article.')
+                                    ->helperText('Summarize the actual content of the article in no more than 4 sentences.')
+                                    ->live()
+                                    ->hint(fn (?string $state) => strlen($state ?? '') . ' / 600')
+                                    ->hintAction(
+                                        Action::make('generateSummary')
+                                            ->label('Generate with AI')
+                                            ->icon(Heroicon::Sparkles)
+                                            ->action(function (
+                                                Get $get,
+                                                Set $set,
+                                                ArticleSummaryGenerator $generator,
+                                            ): void {
+                                                $title = $get('title') ?? '';
+                                                $excerpt = $get('excerpt') ?? '';
+                                                $content = $get('content') ?? '';
+
+                                                if (
+                                                    blank($title)
+                                                    && blank($excerpt)
+                                                    && blank($content)
+                                                ) {
+                                                    throw new \RuntimeException(
+                                                        'First fill in the article information.'
+                                                    );
+                                                }
+
+                                                $summary = $generator->generate(
+                                                    title: $title,
+                                                    excerpt: $excerpt,
+                                                    content: strip_tags($content),
+                                                );
+
+                                                $set('summary', $summary);
+                                            })
+                                    ),
 
                                 RichEditor::make('content')
                                 ->label('Content')
@@ -291,7 +334,7 @@ class ArticleForm
                                 ->helperText('Press Enter after each keyword.')
                                 ->hintAction(
                                     Action::make('generateKeywords')
-                                        ->label('Genereer met AI')
+                                        ->label('Generate with AI')
                                         ->icon(Heroicon::Sparkles)
                                         ->action(function (
                                             Get $get,

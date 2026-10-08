@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Page;
+use App\Models\User;
 
 use Spatie\Tags\Tag;
 
@@ -49,5 +50,12 @@ class ArticleController extends Controller
         $pageSeo = $article;
 
         return view('frontend.article.show', compact('article', 'pageSeo'));
+    }
+
+    public function author(User $user): View
+    {
+        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+
+        return view('frontend.article.index', compact('pageSeo', 'user'));
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\User;
 
 use Spatie\Tags\Tag;
 
@@ -13,7 +14,15 @@ new class extends Component {
     use WithPagination;
 
     public ?Category $category = null;
+    public ?User $user = null;
     public ?string $tag = null;
+
+    public function mount(?Category $category = null, ?User $user = null, ?string $tag = null): void
+    {
+        $this->category = $category;
+        $this->user = $user;
+        $this->tag = $tag;
+    }
 
     public function updatingPage()
     {
@@ -32,12 +41,20 @@ new class extends Component {
             $title = 'Tag: ' . $this->tag;
         }
 
+        if ($this->user) {
+            $title = 'Author: ' . $this->user->username;
+        }
+
         return [
             'articles' => Article::query()
                 ->published()
                 ->when(
                     $this->category,
                     fn ($query) => $query->where('category_id', $this->category->id)
+                )
+                ->when(
+                    $this->user,
+                    fn ($query) => $query->where('user_id', $this->user->id)
                 )
                 ->when(
                     $this->tag,
