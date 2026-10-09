@@ -9,7 +9,7 @@ main {
         bottom: 25px;
         width: 100%;
         height: 450px;
-        background-image: url("http://pkmnnexus.test/images/backgrounds/nidoking-ken-sugimori.jpg");
+        background-image: var(--main-background-image);
         background-repeat: no-repeat;
         background-position: right bottom;
         background-size: contain;
