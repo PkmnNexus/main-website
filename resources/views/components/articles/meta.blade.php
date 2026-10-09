@@ -1,4 +1,4 @@
-<div class="mt-8 hidden md:flex flex-wrap items-center border-t border-[#F0F0F0] pt-4">
+<div class="mt-5 hidden md:flex flex-wrap items-center border-t border-[#F0F0F0] pt-4">
 
     <div class="mr-2 mb-2">
 

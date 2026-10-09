@@ -1,3 +1,28 @@
+main {
+    position: relative;
+    isolation: isolate;
+
+    &::after {
+        content: "";
+        position: absolute;
+        right: 45px;
+        bottom: 25px;
+        width: 100%;
+        height: 450px;
+        background-image: url("http://pkmnnexus.test/images/backgrounds/nidoking-ken-sugimori.jpg");
+        background-repeat: no-repeat;
+        background-position: right bottom;
+        background-size: contain;
+        opacity: 0.08;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    > * {
+        position: relative;
+        z-index: 1;
+    }
+}
 /* Icons */
 .icon-sm,
 .icon-md,
@@ -290,7 +315,7 @@
             margin-bottom: 0.25rem;
             padding-left: 1rem;
 
-            line-height: 1;
+            line-height: 1.75;
         }
 
         li::before {

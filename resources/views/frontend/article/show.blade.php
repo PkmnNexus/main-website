@@ -15,13 +15,19 @@
 
                 <x-articles.content :article="$article" />
 
+                <x-articles.social-sharing :article="$article" />
+
                 <x-articles.meta :article="$article" />
+
+                <x-articles.tag-cloud :article="$article" />
 
             </div>
 
             <aside class="lg:col-span-1">
 
                 <x-articles.side :article="$article" />
+
+                <x-articles.categories />
 
             </aside>
 
