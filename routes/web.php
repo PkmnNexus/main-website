@@ -17,6 +17,7 @@ Route::middleware(['under-construction'])->group(function () {
     Route::get('/articles/{category:slug}/{slug:slug}', [ArticleController::class, 'show'])->name('article.show');
 
     Route::get('/disclaimer', [PageController::class, 'show'])->defaults('page', 'disclaimer')->name('page.disclaimer');
+    Route::get('/cookie-policy', [PageController::class, 'show'])->defaults('page', 'cookie-policy')->name('page.cookie-policy');
 
 });
 

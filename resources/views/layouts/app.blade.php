@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <x-analytics.google-tag-manager />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,10 +9,11 @@
 
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 
-    @stack('structured-data')
     @stack('styles')
 </head>
 <body class="min-h-screen flex flex-col">
+    
+    <x-analytics.google-tag-manager-noscript />
     
     @include('frontend.partials.navigation.main')
 
@@ -26,6 +28,9 @@
     @include('frontend.partials.footer')
 
     @livewireScripts
+
+    <x-cookie-consent.preferences-button />
+    <x-cookie-consent.banner />
 
 </body>
 </html>

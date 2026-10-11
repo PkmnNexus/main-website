@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             MediaFolderSeeder::class,
             AssetSeeder::class,
             ArticleSeeder::class,
+            ArticleDailyViewSeeder::class,
         ]);
     }
 }

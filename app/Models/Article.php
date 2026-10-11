@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Builder;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Contracts\Seoable;
 
 use Spatie\MediaLibrary\HasMedia;
@@ -16,6 +18,7 @@ use Spatie\Tags\HasTags;
 use App\Enums\ArticleStatus;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Article extends Model implements Seoable, HasMedia
 {
@@ -183,6 +186,14 @@ class Article extends Model implements Seoable, HasMedia
         return $this->belongsTo(Asset::class, 'hero_asset_id');
     }
 
+    /**
+     * Get the daily view records for the article.
+     */
+    public function dailyViews(): HasMany
+    {
+        return $this->hasMany(ArticleDailyView::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helpers
@@ -199,6 +210,38 @@ class Article extends Model implements Seoable, HasMedia
         $wordCount = str_word_count($text);
 
         return max(1, (int) ceil($wordCount / 200));
+    }
+
+    /**
+     * Register a view for the article.
+     */
+    public function registerView(): void
+    {
+        $today = now(config('app.timezone'))->toDateString();
+        $now = now(config('app.timezone'));
+
+        DB::transaction(function () use ($today, $now): void {
+            DB::table('articles')
+                ->where('id', $this->getKey())
+                ->increment('views');
+
+            DB::table('article_daily_views')->upsert(
+                [
+                    [
+                        'article_id' => $this->getKey(),
+                        'view_date' => $today,
+                        'views' => 1,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ],
+                ],
+                ['article_id', 'view_date'],
+                [
+                    'views' => DB::raw('views + 1'),
+                    'updated_at' => $now,
+                ],
+            );
+        });
     }
 
     /*

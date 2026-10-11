@@ -27,6 +27,8 @@
 
                 <x-articles.side :article="$article" />
 
+                <x-articles.most-read-today />
+
                 <x-articles.categories />
 
             </aside>

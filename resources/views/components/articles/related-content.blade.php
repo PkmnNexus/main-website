@@ -1,6 +1,8 @@
 @if($relatedArticles->isNotEmpty())
 
-    <section aria-labelledby="related-content-heading">
+    <section aria-labelledby="related-content-heading"
+             itemscope
+             itemtype="https://schema.org/ItemList">
 
         <div class="space-y-3">
 

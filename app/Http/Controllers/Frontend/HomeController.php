@@ -12,6 +12,6 @@ class HomeController extends Controller
     {
         $pageSeo = Page::where('slug', 'home')->firstOrFail();
 
-        return view('frontend.home', compact('pageSeo'));
+        return view('frontend.home.index', compact('pageSeo'));
     }
 }

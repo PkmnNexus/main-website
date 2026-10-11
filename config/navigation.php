@@ -61,7 +61,7 @@ return [
         ],
         [
             'label' => 'Cookie Policy',
-            'route' => 'home'
+            'route' => 'page.cookie-policy'
         ],
         [
             'label' => 'Sitemap',
