@@ -63,6 +63,8 @@ class ArticleFactory extends Factory
             'title' => $title,
             'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(1000, 99999),
 
+            'summary' => $this->faker->sentence(20),
+
             'excerpt' => $this->faker->randomElement($excerptPool),
 
             'content' => '

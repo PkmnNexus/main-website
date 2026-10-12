@@ -17,9 +17,9 @@ class PageSeeder extends Seeder
                 'slug' => 'home',
                 'data' => [
                     'page' => 'Home',
-                    'title' => 'PkmnInsider - Pokémon News & Guides',
-                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
-                    'meta_description' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
+                    'title' => 'PkmnNexus - Pokémon News & Guides',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnNexus.',
+                    'meta_description' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnNexus.',
                     'meta_keywords' => 'pokemon, news, guides, tcg, pokedex',
                     'og_title' => 'Og Title Test',
                     'og_description' => 'Og Description Test',
@@ -30,11 +30,11 @@ class PageSeeder extends Seeder
                 'slug' => 'articles',
                 'data' => [
                     'page' => 'Articles',
-                    'title' => 'Pokémon Articles - PkmnInsider',
-                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
-                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'title' => 'Pokémon Articles - PkmnNexus',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnNexus.',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnNexus.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
-                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_title' => 'Pokémon Articles - PkmnNexus',
                     'og_description' => 'Explore detailed Pokémon articles and guides.',
                     'is_active' => true,
                 ],
@@ -43,11 +43,11 @@ class PageSeeder extends Seeder
                 'slug' => 'tag',
                 'data' => [
                     'page' => 'Tag',
-                    'title' => 'Pokémon Articles - PkmnInsider',
-                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
-                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'title' => 'Pokémon Articles - PkmnNexus',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnNexus.',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnNexus.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
-                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_title' => 'Pokémon Articles - PkmnNexus',
                     'og_description' => 'Explore detailed Pokémon articles and guides.',
                     'is_active' => true,
                 ],
@@ -56,11 +56,11 @@ class PageSeeder extends Seeder
                 'slug' => 'category',
                 'data' => [
                     'page' => 'Category',
-                    'title' => 'Pokémon Articles - PkmnInsider',
-                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
-                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'title' => 'Pokémon Articles - PkmnNexus',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnNexus.',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnNexus.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
-                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_title' => 'Pokémon Articles - PkmnNexus',
                     'og_description' => 'Explore detailed Pokémon articles and guides.',
                     'is_active' => true,
                 ],
@@ -69,19 +69,20 @@ class PageSeeder extends Seeder
                 'slug' => 'disclaimer',
                 'data' => [
                     'page' => 'Disclaimer',
-                    'title' => 'Pokémon Articles - PkmnInsider',
-                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnInsider.',
-                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnInsider.',
+                    'title' => 'Pokémon Articles - PkmnNexus',
+                    'content' => 'Discover the latest Pokémon news, competitive guides, and in-depth articles on PkmnNexus.',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnNexus.',
                     'meta_keywords' => 'pokemon articles, pokemon guides, tcg articles, pokemon analysis',
-                    'og_title' => 'Pokémon Articles - PkmnInsider',
+                    'og_title' => 'Pokémon Articles - PkmnNexus',
                     'og_description' => 'Explore detailed Pokémon articles and guides.',
                     'is_active' => true,
                 ],
-                [
+            ],
+            [
                 'slug' => 'cookie-policy',
                 'data' => [
                     'page' => 'Cookie Policy',
-                    'title' => 'Cookie Policy - PkmnInsider',
+                    'title' => 'Cookie Policy - PkmnNexus',
                     'content' => '
                         <h2>1. Introduction</h2>
                         <p>Welcome to PkmnNexus. This Cookie Policy explains how we use cookies and similar technologies when you visit our website. It describes which technologies we use, why we use them, and how you can manage your preferences.</p>
@@ -142,12 +143,12 @@ class PageSeeder extends Seeder
                         <p>If you have questions about this Cookie Policy or our use of cookies and similar technologies, please contact the website operator using the contact details provided on PkmnNexus.</p>
 
                     ',
+                    'meta_description' => 'Read in-depth Pokémon articles, guides, strategies and analyses on PkmnNexus.',
                     'meta_keywords' => 'PkmnNexus cookie policy, cookies, Google Analytics 4, Google Tag Manager, cookie consent, privacy',
                     'og_title' => 'Cookie Policy - PkmnNexus',
                     'og_description' => 'Learn how PkmnNexus uses cookies and analytics technologies and how to manage or withdraw your privacy preferences at any time.',
                     'is_active' => true,
                 ],
-            ],
             ],
         ];
 

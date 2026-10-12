@@ -14,6 +14,7 @@ Route::middleware(['under-construction'])->group(function () {
     Route::get('/articles/category/{category:slug}', [ArticleController::class, 'category'])->name('articles.category');
     Route::get('/articles/tag/{tag}', [ArticleController::class, 'tag'])->name('articles.tag');
     Route::get('/articles/author/{user:slug}', [ArticleController::class, 'author'])->name('articles.author');
+    Route::get('/articles/video/{slug}', [ArticleController::class, 'video'])->name('article.video');
     Route::get('/articles/{category:slug}/{slug:slug}', [ArticleController::class, 'show'])->name('article.show');
 
     Route::get('/disclaimer', [PageController::class, 'show'])->defaults('page', 'disclaimer')->name('page.disclaimer');

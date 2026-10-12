@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
-
 use Illuminate\Support\Facades\Cache;
 
 use App\Models\Article;
@@ -47,21 +46,52 @@ class ArticleController extends Controller
         return view('frontend.article.index', compact('pageSeo', 'user'));
     }
 
+    public function video(string $slug): View
+    {
+        $article = Article::query()
+            ->where('slug', $slug)
+            ->whereNotNull('video_url')
+            ->firstOrFail();
+
+        $this->registerArticleView($article);
+
+        $pageSeo = $article;
+
+        return view('frontend.article.video', compact('article', 'pageSeo'));
+    }
+
     public function show(string $category, string $slug): View
     {
         $article = Article::query()
             ->where('slug', $slug)
-            ->whereHas('category', function ($q) use ($category) {
-                $q->where('slug', $category);
+            ->whereHas('category', function ($query) use ($category) {
+                $query->where('slug', $category);
             })
             ->firstOrFail();
 
+        $this->registerArticleView($article);
+
+        $pageSeo = $article;
+
+        return view('frontend.article.show', compact('article', 'pageSeo'));
+    }
+
+    /**
+     * Count at most one view per article and session every 30 minutes.
+     * Known bots and crawlers are excluded.
+     */
+    private function registerArticleView(Article $article): void
+    {
         $userAgent = strtolower(request()->userAgent() ?? '');
 
-        $isBot = preg_match(
+        $isBot = (bool) preg_match(
             '/bot|crawler|spider|slurp|bingpreview|facebookexternalhit|monitoring/i',
             $userAgent
         );
+
+        if ($isBot) {
+            return;
+        }
 
         $sessionId = request()->session()->getId();
 
@@ -71,14 +101,8 @@ class ArticleController extends Controller
             hash('sha256', $sessionId)
         );
 
-        if (! $isBot && Cache::add($viewKey, true, now()->addMinutes(30))) {
+        if (Cache::add($viewKey, true, now()->addMinutes(30))) {
             $article->registerView();
         }
-
-        $article->registerView();
-
-        $pageSeo = $article;
-
-        return view('frontend.article.show', compact('article', 'pageSeo'));
     }
 }
