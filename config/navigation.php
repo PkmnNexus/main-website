@@ -21,16 +21,24 @@ return [
     'subfooter' => [
         [
             'label' => 'About',
-            'route' => 'home'
+            'route' => 'page.about'
         ],
         [
-            'label' => 'FAQ',
-            'route' => 'home'
+            'label' => 'Disclaimer',
+            'route' => 'page.disclaimer'
+        ],
+        [
+            'label' => 'Privacy Policy',
+            'route' => 'page.privacy-policy'
         ],
         [
             'label' => 'Terms and Conditions',
-            'route' => 'home'
-        ]
+            'route' => 'page.terms-and-conditions'
+        ],
+        [
+            'label' => 'Cookie Policy',
+            'route' => 'page.cookie-policy'
+        ],
     ],
     'categories' => [
         [

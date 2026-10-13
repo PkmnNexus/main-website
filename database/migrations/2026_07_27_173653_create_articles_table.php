@@ -19,10 +19,23 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
             $table->text('summary')->nullable();
-            $table->longText('content');
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('hero_asset_id')->nullable()->constrained('assets')->nullOnDelete();
+            $table->longText('content')->nullable();
+
+            $table->foreignId('category_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('hero_asset_id')
+                ->nullable()
+                ->constrained('assets')
+                ->nullOnDelete();
+
+            // Video
             $table->string('video_url')->nullable();
+            $table->timestamp('youtube_published_at')->nullable();
+            $table->text('youtube_thumbnail_url')->nullable();
+            $table->string('youtube_duration', 20)->nullable();
+
             $table->boolean('is_breaking')->default(false);
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_pokemon_go_featured')->default(false);
@@ -41,7 +54,10 @@ return new class extends Migration
             $table->string('og_type')->default('article');
 
             // Publishing
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->string('status')->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->timestamp('expires_at')->nullable();

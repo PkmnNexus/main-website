@@ -2,17 +2,21 @@
 
 namespace App\Filament\Resources\Articles\Pages;
 
-use App\Filament\Resources\Articles\ArticleResource;
-use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
-
 use App\Enums\ArticleStatus;
+use App\Filament\Resources\Articles\ArticleResource;
+use App\Services\YouTubeService;
+use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Str;
 use Spatie\Tags\Tag;
+use Throwable;
 
 class EditArticle extends EditRecord
 {
     protected static string $resource = ArticleResource::class;
+
+    protected ?string $originalVideoUrl = null;
 
     protected function getHeaderActions(): array
     {
@@ -23,6 +27,9 @@ class EditArticle extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // Remember the original URL before the record is updated.
+        $this->originalVideoUrl = $this->record->video_url;
+
         if (auth()->user()->hasRole('author')) {
             $data['user_id'] = auth()->id();
             $data['status'] = ArticleStatus::Pending->value;
@@ -53,5 +60,64 @@ class EditArticle extends EditRecord
         unset($data['tags']);
 
         return $data;
+    }
+
+    protected function afterSave(): void
+    {
+        $videoUrl = $this->record->video_url;
+
+        $urlChanged = $this->originalVideoUrl !== $videoUrl;
+
+        $metadataMissing = blank($this->record->youtube_published_at)
+            || blank($this->record->youtube_thumbnail_url)
+            || blank($this->record->youtube_duration);
+
+        // Nothing to do when the URL and metadata are unchanged.
+        if (! $urlChanged && ! $metadataMissing) {
+            return;
+        }
+
+        // Remove metadata belonging to the previous video.
+        if ($urlChanged) {
+            $this->record->forceFill([
+                'youtube_published_at' => null,
+                'youtube_thumbnail_url' => null,
+                'youtube_duration' => null,
+            ])->saveQuietly();
+        }
+
+        // The video URL was removed.
+        if (blank($videoUrl)) {
+            return;
+        }
+
+        try {
+            $metadata = app(YouTubeService::class)
+                ->fetchMetadata($videoUrl);
+
+            if ($metadata === null) {
+                Notification::make()
+                    ->title('YouTube metadata not found')
+                    ->body('The article was saved, but the video metadata could not be retrieved.')
+                    ->warning()
+                    ->send();
+
+                return;
+            }
+
+            $this->record->forceFill([
+                'youtube_published_at' => $metadata['published_at'],
+                'youtube_thumbnail_url' => $metadata['thumbnail_url'],
+                'youtube_duration' => $metadata['duration'],
+            ])->saveQuietly();
+        } catch (Throwable $exception) {
+            report($exception);
+
+            Notification::make()
+                ->title('YouTube metadata could not be retrieved')
+                ->body('The article was saved successfully. You can try retrieving the video metadata again later.')
+                ->warning()
+                ->send();
+        }
     }
 }

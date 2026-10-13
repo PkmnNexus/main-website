@@ -35,8 +35,10 @@ class Article extends Model implements Seoable, HasMedia
      */
     protected static function booted(): void
     {
-        static::saving(function (Article $article) {
-            $article->reading_time = self::calculateReadingTime($article->content);
+        static::saving(function (Article $article): void {
+            $article->reading_time = filled($article->content)
+                ? self::calculateReadingTime($article->content)
+                : null;
         });
     }
 
@@ -59,6 +61,9 @@ class Article extends Model implements Seoable, HasMedia
         'category_id',
         'hero_asset_id',
         'video_url',
+        'youtube_published_at',
+        'youtube_thumbnail_url',
+        'youtube_duration',
         'is_breaking',
         'is_featured',
         'is_pokemon_go_featured',
@@ -97,6 +102,8 @@ class Article extends Model implements Seoable, HasMedia
             'is_breaking' => 'boolean',
             'is_featured' => 'boolean',
             'is_pokemon_go_featured' => 'boolean',
+
+            'youtube_published_at' => 'datetime',
 
             'meta_keywords' => 'array',
             'robots_index' => 'boolean',

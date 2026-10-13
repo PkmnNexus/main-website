@@ -20,7 +20,7 @@
                         fetchpriority="auto"
                     />
 
-                    <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-xs font-black font-display uppercase rounded">{{ $article->category->name }}</span>
+                    <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-xs font-black font-display uppercase rounded">{{ filled($article->video_url) ? 'Video' : $article->category->name }}</span>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 via-[var(--color-primary)]/40 to-transparent"></div>
 

@@ -6,14 +6,34 @@
 
         <x-pages.links.article-link :article="$article" class="w-full md:w-64 flex-shrink-0">
 
-            <x-pages.responsive-picture
-                :article="$article"
-                sizes="(min-width: 768px) 256px, 100vw"
-                class="w-full h-60 md:h-full object-cover rounded-lg"
-                loading="eager"
-                fetchpriority="high"
-            />
+            <div class="relative h-60 md:h-full md:min-h-full">
 
+                <x-pages.responsive-picture
+                    :article="$article"
+                    sizes="(min-width: 768px) 256px, 100vw"
+                    class="w-full h-full object-cover rounded-lg"
+                    loading="eager"
+                    fetchpriority="high"
+                />
+
+                @if (filled($article->video_url))
+
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+
+                        <div class="flex items-center justify-center w-16 h-16 rounded-full border-2 border-white bg-black/40 text-white transition group-hover:bg-[var(--color-primary)]">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M8 5.14v13.72a.75.75 0 0 0 1.13.65l11-6.86a.75.75 0 0 0 0-1.3l-11-6.86A.75.75 0 0 0 8 5.14Z"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+            </div>
+            
         </x-pages.links.article-link>
 
         <div class="flex flex-col flex-1 min-w-0">

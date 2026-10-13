@@ -115,7 +115,7 @@ class ArticleForm
 
                                 RichEditor::make('content')
                                 ->label('Content')
-                                ->required()
+                                ->required(fn (Get $get): bool => blank($get('video_url')))
                                 ->columnSpanFull()
                                 ->tools([
                                     RichEditorTool::make('assetBrowser')
@@ -200,15 +200,16 @@ class ArticleForm
                                 Section::make('Publishing')
                                     ->schema([
                                         TextInput::make('video_url')
-                                            ->label('YouTube URL')
-                                            ->url()
-                                            ->nullable()
-                                            ->placeholder('https://www.youtube.com/watch?v=...')
-                                            ->maxLength(255)
-                                            ->rule('regex:/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]{11}.*$/')
-                                            ->validationMessages([
-                                                'regex' => 'Please enter a valid YouTube URL.',
-                                            ]),
+                                        ->label('YouTube URL')
+                                        ->url()
+                                        ->nullable()
+                                        ->live(onBlur: true)
+                                        ->placeholder('https://www.youtube.com/watch?v=...')
+                                        ->maxLength(255)
+                                        ->rule('regex:/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]{11}.*$/')
+                                        ->validationMessages([
+                                            'regex' => 'Please enter a valid YouTube URL.',
+                                        ]),
 
                                         Select::make('category_id')
                                             ->label('Category')

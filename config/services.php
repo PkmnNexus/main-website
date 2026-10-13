@@ -44,4 +44,8 @@ return [
         'id' => env('GOOGLE_TAG_MANAGER_ID'),
     ],
 
+    'youtube' => [
+        'api_key' => env('YOUTUBE_API_KEY'),
+    ],
+
 ];

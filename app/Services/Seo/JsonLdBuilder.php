@@ -466,7 +466,20 @@ class JsonLdBuilder
             $videoObject['description'] = $description;
         }
 
-        $thumbnailUrl = $videoEmbed->thumbnailUrl();
+        // Use YouTube's publication date, not the article's publication date.
+        if ($article->youtube_published_at) {
+            $videoObject['uploadDate'] = $article->youtube_published_at
+                ->toIso8601String();
+        }
+
+        // YouTube returns duration in ISO 8601 format.
+        if (filled($article->youtube_duration)) {
+            $videoObject['duration'] = $article->youtube_duration;
+        }
+
+        // Prefer the stored YouTube thumbnail, with the existing fallback.
+        $thumbnailUrl = $article->youtube_thumbnail_url
+            ?: $videoEmbed->thumbnailUrl();
 
         if (filled($thumbnailUrl)) {
             $videoObject['thumbnailUrl'] = [$thumbnailUrl];
