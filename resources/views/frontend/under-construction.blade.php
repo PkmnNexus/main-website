@@ -25,7 +25,9 @@
         <section class="max-w-xl xl:max-w-2xl px-5 mx-auto mt-16 under-development">
 
             <figure>
+
                 <img src="{{ asset('images/PkmnNexus-Logo.svg') }}"  alt="PkmnNexus Logo" />
+                
             </figure>
 
             <h1 class="mt-5">Welcome to PkmnNexus!</h1>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" itemscope itemtype="https://schema.org/WebPage">
 <head>
     <x-analytics.google-tag-manager />
     <meta charset="UTF-8">
@@ -12,12 +12,12 @@
     @stack('styles')
 </head>
 <body class="min-h-screen flex flex-col">
-    
+
     <x-analytics.google-tag-manager-noscript />
-    
+
     @include('frontend.partials.navigation.main')
 
-    <main class="flex-1 page-transition" style="--main-background-image: url('{{ asset(\Illuminate\Support\Arr::random(config('appearance.main_background_images'))) }}')">
+    <main class="flex-1 page-transition" style="--main-background-image: url('{{ asset(\Illuminate\Support\Arr::random(config('appearance.main_background_images'))) }}')" itemprop="mainContentOfPage">
 
         {{ $slot }}
 

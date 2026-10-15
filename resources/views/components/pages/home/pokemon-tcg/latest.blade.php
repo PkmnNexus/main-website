@@ -18,13 +18,21 @@
                         fetchpriority="auto"
                     />
 
+                    @if(filled($article->video_url))
+
+                        <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-md font-black font-display uppercase rounded">Video</span>
+                    
+                    @endif
+
+                    <x-play-button :article="$article" />
+
                     <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 via-[var(--color-primary)]/40 to-transparent"></div>
 
                     <figcaption class="absolute bottom-0 p-6 text-white z-10">
 
                         <h3 class="text-lg md:text-xl !text-white">{{ $article->title }}</h3>
 
-                        <p class="text-xl md:text-default font-light mt-2 opacity-90">{{ $article->excerpt }}</p>
+                        <p class="text-xl !md:text-default font-light mt-2 opacity-90">{{ $article->excerpt }}</p>
 
                     </figcaption>
 

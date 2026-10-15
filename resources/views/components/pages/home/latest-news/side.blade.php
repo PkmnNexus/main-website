@@ -9,7 +9,7 @@
 
             <div class="group flex items-center gap-4 p-3 bg-white text-[var(--color-secondary)] rounded-lg transition hover:bg-[var(--color-primary)]">
 
-                <div class="w-20 h-20 overflow-hidden rounded-lg flex-shrink-0">
+                <div class="w-20 h-20 overflow-hidden rounded-lg flex-shrink-0 relative">
 
                     <x-pages.responsive-picture
                         :article="$article"
@@ -18,6 +18,8 @@
                         loading="eager"
                         fetchpriority="auto"
                     />
+
+                    <x-play-button :article="$article" width="w-8" height="h-8" svg-width="w-3.5" svg-height="h-3.5" />
 
                 </div>
 

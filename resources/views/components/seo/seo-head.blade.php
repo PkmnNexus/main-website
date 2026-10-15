@@ -1,4 +1,5 @@
 @if($seo)
+
     <title>{{ $seo['title'] }} | {{ config('app.name') }}</title>
     <meta name="description" content="{{ $seo['description'] }}">
     <meta name="keywords" content="{{ $seo['keywords'] }}">
@@ -15,10 +16,15 @@
     <meta property="og:image:alt" content="{{ $seo['og_title'] }}">
 
     @if($seo['og_type'] === 'article')
+
         <meta property="article:published_time" content="{{ $seo['published_time'] }}">
+
         @if($seo['published_time'] != $seo['modified_time'])
+
             <meta property="article:modified_time" content="{{ $seo['modified_time'] }}">
+
         @endif
+
     @endif
 
     <meta name="twitter:card" content="summary_large_image">
@@ -37,10 +43,13 @@
     <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}" />
     <meta name="theme-color" content="#ffffff">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+
 @endif
 
 @if(!empty($jsonLd))
+
     <script type="application/ld+json">
         {!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
+    
 @endif
