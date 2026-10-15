@@ -11,6 +11,7 @@ Route::middleware(['under-construction'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/articles', [ArticleController::class, 'index'])->name('article.index');
+    Route::get('/articles/category/video', [ArticleController::class, 'videos'])->name('articles.videos');
     Route::get('/articles/category/{category:slug}', [ArticleController::class, 'category'])->name('articles.category');
     Route::get('/articles/tag/{tag}', [ArticleController::class, 'tag'])->name('articles.tag');
     Route::get('/articles/author/{user:slug}', [ArticleController::class, 'author'])->name('articles.author');

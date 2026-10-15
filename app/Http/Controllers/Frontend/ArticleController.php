@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Page;
 use App\Models\User;
 
+use Carbon\CarbonInterval;
 use Spatie\Tags\Tag;
 
 class ArticleController extends Controller
@@ -57,7 +58,22 @@ class ArticleController extends Controller
 
         $pageSeo = $article;
 
-        return view('frontend.article.video', compact('article', 'pageSeo'));
+        $description = $article->meta_description ?: $article->excerpt;
+
+        $duration = filled($article->youtube_duration)
+            ? CarbonInterval::create($article->youtube_duration)->cascade()->format('%H:%I:%S')
+            : null;
+
+        $duration = $duration ? ltrim($duration, '0:') : null;
+
+        return view('frontend.article.video', compact('article', 'pageSeo', 'description', 'duration'));
+    }
+
+    public function videos(): View
+    {
+        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+
+        return view('frontend.article.index', compact('pageSeo'));
     }
 
     public function show(string $category, string $slug): View

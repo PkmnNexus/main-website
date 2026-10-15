@@ -468,8 +468,7 @@ class JsonLdBuilder
 
         // Use YouTube's publication date, not the article's publication date.
         if ($article->youtube_published_at) {
-            $videoObject['uploadDate'] = $article->youtube_published_at
-                ->toIso8601String();
+            $videoObject['uploadDate'] = $article->youtube_published_at->toIso8601String();
         }
 
         // YouTube returns duration in ISO 8601 format.

@@ -52,13 +52,13 @@
 
                     <x-pages.links.category-link
                         :category="$article->category"
-                        class="px-4 py-2 text-xs uppercase font-display bg-[var(--color-primary)] text-white rounded-sm transition hover:bg-[var(--color-secondary)]">
+                        class="px-4 py-2 text-xs uppercase font-display bg-[var(--color-primary)] text-white font-black rounded-sm transition hover:bg-[var(--color-secondary)]">
 
                         {{ $article->category->name }}
                         
                     </x-pages.links.category-link>
                     
-                    <x-pages.article-date :date="$article->published_at" class="px-4 py-2 text-xs uppercase font-display bg-[var(--color-primary)] text-white rounded-sm" />
+                    <x-pages.article-date :date="$article->published_at" class="px-4 py-2 text-xs font-black uppercase font-display bg-[var(--color-primary)] text-white rounded-sm" />
 
                 </div>
 

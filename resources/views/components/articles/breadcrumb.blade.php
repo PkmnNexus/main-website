@@ -14,7 +14,7 @@
                class="text-primary transition-colors hover:opacity-80">
 
                 <span itemprop="name">Home</span>
-            
+
             </a>
 
             <meta itemprop="position" content="1">
@@ -45,13 +45,27 @@
             itemscope
             itemtype="https://schema.org/ListItem">
 
-            <a href="{{ route('articles.category', $article->category) }}"
-               itemprop="item"
-               class="text-primary transition-colors hover:opacity-80">
+            @if (filled($article->video_url))
 
-                <span itemprop="name">{{ $article->category->name }}</span>
+                <a href="{{ route('articles.videos') }}"
+                   itemprop="item"
+                   class="text-primary transition-colors hover:opacity-80">
 
-            </a>
+                    <span itemprop="name">Video</span>
+
+                </a>
+
+            @else
+
+                <a href="{{ route('articles.category', $article->category) }}"
+                   itemprop="item"
+                   class="text-primary transition-colors hover:opacity-80">
+
+                    <span itemprop="name">{{ $article->category->name }}</span>
+
+                </a>
+
+            @endif
 
             <meta itemprop="position" content="3">
 

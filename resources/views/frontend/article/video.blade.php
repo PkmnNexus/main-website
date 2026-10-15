@@ -1,26 +1,77 @@
-
 <x-app :pageSeo="$pageSeo">
 
-    <article class="max-w-5xl mx-auto px-6 xl:px-0 py-12" aria-labelledby="video-heading">
+    <article class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-7xl mx-auto px-6 xl:px-0 py-12" aria-labelledby="video-heading" itemscope itemtype="https://schema.org/VideoObject">
 
         <x-pages.video-embed :article="$article" loading="eager" />
 
-        <header class="mt-6 rounded-xl bg-white shadow-md p-10">
+        <meta itemprop="name" content="{{ $article->title }}">
+        <meta itemprop="thumbnailUrl" content="{{ $article->youtube_thumbnail_url }}">
 
-            <h1 id="video-heading" class="text-3xl font-bold">{{ $article->title }}</h1>
+        @if($article->youtube_published_at)
 
-            @php
-                $description = $article->meta_description ?: $article->excerpt;
-            @endphp
+            <meta itemprop="uploadDate" content="{{ $article->youtube_published_at->toIso8601String() }}">
 
-            @if(filled($description))
+        @endif
 
-                <p class="mt-2 font-display text-secondary text-lg font-bold leading-snug tracking-wide md:text-xl">{{ $description }}</p>
+        @if(filled($article->youtube_duration))
 
-            @endif
+            <meta itemprop="duration" content="{{ $article->youtube_duration }}">
 
-        </header>
+        @endif
+
+        @if(filled($description))
+
+            <meta itemprop="description" content="{{ $description }}">
+
+        @endif
+
+        <x-articles.breadcrumb :article="$article" />
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
+
+            <section class="lg:col-span-3 rounded-xl bg-white shadow-md p-10">
+
+                <header>
+
+                    <h1 id="video-heading" class="text-3xl font-bold" itemprop="headline">{{ $article->title }}</h1>
+
+                    @if(filled($description))
+
+                        <p class="mt-2 font-display text-secondary text-lg font-bold leading-snug tracking-wide md:text-xl" itemprop="description">{{ $description }}</p>
+
+                    @endif
+
+                </header>
+
+                @if(filled($article->content))
+
+                    <div itemprop="articleBody" id="articleBody" class="prose prose-lg max-w-none mt-4">{!! $article->content !!}</div>
+
+                @endif
+
+                <div class="flex flex-wrap items-center justify-between gap-4 mt-4 border-t border-gray-200">
+
+                    <x-articles.tag-cloud :article="$article" :showHeading="false" />
+                    <x-articles.social-sharing :article="$article" />
+
+                </div>
+
+            </section>
+
+            <aside class="lg:col-span-1">
+
+                <x-articles.video-information :article="$article" :duration="$duration" />
+
+            </aside>
+
+        </div>
 
     </article>
+
+    <div class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-7xl mx-auto px-6 xl:px-0 pb-12">
+
+        <x-articles.latest-videos :article="$article" />
+
+    </div>
 
 </x-app>

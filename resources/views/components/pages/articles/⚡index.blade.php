@@ -16,12 +16,14 @@ new class extends Component {
     public ?Category $category = null;
     public ?User $user = null;
     public ?string $tag = null;
+    public bool $videosOnly = false;
 
     public function mount(?Category $category = null, ?User $user = null, ?string $tag = null): void
     {
         $this->category = $category;
         $this->user = $user;
         $this->tag = $tag;
+        $this->videosOnly = request()->routeIs('articles.videos');
     }
 
     public function updatingPage()
@@ -31,7 +33,7 @@ new class extends Component {
 
     public function with(): array
     {
-        $title = 'Articles';
+        $title = $this->videosOnly ? 'Videos' : 'Articles';
 
         if ($this->category) {
             $title = 'Category: ' . $this->category->name;
@@ -48,6 +50,12 @@ new class extends Component {
         return [
             'articles' => Article::query()
                 ->published()
+                ->when(
+                    $this->videosOnly,
+                    fn ($query) => $query
+                        ->whereNotNull('video_url')
+                        ->where('video_url', '!=', '')
+                )
                 ->when(
                     $this->category,
                     fn ($query) => $query->where('category_id', $this->category->id)
@@ -107,6 +115,12 @@ new class extends Component {
                                     fetchpriority="high"
                                 />
 
+                                <div class="absolute top-3 left-3 z-10 px-3 py-2 text-xs uppercase font-display font-black text-white rounded-sm bg-[var(--color-primary)]">
+
+                                    <x-pages.article-date :date="$article->published_at" />
+
+                                </div>
+
                                 <div class="absolute top-3 right-3 z-10 px-3 py-2 text-xs uppercase font-display font-black text-white rounded-sm bg-[var(--color-primary)]">
 
                                     @if (filled($article->video_url))
@@ -118,7 +132,7 @@ new class extends Component {
                                         {{ $article->category->name }}
 
                                     @endif
-                                    
+
                                 </div>
 
                                 @if (filled($article->video_url))
@@ -140,8 +154,6 @@ new class extends Component {
                             </div>
 
                             <div class="p-6">
-
-                                <x-pages.article-date :date="$article->published_at" class="text-sm text-[var(--color-primary)] mb-2 block" />
 
                                 <h3 class="text-xl text-[var(--color-primary)] mb-2" itemprop="headline">{{ $article->title }}</h3>
 
