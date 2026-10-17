@@ -7,7 +7,7 @@
         <meta itemprop="name" content="More Videos">
         <meta itemprop="numberOfItems" content="{{ $videos->count() }}">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 
             @foreach($videos as $video)
 

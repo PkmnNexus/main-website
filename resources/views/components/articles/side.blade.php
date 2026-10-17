@@ -1,1 +1,0 @@
-<x-articles.related-content :article="$article" />

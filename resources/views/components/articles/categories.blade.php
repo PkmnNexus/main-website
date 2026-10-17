@@ -12,7 +12,7 @@
 
         <nav aria-label="Article categories">
 
-            <ul class="mt-4 divide-y divide-[#F0F0F0]">
+            <ul class="mt-4 divide-y divide-[#F0F0F0] last:[&>li]:pb-0">
 
                 @foreach($categories as $category)
 
@@ -41,7 +41,7 @@
                                  aria-hidden="true">
 
                                 <path d="m9 18 6-6-6-6"/>
-                                
+
                             </svg>
 
                         </a>

@@ -1,7 +1,6 @@
-
 @if($articles->isNotEmpty())
 
-    <section class="news-side mb-6 flex flex-col gap-3 rounded-xl bg-[#FAFAFA] p-3 pt-6 shadow-md"
+    <section class="news-side mb-6 flex flex-col gap-3 self-start rounded-xl bg-[#FAFAFA] p-3 pt-6 shadow-md"
              aria-labelledby="most-read-today-heading"
              itemscope
              itemtype="https://schema.org/ItemList">

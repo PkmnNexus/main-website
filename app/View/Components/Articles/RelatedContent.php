@@ -20,7 +20,7 @@ class RelatedContent extends Component
             ->whereKeyNot($this->article->getKey())
             ->with(['category', 'heroImage.media'])
             ->latest('published_at')
-            ->take(5)
+            ->take(6)
             ->get();
     }
 

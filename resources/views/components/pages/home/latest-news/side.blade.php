@@ -23,7 +23,7 @@
 
                 </div>
 
-                <h4 class="text-xl md:text-lg lg:text-default px-2 py-2 leading-tight self-start group-hover:!text-white"" itemprop="headline">{{ $article->title }}</h4>
+                <h4 class="md:text-lg lg:text-default px-2 py-2 leading-tight self-start group-hover:!text-white"" itemprop="headline">{{ $article->title }}</h4>
 
             </div>
 

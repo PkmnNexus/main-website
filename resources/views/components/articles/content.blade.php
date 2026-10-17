@@ -1,4 +1,4 @@
-<section itemprop="articleBody">
+<section itemprop="articleBody" class="mb-6">
 
     <h1 itemprop="headline" class="font-display !text-primary !normal-case font-black text-3xl leading-tight tracking-tight md:text-3xl lg:text-4xl xl:text-5xl">
 

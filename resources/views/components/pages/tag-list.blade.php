@@ -1,6 +1,10 @@
+@props([
+    'showBorder' => true,
+])
+
 @if($tags->isNotEmpty())
 
-    <ul class="flex flex-wrap p-0 m-0 list-none"
+    <ul class="flex flex-wrap p-0 m-0 list-none {{ $showBorder ? 'border-t border-gray-200 pt-6' : '' }}"
         itemscope
         itemtype="https://schema.org/ItemList">
 

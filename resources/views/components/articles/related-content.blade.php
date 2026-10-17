@@ -1,6 +1,7 @@
 @if($relatedArticles->isNotEmpty())
 
-    <section aria-labelledby="related-content-heading"
+    <section class="mb-6"
+             aria-labelledby="related-content-heading"
              itemscope
              itemtype="https://schema.org/ItemList">
 
@@ -8,43 +9,42 @@
 
             <h2 class="font-display !text-2xl font-bold text-[var(--color-primary)]">Related articles</h2>
 
-            @foreach($relatedArticles as $article)
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 gap-4">
 
-                <article class="group mb-3"
-                         itemscope
-                         itemtype="https://schema.org/Article"
-                         itemprop="itemListElement">
+                @foreach($relatedArticles as $article)
 
-                    <x-pages.links.article-link :article="$article"
-                                                class="block">
+                    <article class="group"
+                             itemscope
+                             itemtype="https://schema.org/Article"
+                             itemprop="itemListElement">
 
-                        <figure class="relative h-40 overflow-hidden rounded-lg transition-all duration-300 group-hover:shadow-xl">
+                        <x-pages.links.article-link :article="$article"
+                                                    class="block">
 
-                            <x-pages.responsive-picture :article="$article"
-                                                        sizes="(min-width: 1024px) 300px, 100vw"
-                                                        class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                                                        loading="lazy"/>
+                            <figure class="relative h-40 overflow-hidden rounded-lg transition-all duration-300 group-hover:shadow-xl">
 
-                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 via-[var(--color-primary)]/40 to-transparent"></div>
+                                <x-pages.responsive-picture :article="$article"
+                                                            sizes="(min-width: 1280px) 300px, (min-width: 1024px) 50vw, 100vw"
+                                                            class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                                            loading="lazy"/>
 
-                            <figcaption class="absolute inset-x-0 bottom-0 z-10 p-4 text-white">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 via-[var(--color-primary)]/40 to-transparent"></div>
 
-                                <h3 class="line-clamp-2 text-lg leading-6 !text-white"
-                                    itemprop="headline">
+                                <figcaption class="absolute inset-x-0 bottom-0 z-10 p-4 text-white">
 
-                                    {{ $article->title }}
+                                    <h3 class="line-clamp-2 text-lg leading-6 !text-white" itemprop="headline">{{ $article->title }}</h3>
 
-                                </h3>
+                                </figcaption>
 
-                            </figcaption>
+                            </figure>
 
-                        </figure>
+                        </x-pages.links.article-link>
 
-                    </x-pages.links.article-link>
+                    </article>
 
-                </article>
+                @endforeach
 
-            @endforeach
+            </div>
 
         </div>
 

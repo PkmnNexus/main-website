@@ -9,9 +9,9 @@
 
         <x-articles.breadcrumb :article="$article" />
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-8 mt-8">
 
-            <div class="lg:col-span-3 rounded-xl bg-white shadow-md p-10">
+            <div class="xl:col-span-3 rounded-xl bg-white shadow-md p-7 md:p-10">
 
                 <x-articles.content :article="$article" />
 
@@ -23,13 +23,17 @@
 
             </div>
 
-            <aside class="lg:col-span-1">
+            <aside class="xl:col-span-1">
 
-                <x-articles.side :article="$article" />
+                <x-articles.related-content :article="$article" />
 
-                <x-articles.most-read-today />
+                <div class="grid grid-cols-1 lg:grid-cols-2 lg:mt-4 xl:mt-0 xl:grid-cols-1 gap-2 lg:gap-6 xl:gap-0">
 
-                <x-articles.categories />
+                    <x-articles.most-read-today />
+
+                    <x-articles.categories />
+
+                </div>
 
             </aside>
 

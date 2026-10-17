@@ -3,10 +3,14 @@
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ArticleController;
 use App\Http\Controllers\Frontend\PageController;
+use App\Http\Controllers\Frontend\SitemapController;
 
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['under-construction'])->group(function () {
+
+    Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.xml');
+    Route::get('/sitemap', [SitemapController::class, 'show'])->name('sitemap');
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
 

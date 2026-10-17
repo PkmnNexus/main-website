@@ -27,7 +27,7 @@ function initSwiper() {
         slidesPerView: 1.2,
         centeredSlides: true,
         spaceBetween: 16,
-        loop: false,
+        loop: true,
 
         autoplay: {
             delay: 3000,
