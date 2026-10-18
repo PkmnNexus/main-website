@@ -13,8 +13,19 @@ return [
             'label' => 'Articles',
             'route' => 'article.index',
             'active_routes' => [
-                'article.*',
-                'articles.*',
+                'article.index',
+                'articles.category',
+                'articles.tag',
+                'articles.author',
+                'article.show',
+            ],
+        ],
+        [
+            'label' => 'Videos',
+            'route' => 'articles.videos',
+            'active_routes' => [
+                'articles.videos',
+                'article.video',
             ],
         ],
     ],
@@ -73,7 +84,7 @@ return [
         ],
         [
             'label' => 'Sitemap',
-            'route' => 'home'
+            'route' => 'sitemap'
         ]
     ]
 ];

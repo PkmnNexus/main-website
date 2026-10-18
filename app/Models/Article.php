@@ -19,6 +19,7 @@ use App\Enums\ArticleStatus;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Article extends Model implements Seoable, HasMedia
 {
@@ -199,6 +200,14 @@ class Article extends Model implements Seoable, HasMedia
     public function dailyViews(): HasMany
     {
         return $this->hasMany(ArticleDailyView::class);
+    }
+
+    /**
+     * Get the sources associated with the article.
+     */
+    public function sources(): BelongsToMany
+    {
+        return $this->belongsToMany(Source::class);
     }
 
     /*

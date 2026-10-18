@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ArticleDailyView extends Model
 {
-    /** @use HasFactory<\Database\Factories\ArticleDailyViewFactory> */
     use HasFactory;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Eloquent
+    |--------------------------------------------------------------------------
+    */
+
+    protected $guarded = [];
 
     protected $fillable = [
         'article_id',
@@ -16,6 +24,17 @@ class ArticleDailyView extends Model
         'views',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Casts
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the model's attribute casts.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -24,6 +43,15 @@ class ArticleDailyView extends Model
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the article that belongs to the daily view record.
+     */
     public function article(): BelongsTo
     {
         return $this->belongsTo(Article::class);

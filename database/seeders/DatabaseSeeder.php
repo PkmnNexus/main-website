@@ -9,9 +9,6 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $this->call([
@@ -20,12 +17,18 @@ class DatabaseSeeder extends Seeder
             Admin\UserSeeder::class,
 
             PageSeeder::class,
-
             CategorySeeder::class,
             MediaFolderSeeder::class,
-            AssetSeeder::class,
-            ArticleSeeder::class,
-            ArticleDailyViewSeeder::class,
         ]);
+
+        if (app()->isLocal()) {
+            $this->call([
+                SourceSeeder::class,
+
+                AssetSeeder::class,
+                ArticleSeeder::class,
+                ArticleDailyViewSeeder::class,
+            ]);
+        }
     }
 }

@@ -21,6 +21,8 @@
 
                 <x-articles.tag-cloud :article="$article" />
 
+                <x-articles.sources :article="$article" />
+
             </div>
 
             <aside class="xl:col-span-1">

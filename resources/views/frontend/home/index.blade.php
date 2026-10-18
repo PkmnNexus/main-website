@@ -1,5 +1,7 @@
 <x-app :pageSeo="$pageSeo">
 
+    <x-breaking-news />
+    
     <livewire:pages.home.featured-articles />
 
     <livewire:pages.home.latest-video />

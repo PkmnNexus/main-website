@@ -17,27 +17,19 @@ class CategorySeeder extends Seeder
         $categories = [
             // Pokémon Core
             [
-                'name' => 'Pokémon News',
+                'name' => 'News',
                 'description' => 'General Pokémon news and announcements.',
             ],
             [
-                'name' => 'Pokémon Games',
+                'name' => 'Games',
                 'description' => 'News, features, and updates about Pokémon games.',
             ],
             [
-                'name' => 'Pokémon Rumors',
-                'description' => 'Rumors, speculation, and unconfirmed Pokémon information.',
-            ],
-            [
-                'name' => 'Pokémon Guides',
-                'description' => 'Guides, tips, and helpful information for Pokémon games and content.',
-            ],
-            [
-                'name' => 'Pokémon Events',
+                'name' => 'Pokémon Championship',
                 'description' => 'Coverage of Pokémon events, tournaments, and special occasions.',
             ],
             [
-                'name' => 'Pokémon Updates',
+                'name' => 'Pokémon Day',
                 'description' => 'Updates, patches, announcements, and changes across Pokémon games and services.',
             ],
 
@@ -58,23 +50,13 @@ class CategorySeeder extends Seeder
                 'name' => 'Pokémon Anime',
                 'description' => 'News, episodes, characters, and updates about the Pokémon anime.',
             ],
-
-            // Nintendo ecosystem
             [
-                'name' => 'Nintendo Switch',
-                'description' => 'News and updates about Pokémon and Nintendo games on Nintendo Switch.',
+                'name' => 'Pokémon Sleep',
+                'description' => 'News, episodes, characters, and updates about the Pokémon anime.',
             ],
             [
-                'name' => 'Nintendo Switch 2',
-                'description' => 'News, updates, and information about Pokémon and Nintendo games on Nintendo Switch 2.',
-            ],
-            [
-                'name' => 'Nintendo News',
-                'description' => 'News and announcements from Nintendo relevant to Pokémon and its ecosystem.',
-            ],
-            [
-                'name' => 'Nintendo Games',
-                'description' => 'News and information about Nintendo games and releases.',
+                'name' => 'Pokémon Center',
+                'description' => 'News, episodes, characters, and updates about the Pokémon anime.',
             ],
 
             // Content types (SEO structuur)
@@ -83,24 +65,8 @@ class CategorySeeder extends Seeder
                 'description' => 'Reviews and evaluations of Pokémon games, products, cards, and related content.',
             ],
             [
-                'name' => 'Leaks',
+                'name' => 'Rumours and Leaks',
                 'description' => 'Reported leaks and leaked information related to Pokémon and Nintendo.',
-            ],
-            [
-                'name' => 'Tier Lists',
-                'description' => 'Rankings and tier lists for Pokémon, cards, characters, and gameplay elements.',
-            ],
-            [
-                'name' => 'How To Guides',
-                'description' => 'Step-by-step guides and instructions for Pokémon games and related content.',
-            ],
-            [
-                'name' => 'Opinion',
-                'description' => 'Opinion and commentary on Pokémon, Nintendo, and related topics.',
-            ],
-            [
-                'name' => 'News',
-                'description' => 'The latest news and developments from the Pokémon and Nintendo community.',
             ],
             [
                 'name' => 'Deep Dive',
@@ -109,16 +75,6 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Card Gallery',
                 'description' => 'Card galleries featuring Pokémon Trading Card Game cards and collections.',
-            ],
-
-            // Community / meta
-            [
-                'name' => 'Esports',
-                'description' => 'News and coverage of Pokémon esports, competitions, and professional events.',
-            ],
-            [
-                'name' => 'Competitive Play',
-                'description' => 'Competitive Pokémon strategies, tournaments, formats, and gameplay.',
             ],
         ];
 

@@ -1,32 +1,32 @@
 <?php
+
 namespace App\Filament\Resources\Articles\Schemas;
 
-use Filament\Schemas\Components\Fieldset;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\RichEditor;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\RichEditor\RichEditorTool;
-use Filament\Support\Icons\Heroicon;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Facades\Filament;
-
+use App\Enums\ArticleStatus;
 use App\Filament\Forms\Components\Media\AssetPicker;
-use App\Services\ArticleMetadataGenerator;
+use App\Models\Source;
 use App\Services\ArticleKeywordGenerator;
+use App\Services\ArticleMetadataGenerator;
 use App\Services\ArticleSummaryGenerator;
-
+use Filament\Actions\Action;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\RichEditorTool;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use App\Enums\ArticleStatus;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class ArticleForm
 {
@@ -114,50 +114,50 @@ class ArticleForm
                                     ),
 
                                 RichEditor::make('content')
-                                ->label('Content')
-                                ->required(fn (Get $get): bool => blank($get('video_url')))
-                                ->columnSpanFull()
-                                ->tools([
-                                    RichEditorTool::make('assetBrowser')
-                                        ->label('Asset browser')
-                                        ->icon(Heroicon::Photo)
-                                        ->jsHandler(<<<'JS'
-                                            (() => {
-                                                const editor = $getEditor();
+                                    ->label('Content')
+                                    ->required(fn (Get $get): bool => blank($get('video_url')))
+                                    ->columnSpanFull()
+                                    ->tools([
+                                        RichEditorTool::make('assetBrowser')
+                                            ->label('Asset browser')
+                                            ->icon(Heroicon::Photo)
+                                            ->jsHandler(<<<'JS'
+                                                (() => {
+                                                    const editor = $getEditor();
 
-                                                if (! editor) {
-                                                    return;
-                                                }
+                                                    if (! editor) {
+                                                        return;
+                                                    }
 
-                                                window.__pkmNexusAssetEditor = editor;
+                                                    window.__pkmNexusAssetEditor = editor;
 
-                                                window.__pkmNexusAssetPosition = {
-                                                    from: editor.state.selection.from,
-                                                    to: editor.state.selection.to,
-                                                };
+                                                    window.__pkmNexusAssetPosition = {
+                                                        from: editor.state.selection.from,
+                                                        to: editor.state.selection.to,
+                                                    };
 
-                                                window.dispatchEvent(new CustomEvent('open-modal', {
-                                                    detail: { id: 'asset-browser' },
-                                                }));
-                                            })()
-                                        JS),
-                                ])
-                                ->toolbarButtons([
-                                    'bold',
-                                    'italic',
-                                    'underline',
-                                    'strike',
-                                    'link',
-                                    'h2',
-                                    'h3',
-                                    'bulletList',
-                                    'orderedList',
-                                    'blockquote',
-                                    'codeBlock',
-                                    'undo',
-                                    'redo',
-                                    'assetBrowser',
-                                ]),
+                                                    window.dispatchEvent(new CustomEvent('open-modal', {
+                                                        detail: { id: 'asset-browser' },
+                                                    }));
+                                                })()
+                                            JS),
+                                    ])
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'strike',
+                                        'link',
+                                        'h2',
+                                        'h3',
+                                        'bulletList',
+                                        'orderedList',
+                                        'blockquote',
+                                        'codeBlock',
+                                        'undo',
+                                        'redo',
+                                        'assetBrowser',
+                                    ]),
 
                                 TagsInput::make('tags')
                                     ->label('Tags')
@@ -200,16 +200,16 @@ class ArticleForm
                                 Section::make('Publishing')
                                     ->schema([
                                         TextInput::make('video_url')
-                                        ->label('YouTube URL')
-                                        ->url()
-                                        ->nullable()
-                                        ->live(onBlur: true)
-                                        ->placeholder('https://www.youtube.com/watch?v=...')
-                                        ->maxLength(255)
-                                        ->rule('regex:/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]{11}.*$/')
-                                        ->validationMessages([
-                                            'regex' => 'Please enter a valid YouTube URL.',
-                                        ]),
+                                            ->label('YouTube URL')
+                                            ->url()
+                                            ->nullable()
+                                            ->live(onBlur: true)
+                                            ->placeholder('https://www.youtube.com/watch?v=...')
+                                            ->maxLength(255)
+                                            ->rule('regex:/^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)[A-Za-z0-9_-]{11}.*$/')
+                                            ->validationMessages([
+                                                'regex' => 'Please enter a valid YouTube URL.',
+                                            ]),
 
                                         Select::make('category_id')
                                             ->label('Category')
@@ -270,6 +270,48 @@ class ArticleForm
                             ]),
                     ]),
 
+                Section::make('Sources')
+                    ->schema([
+                        Select::make('sources')
+                            ->label('Sources')
+                            ->relationship(titleAttribute: 'name')
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255),
+
+                                TextInput::make('url')
+                                    ->label('URL')
+                                    ->url()
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->createOptionUsing(function (array $data): int {
+                                $baseSlug = Str::slug($data['name']);
+                                $slug = $baseSlug;
+                                $suffix = 2;
+
+                                while (Source::query()->where('slug', $slug)->exists()) {
+                                    $slug = $baseSlug . '-' . $suffix++;
+                                }
+
+                                $source = Source::query()->create([
+                                    'name' => $data['name'],
+                                    'slug' => $slug,
+                                    'url' => $data['url'],
+                                ]);
+
+                                return (int) $source->getKey();
+                            })
+                            ->helperText('Search for existing sources or create a new one.'),
+                    ])
+                    ->columnSpanFull()
+                    ->collapsible(),
+
                 Section::make('SEO')
                     ->schema([
                         TextInput::make('meta_title')
@@ -328,40 +370,40 @@ class ArticleForm
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
 
-                            TagsInput::make('meta_keywords')
-                                ->label('Meta keywords')
-                                ->placeholder('Type a keyword and press Enter')
-                                ->separator(',')
-                                ->helperText('Press Enter after each keyword.')
-                                ->hintAction(
-                                    Action::make('generateKeywords')
-                                        ->label('Generate with AI')
-                                        ->icon(Heroicon::Sparkles)
-                                        ->action(function (
-                                            Get $get,
-                                            Set $set,
-                                            ArticleKeywordGenerator $generator,
-                                        ) {
-                                            $title = $get('title') ?? '';
-                                            $excerpt = $get('excerpt') ?? '';
-                                            $content = $get('content') ?? '';
+                        TagsInput::make('meta_keywords')
+                            ->label('Meta keywords')
+                            ->placeholder('Type a keyword and press Enter')
+                            ->separator(',')
+                            ->helperText('Press Enter after each keyword.')
+                            ->hintAction(
+                                Action::make('generateKeywords')
+                                    ->label('Generate with AI')
+                                    ->icon(Heroicon::Sparkles)
+                                    ->action(function (
+                                        Get $get,
+                                        Set $set,
+                                        ArticleKeywordGenerator $generator,
+                                    ) {
+                                        $title = $get('title') ?? '';
+                                        $excerpt = $get('excerpt') ?? '';
+                                        $content = $get('content') ?? '';
 
-                                            if (blank($title) && blank($excerpt) && blank($content)) {
-                                                throw new \RuntimeException(
-                                                    'First fill in the article information.'
-                                                );
-                                            }
-
-                                            $keywords = $generator->generate(
-                                                title: $title,
-                                                excerpt: $excerpt,
-                                                content: strip_tags($content),
+                                        if (blank($title) && blank($excerpt) && blank($content)) {
+                                            throw new \RuntimeException(
+                                                'First fill in the article information.'
                                             );
+                                        }
 
-                                            $set('meta_keywords', $keywords);
-                                        })
-                                )
-                                ->columnSpanFull(),
+                                        $keywords = $generator->generate(
+                                            title: $title,
+                                            excerpt: $excerpt,
+                                            content: strip_tags($content),
+                                        );
+
+                                        $set('meta_keywords', $keywords);
+                                    })
+                            )
+                            ->columnSpanFull(),
 
                         TextInput::make('canonical')
                             ->label('Canonical URL')
