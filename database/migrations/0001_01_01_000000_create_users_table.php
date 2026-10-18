@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('username')->unique();
+            $table->string('display_name')->unique();
             $table->string('slug')->unique();
             $table->text('bio')->nullable();
 

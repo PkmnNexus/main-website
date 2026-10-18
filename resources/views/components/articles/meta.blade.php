@@ -5,7 +5,7 @@
         <a href="{{ route('articles.author', $article->user) }}"
            class="px-4 py-2 text-xs font-bold uppercase bg-[var(--color-primary)] font-display text-white transition hover:bg-[var(--color-secondary)] rounded-sm inline-block">
 
-            {{ $article->user->username }}
+            {{ $article->user->display_name }}
             
         </a>
 

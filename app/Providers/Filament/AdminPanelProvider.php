@@ -19,6 +19,9 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Pages\Auth\EditProfile;
+use Filament\Navigation\NavigationItem;
+use Filament\Support\Icons\Heroicon;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('favicon/favicon.ico'))
             ->brandLogo(asset('images/PkmnNexus-Logo.svg'))
             ->login()
+            ->profile(EditProfile::class, isSimple: false)
             ->colors([
                 'primary' => Color::hex('#5541F0'),
             ])
@@ -39,6 +43,14 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Profile')
+                    ->url(fn (): string => EditProfile::getUrl())
+                    ->icon(Heroicon::OutlinedUserCircle)
+                    ->group('Users')
+                    ->sort(1)
+                    ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.auth.profile')),
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')

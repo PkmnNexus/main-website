@@ -9,7 +9,7 @@
 
             <a href="{{ route('articles.author', $article->user) }}" class="text-[var(--color-primary)] transition hover:text-[var(--color-secondary)]">
 
-                {{ $article->user->username }}
+                {{ $article->user->display_name }}
 
             </a>
 

@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => env('ADMIN_NAME'),
-                'username' => 'Mr. Pokémon',
+                'display_name' => 'Mr. Pokémon',
                 'slug' => 'mr-pokemon',
                 'bio' => 'PKMN Nexus administrator.',
                 'password' => Hash::make(env('ADMIN_PASSWORD')),
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 ],
                 [
                     'name' => 'Editor Test',
-                    'username' => 'Editor Test',
+                    'display_name' => 'Editor Test',
                     'slug' => 'editor-test',
                     'bio' => 'PKMN Nexus editor.',
                     'password' => Hash::make($editorPassword),
@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
                 ],
                 [
                     'name' => 'Author Test',
-                    'username' => 'Author Test',
+                    'display_name' => 'Author Test',
                     'slug' => 'author-test',
                     'bio' => 'PKMN Nexus author.',
                     'password' => Hash::make($authorPassword),

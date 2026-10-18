@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 #[Fillable([
     'name',
-    'username',
+    'display_name',
     'slug',
     'bio',
     'email',
