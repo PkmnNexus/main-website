@@ -18,6 +18,11 @@ use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Image\Enums\Fit;
+use Filament\Models\Contracts\HasAvatar;
 
 /**
  * @property int $id
@@ -61,10 +66,10 @@ use Spatie\Permission\Traits\HasRoles;
     'two_factor_recovery_codes',
     'remember_token',
 ])]
-class User extends Authenticatable implements PasskeyUser, FilamentUser
+class User extends Authenticatable implements PasskeyUser, FilamentUser, HasMedia, HasAvatar
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable, HasRoles;
+    use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable, HasRoles, InteractsWithMedia;
 
     /*
     |--------------------------------------------------------------------------
@@ -172,6 +177,20 @@ class User extends Authenticatable implements PasskeyUser, FilamentUser
     }
 
     /**
+     * Get the user's Filament avatar URL.
+     */
+    public function getFilamentAvatarUrl(): ?string
+    {
+        $media = $this->getFirstMedia('user_avatar');
+
+        if (! $media) {
+            return null;
+        }
+
+        return $media->getUrl('avatar-webp');
+    }
+
+    /**
      * Determine whether the user is currently suspended.
      */
     public function isSuspended(): bool
@@ -199,5 +218,41 @@ class User extends Authenticatable implements PasskeyUser, FilamentUser
         return $this->is_active
             && ! $this->isSuspended()
             && $this->hasAnyRole(['author', 'editor', 'admin']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Media Collections
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Register the user's media collections.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('user_avatar')
+            ->singleFile();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Media Conversions
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Register the user's media conversions.
+     */
+    public function registerMediaConversions(
+        ?Media $media = null
+    ): void {
+        $this
+            ->addMediaConversion('avatar-webp')
+            ->fit(Fit::Crop, 250, 250)
+            ->format('webp')
+            ->performOnCollections('user_avatar')
+            ->nonQueued();
     }
 }

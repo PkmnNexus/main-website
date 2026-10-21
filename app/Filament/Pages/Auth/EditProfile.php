@@ -4,9 +4,10 @@ namespace App\Filament\Pages\Auth;
 
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Validation\Rules\Password;
 use UnitEnum;
 use BackedEnum;
@@ -36,6 +37,21 @@ class EditProfile extends BaseEditProfile
                     ->label('Display name')
                     ->maxLength(255)
                     ->helperText('This name is displayed publicly with your articles.'),
+
+                Textarea::make('bio')
+                    ->label('Bio')
+                    ->rows(4)
+                    ->maxLength(1000)
+                    ->columnSpanFull(),
+
+                SpatieMediaLibraryFileUpload::make('avatar')
+                    ->label('Avatar')
+                    ->collection('user_avatar')
+                    ->conversion('avatar-webp')
+                    ->image()
+                    ->imageEditor()
+                    ->maxSize(2048)
+                    ->helperText('Upload a profile picture (maximum 2 MB).'),
 
                 $this->getEmailFormComponent(),
 
