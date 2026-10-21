@@ -6,6 +6,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -25,6 +26,10 @@ class UserForm
                         Placeholder::make('display_name')
                             ->label('Display name')
                             ->content(fn ($record): string => $record?->display_name ?? '—'),
+
+                        Placeholder::make('flair')
+                            ->label('Flair')
+                            ->content(fn ($record): string => $record?->flair ?? '—'),
 
                         Placeholder::make('slug')
                             ->label('Slug')
@@ -46,6 +51,18 @@ class UserForm
                     ->columns(2)
                     ->columnSpanFull(),
 
+                Section::make('Community flair')
+                    ->description('Give this user a special flair that appears next to their name in comments.')
+                    ->schema([
+                        TextInput::make('flair')
+                            ->label('Flair')
+                            ->placeholder('e.g. Shiny Hunter')
+                            ->maxLength(50)
+                            ->nullable()
+                            ->helperText('Optional. Leave empty if this user has no flair.'),
+                    ])
+                    ->columnSpanFull(),
+
                 Section::make('Roles & permissions')
                     ->schema([
                         Select::make('roles')
@@ -57,7 +74,9 @@ class UserForm
                                     ->where('guard_name', 'web')
                                     ->orderBy('name'),
                             )
-                            ->multiple()
+                            ->getOptionLabelFromRecordUsing(
+                                fn ($record): string => ucfirst($record->name),
+                            )
                             ->searchable()
                             ->preload()
                             ->required()

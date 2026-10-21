@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('display_name')->unique();
+            $table->string('flair')->unique()->nullable();
             $table->string('slug')->unique();
             $table->text('bio')->nullable();
 

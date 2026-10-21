@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('favicon/favicon.ico'))
             ->brandLogo(asset('images/PkmnNexus-Logo.svg'))
             ->login()
+            ->databaseNotifications()
             ->profile(EditProfile::class, isSimple: false)
             ->colors([
                 'primary' => Color::hex('#5541F0'),

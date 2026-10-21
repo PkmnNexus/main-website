@@ -49,6 +49,7 @@ use Filament\Models\Contracts\HasAvatar;
 #[Fillable([
     'name',
     'display_name',
+    'flair',
     'slug',
     'bio',
     'email',
