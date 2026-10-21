@@ -32,6 +32,11 @@ class ArticleForm
 {
     public static function configure(Schema $schema): Schema
     {
+        $user = Filament::auth()->user();
+        $isAuthor = $user?->hasRole('author') ?? false;
+        $canManagePublishing = $user?->hasAnyRole(['admin', 'editor']) ?? false;
+        $canCreateSources = $canManagePublishing;
+
         return $schema
             ->components([
                 Grid::make([
@@ -223,8 +228,12 @@ class ArticleForm
                                             ->relationship(
                                                 name: 'user',
                                                 titleAttribute: 'name',
-                                                modifyQueryUsing: function (Builder $query) {
-                                                    if (Filament::auth()->user()->hasRole('author')) {
+                                                modifyQueryUsing: function (Builder $query) use ($isAuthor) {
+                                                    $query->whereHas('roles', function (Builder $query) {
+                                                        $query->whereIn('name', ['admin', 'editor', 'author']);
+                                                    });
+
+                                                    if ($isAuthor) {
                                                         $query->whereKey(Filament::auth()->id());
                                                     }
                                                 },
@@ -232,7 +241,7 @@ class ArticleForm
                                             ->searchable()
                                             ->preload()
                                             ->required()
-                                            ->hidden(fn () => Filament::auth()->user()->hasRole('author'))
+                                            ->hidden(fn () => $isAuthor)
                                             ->dehydrated(),
 
                                         Select::make('status')
@@ -240,27 +249,32 @@ class ArticleForm
                                             ->options(ArticleStatus::class)
                                             ->default(ArticleStatus::Draft)
                                             ->required()
-                                            ->hidden(fn () => auth()->user()->hasRole('author'))
+                                            ->hidden(fn () => ! $canManagePublishing)
                                             ->dehydrated(),
 
                                         DateTimePicker::make('published_at')
                                             ->label('Published at')
-                                            ->seconds(false),
+                                            ->seconds(false)
+                                            ->visible(fn () => $canManagePublishing),
 
                                         DateTimePicker::make('expires_at')
                                             ->label('Expires at')
                                             ->seconds(false)
                                             ->helperText('Leave empty to keep this article online indefinitely.')
-                                            ->rule('after:published_at'),
+                                            ->rule('after:published_at')
+                                            ->visible(fn () => $canManagePublishing),
 
                                         Toggle::make('is_breaking')
-                                            ->label('Breaking News'),
+                                            ->label('Breaking News')
+                                            ->visible(fn () => $canManagePublishing),
 
                                         Toggle::make('is_featured')
-                                            ->label('Featured'),
+                                            ->label('Featured')
+                                            ->visible(fn () => $canManagePublishing),
 
                                         Toggle::make('is_pokemon_go_featured')
-                                            ->label('Pokémon GO Featured'),
+                                            ->label('Pokémon GO Featured')
+                                            ->visible(fn () => $canManagePublishing),
                                     ])
                                     ->collapsible(),
                             ])
@@ -278,7 +292,7 @@ class ArticleForm
                             ->multiple()
                             ->searchable()
                             ->preload()
-                            ->createOptionForm([
+                            ->createOptionForm($canCreateSources ? [
                                 TextInput::make('name')
                                     ->label('Name')
                                     ->required()
@@ -289,8 +303,13 @@ class ArticleForm
                                     ->url()
                                     ->required()
                                     ->maxLength(255),
-                            ])
+                            ] : [])
                             ->createOptionUsing(function (array $data): int {
+                                abort_unless(
+                                    Filament::auth()->user()?->hasAnyRole(['admin', 'editor']),
+                                    403,
+                                );
+
                                 $baseSlug = Str::slug($data['name']);
                                 $slug = $baseSlug;
                                 $suffix = 2;

@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
+
             $table->id();
 
             $table->string('name');
@@ -25,8 +26,16 @@ return new class extends Migration
 
             $table->boolean('is_active')->default(true);
 
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_activity_at')->nullable();
+
+            $table->timestamp('suspended_at')->nullable();
+            $table->timestamp('suspended_until')->nullable();
+            $table->text('suspended_reason')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
+            
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

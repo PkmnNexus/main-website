@@ -52,7 +52,6 @@ class AdminPanelProvider extends PanelProvider
                     ->sort(1)
                     ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.auth.profile')),
             ])
-            ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,

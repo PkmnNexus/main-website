@@ -98,7 +98,9 @@ class ArticlesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => auth()->user()?->hasRole('admin') ?? false)
+                        ->authorize(fn (): bool => auth()->user()?->hasRole('admin') ?? false),
                 ]),
             ]);
     }

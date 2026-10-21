@@ -1,6 +1,6 @@
 <x-app :pageSeo="$pageSeo">
 
-    <article class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-7xl mx-auto px-6 xl:px-0" aria-labelledby="video-heading" itemscope itemtype="https://schema.org/VideoObject">
+    <article class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-7xl mx-auto px-6 xl:px-0 mt-12" aria-labelledby="video-heading" itemscope itemtype="https://schema.org/VideoObject">
 
         <x-pages.video-embed :article="$article" loading="eager" />
 

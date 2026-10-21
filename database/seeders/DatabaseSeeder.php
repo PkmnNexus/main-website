@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
                 AssetSeeder::class,
                 ArticleSeeder::class,
                 ArticleDailyViewSeeder::class,
+
+                UserSeeder::class,
             ]);
         }
     }

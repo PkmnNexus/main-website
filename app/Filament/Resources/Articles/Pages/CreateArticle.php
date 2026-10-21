@@ -15,8 +15,10 @@ class CreateArticle extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        if (auth()->user()->hasRole('author')) {
-            $data['user_id'] = auth()->id();
+        $user = auth()->user();
+
+        if ($user->hasRole('author') && ! $user->hasAnyRole(['admin', 'editor'])) {
+            $data['user_id'] = $user->id;
             $data['status'] = ArticleStatus::Pending->value;
         }
 

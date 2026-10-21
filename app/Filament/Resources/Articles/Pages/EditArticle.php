@@ -18,10 +18,30 @@ class EditArticle extends EditRecord
 
     protected ?string $originalVideoUrl = null;
 
+    protected function authorizeAccess(): void
+    {
+        parent::authorizeAccess();
+
+        $user = auth()->user();
+
+        if (
+            $user->hasRole('author')
+            && ! $user->hasAnyRole(['admin', 'editor'])
+        ) {
+            abort_unless(
+                $this->record->user_id === $user->id,
+                403,
+                'You can only edit your own articles.',
+            );
+        }
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->visible(fn (): bool => auth()->user()?->hasRole('admin') ?? false)
+                ->authorize(fn (): bool => auth()->user()?->hasRole('admin') ?? false),
         ];
     }
 
@@ -30,9 +50,13 @@ class EditArticle extends EditRecord
         // Remember the original URL before the record is updated.
         $this->originalVideoUrl = $this->record->video_url;
 
-        if (auth()->user()->hasRole('author')) {
-            $data['user_id'] = auth()->id();
-            $data['status'] = ArticleStatus::Pending->value;
+        $user = auth()->user();
+
+        if ($user->hasRole('author') && ! $user->hasAnyRole(['admin', 'editor'])) {
+            $data['user_id'] = $user->id;
+            $data['status'] = $this->record->status instanceof ArticleStatus
+                ? $this->record->status->value
+                : $this->record->status;
         }
 
         $tags = collect($data['tags'] ?? [])

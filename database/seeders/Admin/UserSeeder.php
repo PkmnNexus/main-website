@@ -79,11 +79,36 @@ class UserSeeder extends Seeder
                 $author->assignRole('author');
             }
 
+            // Member
+            $memberPassword = Str::password();
+
+            $member = User::updateOrCreate(
+                [
+                    'email' => 'member@pkmnnexus.com',
+                ],
+                [
+                    'name' => 'Member Test',
+                    'display_name' => 'Member Test',
+                    'slug' => 'member-test',
+                    'bio' => 'PKMN Nexus member.',
+                    'password' => Hash::make($memberPassword),
+                    'email_verified_at' => now(),
+                    'is_active' => true,
+                ]
+            );
+
+            if (! $member->hasRole('member')) {
+                $member->assignRole('member');
+            }
+
             $this->command->info('Editor login: editor@pkmnnexus.com');
             $this->command->info("Editor password: {$editorPassword}");
 
             $this->command->info('Author login: author@pkmnnexus.com');
             $this->command->info("Author password: {$authorPassword}");
+
+            $this->command->info('Author login: member@pkmnnexus.com');
+            $this->command->info("Author password: {$memberPassword}");
         }
     }
 }

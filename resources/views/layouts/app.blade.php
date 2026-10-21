@@ -15,6 +15,8 @@
 
     <x-analytics.google-tag-manager-noscript />
 
+    <x-admin-dashboard-link />
+
     @include('frontend.partials.navigation.main')
 
     <main class="flex-1 page-transition" style="--main-background-image: url('{{ asset(\Illuminate\Support\Arr::random(config('appearance.main_background_images'))) }}')" itemprop="mainContentOfPage">
