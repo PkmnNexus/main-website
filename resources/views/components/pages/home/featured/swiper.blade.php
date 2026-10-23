@@ -27,7 +27,7 @@
 
                                 <x-play-button :article="$article" />
 
-                                <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 to-transparent"></div>
+                                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 to-transparent"></div>
 
                                 <figcaption class="absolute bottom-4 p-4 text-white">
 

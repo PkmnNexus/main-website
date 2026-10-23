@@ -29,6 +29,9 @@ function initSwiper() {
         spaceBetween: 16,
         loop: true,
 
+        preventClicks: false,
+        preventClicksPropagation: false,
+
         autoplay: {
             delay: 3000,
             disableOnInteraction: false,
@@ -36,13 +39,13 @@ function initSwiper() {
         },
 
         pagination: {
-            el: '.swiper-pagination',
+            el: el.querySelector('.swiper-pagination'),
             clickable: true,
         },
 
         navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
+            nextEl: el.querySelector('.swiper-button-next'),
+            prevEl: el.querySelector('.swiper-button-prev'),
         },
     });
 }

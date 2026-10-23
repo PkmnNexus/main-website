@@ -91,25 +91,21 @@
                 @if (config('website.features.member_login'))
 
                     <a href="{{ auth()->check() ? route('account.profile') : route('login') }}"
-                    aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
-                    title="Member area"
-                    class="inline-flex items-center justify-center ml-2">
+                       aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
+                       title="Member area"
+                       class="inline-flex items-center justify-center ml-2 pl-1 border-l border-l-gray-200 hover:!text-[var(--color-primary)] transition-colors duration-200">
 
                         @if (auth()->check())
 
                             <img src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
-                                 alt="{{ auth()->user()->display_name }}'s avatar"
-                                 width="48"
-                                 height="48"
-                                 class="w-7 h-7 rounded-sm object-cover">
+                                alt="{{ auth()->user()->display_name }}'s avatar"
+                                width="48"
+                                height="48"
+                                class="w-7 h-7 ml-1 rounded-sm object-cover">
 
                         @else
 
-                            <div class="bg-gradient text-white p-2 rounded-sm hover:opacity-90 transition-opacity duration-200 ">
-
-                                <x-heroicon-o-user-circle class="w-6 h-6" />
-
-                            </div>
+                            <x-heroicon-o-user-circle class="w-7 h-7 text-[var(--color-secondary)] hover:!text-[var(--color-primary)] transition-colors duration-200" />
 
                         @endif
 
@@ -195,8 +191,6 @@
 
         <div class="mobile-social justify-end p-4">
 
-            <h4 class="text-xl mb-2">Follow us:</h4>
-
             <div class="flex items-center">
 
                 <x-social-media />
@@ -204,9 +198,9 @@
                 @if (config('website.features.member_login'))
 
                     <a href="{{ auth()->check() ? route('account.profile') : route('login') }}"
-                    aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
-                    title="Member area"
-                    class="inline-flex items-center justify-center ml-2">
+                       aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
+                       title="Member area"
+                       class="inline-flex items-center justify-center ml-2 pl-1 border-l border-l-gray-200 hover:!text-[var(--color-primary)] transition-colors duration-200">
 
                         @if (auth()->check())
 
@@ -214,15 +208,11 @@
                                  alt="{{ auth()->user()->display_name }}'s avatar"
                                  width="48"
                                  height="48"
-                                 class="w-7 h-7 rounded-sm object-cover">
+                                 class="w-7 h-7 ml-1 rounded-sm object-cover">
 
                         @else
 
-                            <div class="bg-gradient text-white p-2 rounded-sm hover:opacity-90 transition-opacity duration-200 ">
-
-                                <x-heroicon-o-user-circle class="w-6 h-6" />
-                                
-                            </div>
+                            <x-heroicon-o-user-circle class="w-7 h-7 text-[var(--color-secondary)] hover:!text-[var(--color-primary)] transition-colors duration-200" />
 
                         @endif
 
