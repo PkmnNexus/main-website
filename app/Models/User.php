@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -27,9 +27,16 @@ use Filament\Models\Contracts\HasAvatar;
 /**
  * @property int $id
  * @property string $name
+ * @property string|null $surname
  * @property string $display_name
+ * @property string|null $flair
  * @property string $slug
  * @property string|null $bio
+ * @property string|null $website
+ * @property string|null $social_link_1
+ * @property string|null $social_link_2
+ * @property string|null $social_link_3
+ * @property string|null $social_link_4
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
@@ -48,10 +55,16 @@ use Filament\Models\Contracts\HasAvatar;
  */
 #[Fillable([
     'name',
+    'surname',
     'display_name',
     'flair',
     'slug',
     'bio',
+    'website',
+    'social_link_1',
+    'social_link_2',
+    'social_link_3',
+    'social_link_4',
     'email',
     'password',
     'is_active',
@@ -67,7 +80,7 @@ use Filament\Models\Contracts\HasAvatar;
     'two_factor_recovery_codes',
     'remember_token',
 ])]
-class User extends Authenticatable implements PasskeyUser, FilamentUser, HasMedia, HasAvatar
+class User extends Authenticatable implements MustVerifyEmail, PasskeyUser, FilamentUser, HasMedia, HasAvatar
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable, HasRoles, InteractsWithMedia;
@@ -84,14 +97,14 @@ class User extends Authenticatable implements PasskeyUser, FilamentUser, HasMedi
     protected static function booted(): void
     {
         static::creating(function (User $user) {
-            if (blank($user->slug) && filled($user->name)) {
-                $user->slug = Str::slug($user->name);
+            if (blank($user->slug) && filled($user->display_name)) {
+                $user->slug = Str::slug($user->display_name);
             }
         });
 
         static::updating(function (User $user) {
-            if ($user->isDirty('name') && ! $user->isDirty('slug')) {
-                $user->slug = Str::slug($user->name);
+            if ($user->isDirty('display_name') && ! $user->isDirty('slug')) {
+                $user->slug = Str::slug($user->display_name);
             }
         });
     }
@@ -200,11 +213,8 @@ class User extends Authenticatable implements PasskeyUser, FilamentUser, HasMedi
             return false;
         }
 
-        if ($this->suspended_until && $this->suspended_until->isPast()) {
-            return false;
-        }
-
-        return true;
+        return ! $this->suspended_until
+            || $this->suspended_until->isFuture();
     }
 
     /**
@@ -219,6 +229,85 @@ class User extends Authenticatable implements PasskeyUser, FilamentUser, HasMedi
         return $this->is_active
             && ! $this->isSuspended()
             && $this->hasAnyRole(['author', 'editor', 'admin']);
+    }
+
+    /**
+     * Get the formatted website URL for display.
+     */
+    public function getFormattedWebsiteAttribute(): ?string
+    {
+        if (blank($this->website)) {
+            return null;
+        }
+
+        $host = parse_url($this->website, PHP_URL_HOST);
+
+        if (blank($host)) {
+            return null;
+        }
+
+        return 'www.' . preg_replace('/^www\./i', '', $host);
+    }
+
+    /**
+     * Get the user's social media links with their platform information.
+     */
+    public function getSocialLinksAttribute(): array
+    {
+        return collect([
+            $this->social_link_1,
+            $this->social_link_2,
+            $this->social_link_3,
+            $this->social_link_4,
+        ])
+            ->filter(fn (?string $url) => filled($url))
+            ->map(function (string $url): array {
+                $platform = $this->getSocialPlatform($url);
+
+                return [
+                    'url' => $url,
+                    'platform' => $platform['name'],
+                    'icon' => $platform['icon'],
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Identify a social media platform from its URL.
+     */
+    public function getSocialPlatform(string $url): array
+    {
+        $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+        $host = preg_replace('/^www\./i', '', $host);
+
+        $platforms = [
+            'facebook.com' => ['name' => 'Facebook', 'icon' => 'icon.facebook'],
+            'instagram.com' => ['name' => 'Instagram', 'icon' => 'icon.instagram'],
+            'youtube.com' => ['name' => 'YouTube', 'icon' => 'icon.youtube'],
+            'youtu.be' => ['name' => 'YouTube', 'icon' => 'icon.youtube'],
+            'x.com' => ['name' => 'X', 'icon' => 'icon.x'],
+            'twitter.com' => ['name' => 'X', 'icon' => 'icon.x'],
+            'tiktok.com' => ['name' => 'TikTok', 'icon' => 'icon.tiktok'],
+            'linkedin.com' => ['name' => 'LinkedIn', 'icon' => 'icon.linkedin'],
+            'twitch.tv' => ['name' => 'Twitch', 'icon' => 'icon.twitch'],
+            'pinterest.com' => ['name' => 'Pinterest', 'icon' => 'icon.pinterest'],
+            'reddit.com' => ['name' => 'Reddit', 'icon' => 'icon.reddit'],
+            'threads.net' => ['name' => 'Threads', 'icon' => 'icon.threads'],
+            'bsky.app' => ['name' => 'Bluesky', 'icon' => 'icon.bluesky'],
+        ];
+
+        foreach ($platforms as $domain => $platform) {
+            if ($host === $domain || str_ends_with($host, '.' . $domain)) {
+                return $platform;
+            }
+        }
+
+        return [
+            'name' => 'Website',
+            'icon' => 'website',
+        ];
     }
 
     /*

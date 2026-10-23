@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => env('ADMIN_NAME'),
+                'surname' => env('ADMIN_SURNAME'),
                 'display_name' => 'Mr. Pokémon',
                 'slug' => 'mr-pokemon',
                 'bio' => 'PKMN Nexus administrator.',
@@ -36,7 +37,7 @@ class UserSeeder extends Seeder
 
         if (app()->isLocal()) {
             // Editor
-            $editorPassword = Str::password();
+            $editorPassword = '_8%b{raT7i;z|~8}CZ{aCUm?y7qZOmW%';
 
             $editor = User::updateOrCreate(
                 [
@@ -44,6 +45,7 @@ class UserSeeder extends Seeder
                 ],
                 [
                     'name' => 'Editor Test',
+                    'surname' => 'Surname',
                     'display_name' => 'Editor Test',
                     'slug' => 'editor-test',
                     'bio' => 'PKMN Nexus editor.',
@@ -58,7 +60,7 @@ class UserSeeder extends Seeder
             }
 
             // Author
-            $authorPassword = Str::password();
+            $authorPassword = 't#1fO8VcG6~f5d\^~7M$0KnD&MXp4Zq#';
 
             $author = User::updateOrCreate(
                 [
@@ -66,6 +68,7 @@ class UserSeeder extends Seeder
                 ],
                 [
                     'name' => 'Author Test',
+                    'surname' => 'Surname',
                     'display_name' => 'Author Test',
                     'slug' => 'author-test',
                     'bio' => 'PKMN Nexus author.',
@@ -80,7 +83,7 @@ class UserSeeder extends Seeder
             }
 
             // Member
-            $memberPassword = Str::password();
+            $memberPassword = 'kU;4X2R_$%o3e{w$1U5c0-G,9VM{V**-';
 
             $member = User::updateOrCreate(
                 [
@@ -88,6 +91,7 @@ class UserSeeder extends Seeder
                 ],
                 [
                     'name' => 'Member Test',
+                    'surname' => 'Surname',
                     'display_name' => 'Member Test',
                     'slug' => 'member-test',
                     'bio' => 'PKMN Nexus member.',

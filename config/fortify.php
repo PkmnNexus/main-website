@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/dashboard',
+    'home' => '/account/profile',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,9 @@ return [
     */
 
     'features' => [
+        Features::registration(),
         Features::resetPasswords(),
+        Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => false,
@@ -171,5 +173,4 @@ return [
             'confirmPassword' => false,
         ]),
     ],
-
 ];

@@ -17,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'under-construction' => UnderConstruction::class,
         ]);
+        
+        $middleware->appendToGroup(
+            'web',
+            \App\Http\Middleware\EnsureMemberLoginEnabled::class,
+        );
+        $middleware->redirectUsersTo('/account/profile');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         Integration::handles($exceptions);

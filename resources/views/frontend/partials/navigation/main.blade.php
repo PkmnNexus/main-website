@@ -13,7 +13,7 @@
 
     </div>
 
-    <div class="main-navigation-wrapper">
+    <div class="main-navigation-wrapper bg-white">
 
         <div class="main-navigation flex max-w-xl md:max-w-6xl xl:max-w-7xl mx-auto px-6 xl:px-0 h-full w-full">
 
@@ -87,6 +87,35 @@
             <div class="hidden lg:flex justify-end items-center w-2/12">
 
                 <x-social-media />
+
+                @if (config('website.features.member_login'))
+
+                    <a href="{{ auth()->check() ? route('account.profile') : route('login') }}"
+                    aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
+                    title="Member area"
+                    class="inline-flex items-center justify-center ml-2">
+
+                        @if (auth()->check())
+
+                            <img src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
+                                 alt="{{ auth()->user()->display_name }}'s avatar"
+                                 width="48"
+                                 height="48"
+                                 class="w-7 h-7 rounded-sm object-cover">
+
+                        @else
+
+                            <div class="bg-gradient text-white p-2 rounded-sm hover:opacity-90 transition-opacity duration-200 ">
+
+                                <x-heroicon-o-user-circle class="w-6 h-6" />
+
+                            </div>
+
+                        @endif
+
+                    </a>
+
+                @endif
 
             </div>
 
@@ -168,7 +197,40 @@
 
             <h4 class="text-xl mb-2">Follow us:</h4>
 
-            <x-social-media />
+            <div class="flex items-center">
+
+                <x-social-media />
+
+                @if (config('website.features.member_login'))
+
+                    <a href="{{ auth()->check() ? route('account.profile') : route('login') }}"
+                    aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
+                    title="Member area"
+                    class="inline-flex items-center justify-center ml-2">
+
+                        @if (auth()->check())
+
+                            <img src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
+                                 alt="{{ auth()->user()->display_name }}'s avatar"
+                                 width="48"
+                                 height="48"
+                                 class="w-7 h-7 rounded-sm object-cover">
+
+                        @else
+
+                            <div class="bg-gradient text-white p-2 rounded-sm hover:opacity-90 transition-opacity duration-200 ">
+
+                                <x-heroicon-o-user-circle class="w-6 h-6" />
+                                
+                            </div>
+
+                        @endif
+
+                    </a>
+
+                @endif
+
+            </div>
 
         </div>
 

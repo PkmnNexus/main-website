@@ -17,5 +17,5 @@ return [
         'member_login' => env('FEATURE_MEMBER_LOGIN', false),
         'registration' => env('FEATURE_REGISTRATION', false),
         'author_profiles' => env('FEATURE_AUTHOR_PROFILES', false),
-    ],
+    ]
 ];

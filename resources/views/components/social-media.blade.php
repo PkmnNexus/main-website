@@ -12,7 +12,8 @@
                target="_blank"
                rel="noopener noreferrer"
                itemprop="sameAs"
-               aria-label="{{ $item['label'] ?? 'Social link' }}">                            
+               aria-label="{{ $item['label'] ?? 'Social link' }}"
+               class="text-[var(--color-secondary)] hover:text-[var(--color-primary)]">                            
 
                 <div class="{{ $size }}">
 

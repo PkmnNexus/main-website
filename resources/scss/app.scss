@@ -28,14 +28,11 @@ main {
 .icon-md,
 .icon-lg {
     svg {
-        color: #233351;
-        transition: all 0.2s ease;
-
-        &:hover {
-            color: #5541F0;
-        }
+        color: inherit;
+        transition: color 0.2s ease;
     }
 }
+
 .icon-sm svg { height: 20px; width: 20px; }
 .icon-md svg { height: 26px; width: 26px; }
 .icon-lg svg { height: 32px; width: 32px; }
@@ -51,8 +48,10 @@ main {
 }
 /* Main Navigation */
 .main-navigation-wrapper {
+    background-color: #FFF;
     height: 80px;
     border-bottom: 1px solid #E5E7EB;
+    z-index: 1;
 
     .mobile-social {
         height: 20px;

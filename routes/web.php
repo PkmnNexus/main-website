@@ -7,6 +7,13 @@ use App\Http\Controllers\Frontend\SitemapController;
 
 use Illuminate\Support\Facades\Route;
 
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::view('/account/profile', 'frontend.user.profile')->name('account.profile');
+    Route::view('/account/profile/edit', 'frontend.user.edit-profile')->name('account.profile.edit');
+    
+});
+
 Route::middleware(['under-construction'])->group(function () {
 
     Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.xml');
