@@ -27,7 +27,22 @@ yarn-error.log
 **/.DS_Store
 
 # Storage (alles)
-storage/
+# Storage: ignore generated files, keep required Laravel directories
+/storage/*
+!/storage/framework/
+/storage/framework/*
+!/storage/framework/cache/
+/storage/framework/cache/*
+!/storage/framework/cache/data/
+/storage/framework/cache/data/*
+!/storage/framework/sessions/
+/storage/framework/sessions/*
+!/storage/framework/testing/
+/storage/framework/testing/*
+!/storage/framework/views/
+/storage/framework/views/*
+!/storage/logs/
+!/storage/app/
 
 # Database seed images
 /public/database/
