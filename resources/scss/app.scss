@@ -50,6 +50,21 @@ main {
         }
     }
 }
+
+.comment-user-meta-secondary {
+    margin-top: 0.25rem;
+
+    a {
+        svg {
+            display: block;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            min-height: 16px;
+            flex-shrink: 0;
+        }
+    }
+}
 /* Main Navigation */
 .main-navigation-wrapper {
     background-color: #FFF;

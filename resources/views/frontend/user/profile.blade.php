@@ -52,6 +52,14 @@
 
                         <div>
 
+                            <p class="text-sm text-gray-500">Location</p>
+
+                            <p class="font-medium">{{ auth()->user()->location ?: 'No location set.'}}</p>
+
+                        </div>
+
+                        <div>
+
                             <p class="text-sm text-gray-500">Bio</p>
 
                             <p class="font-medium whitespace-pre-line">{{ auth()->user()->bio ?: 'No bio added yet.' }}</p>

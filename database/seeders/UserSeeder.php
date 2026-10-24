@@ -30,7 +30,8 @@ class UserSeeder extends Seeder
                     'email' => sprintf('testuser%03d@pkmnexus.test', $number),
                 ],
                 [
-                    'name' => fake()->name(),
+                    'name' => fake()->firstName(),
+                    'surname' => fake()->lastName(),
                     'display_name' => sprintf('Test Trainer %03d', $number),
                     'slug' => sprintf('test-user-%03d', $number),
                     'bio' => fake()->optional(0.7)->paragraph(),

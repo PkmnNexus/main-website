@@ -203,6 +203,23 @@ class Article extends Model implements Seoable, HasMedia
     }
 
     /**
+     * Get all non-deleted comments associated with the article.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get top-level comments, including soft-deleted comments,
+     * so their replies can retain their thread context.
+     */
+    public function rootComments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->withTrashed()->whereNull('parent_id');
+    }
+
+    /**
      * Get the sources associated with the article.
      */
     public function sources(): BelongsToMany

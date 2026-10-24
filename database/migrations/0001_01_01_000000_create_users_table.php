@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('flair')->unique()->nullable();
             $table->string('slug')->unique();
             $table->text('bio')->nullable();
+            $table->string('location')->nullable();
 
             $table->string('website')->nullable();
             $table->string('social_link_1')->nullable();

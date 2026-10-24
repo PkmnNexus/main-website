@@ -10,6 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 
 class UserForm
 {
@@ -115,6 +116,78 @@ class UserForm
                             ->columnSpanFull(),
                     ])
                     ->columns(2)
+                    ->columnSpanFull(),
+
+                Section::make('Activity history')
+                    ->collapsed()
+                    ->description('User activity from the last 90 days. Older records remain stored in the database.')
+                    ->schema([
+                        Placeholder::make('activity_history')
+                            ->label('Recent activity')
+                            ->content(function ($record): string|HtmlString {
+                                if (! $record) {
+                                    return 'No activity recorded yet.';
+                                }
+
+                                $activities = $record->loginActivities()
+                                    ->where('created_at', '>=', now()->subDays(90))
+                                    ->latest('created_at')
+                                    ->limit(10)
+                                    ->get();
+
+                                if ($activities->isEmpty()) {
+                                    return 'No activity recorded in the last 90 days.';
+                                }
+
+                                $items = $activities->map(function ($activity): string {
+                                    $type = e($activity->activity_type);
+                                    $date = e($activity->created_at?->format('Y-m-d H:i') ?? 'Unknown date');
+                                    $ip = e($activity->ip_address ?: 'Unknown');
+                                    $browser = e(trim(implode(' ', array_filter([
+                                        $activity->browser,
+                                        $activity->browser_version,
+                                    ])) ?: 'Unknown'));
+                                    $platform = e(trim(implode(' ', array_filter([
+                                        $activity->platform,
+                                        $activity->platform_version,
+                                    ])) ?: 'Unknown'));
+                                    $deviceType = e($activity->device_type ?: 'Unknown');
+                                    $device = e($activity->device ?: 'Unknown');
+
+                                    return <<<HTML
+                                        <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <span class="font-semibold text-gray-950 dark:text-white">{$type}</span>
+                                                <span class="text-sm text-gray-500 dark:text-gray-400">{$date}</span>
+                                            </div>
+                                            <dl class="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                                                <div>
+                                                    <dt class="text-gray-500 dark:text-gray-400">IP address</dt>
+                                                    <dd class="mt-1 break-all text-gray-950 dark:text-white">{$ip}</dd>
+                                                </div>
+                                                <div>
+                                                    <dt class="text-gray-500 dark:text-gray-400">Browser</dt>
+                                                    <dd class="mt-1 text-gray-950 dark:text-white">{$browser}</dd>
+                                                </div>
+                                                <div>
+                                                    <dt class="text-gray-500 dark:text-gray-400">Operating system</dt>
+                                                    <dd class="mt-1 text-gray-950 dark:text-white">{$platform}</dd>
+                                                </div>
+                                                <div>
+                                                    <dt class="text-gray-500 dark:text-gray-400">Device</dt>
+                                                    <dd class="mt-1 text-gray-950 dark:text-white">{$deviceType} — {$device}</dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+                                    HTML;
+                                })->implode('');
+
+                                return new HtmlString(
+                                    '<div class="space-y-4">' . $items . '</div>'
+                                );
+                            })
+                            ->columnSpanFull(),
+                    ])
                     ->columnSpanFull(),
             ]);
     }

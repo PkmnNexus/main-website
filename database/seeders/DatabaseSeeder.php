@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             MediaFolderSeeder::class,
         ]);
 
-        if (app()->isLocal()) {
+        if (! app()->isProduction()) {
             $this->call([
                 SourceSeeder::class,
 
@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
                 ArticleDailyViewSeeder::class,
 
                 UserSeeder::class,
+                CommentSeeder::class,
             ]);
         }
     }

@@ -88,30 +88,7 @@
 
                 <x-social-media />
 
-                @if (config('website.features.member_login'))
-
-                    <a href="{{ auth()->check() ? route('account.profile') : route('login') }}"
-                       aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
-                       title="Member area"
-                       class="inline-flex items-center justify-center ml-2 pl-1 border-l border-l-gray-200 hover:!text-[var(--color-primary)] transition-colors duration-200">
-
-                        @if (auth()->check())
-
-                            <img src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
-                                alt="{{ auth()->user()->display_name }}'s avatar"
-                                width="48"
-                                height="48"
-                                class="w-7 h-7 ml-1 rounded-sm object-cover">
-
-                        @else
-
-                            <x-heroicon-o-user-circle class="w-7 h-7 text-[var(--color-secondary)] hover:!text-[var(--color-primary)] transition-colors duration-200" />
-
-                        @endif
-
-                    </a>
-
-                @endif
+                <x-member-menu />
 
             </div>
 
@@ -195,30 +172,7 @@
 
                 <x-social-media />
 
-                @if (config('website.features.member_login'))
-
-                    <a href="{{ auth()->check() ? route('account.profile') : route('login') }}"
-                       aria-label="{{ auth()->check() ? 'View your member profile' : 'Login to your member account' }}"
-                       title="Member area"
-                       class="inline-flex items-center justify-center ml-2 pl-1 border-l border-l-gray-200 hover:!text-[var(--color-primary)] transition-colors duration-200">
-
-                        @if (auth()->check())
-
-                            <img src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
-                                 alt="{{ auth()->user()->display_name }}'s avatar"
-                                 width="48"
-                                 height="48"
-                                 class="w-7 h-7 ml-1 rounded-sm object-cover">
-
-                        @else
-
-                            <x-heroicon-o-user-circle class="w-7 h-7 text-[var(--color-secondary)] hover:!text-[var(--color-primary)] transition-colors duration-200" />
-
-                        @endif
-
-                    </a>
-
-                @endif
+                <x-member-menu />
 
             </div>
 

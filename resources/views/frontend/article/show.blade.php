@@ -11,17 +11,31 @@
 
         <div class="grid grid-cols-1 xl:grid-cols-4 gap-8 mt-8">
 
-            <div class="xl:col-span-3 rounded-xl bg-white shadow-md p-7 md:p-10">
+            <div class="xl:col-span-3 space-y-6">
 
-                <x-articles.content :article="$article" />
+                <div class="rounded-xl bg-white shadow-md p-7 md:p-10">
 
-                <x-articles.social-sharing :article="$article" />
+                    <x-articles.content :article="$article" />
 
-                <x-articles.meta :article="$article" />
+                    <x-articles.social-sharing :article="$article" />
 
-                <x-articles.tag-cloud :article="$article" />
+                    <x-articles.meta :article="$article" />
 
-                <x-articles.sources :article="$article" />
+                    <x-articles.tag-cloud :article="$article" />
+
+                    <x-articles.sources :article="$article" />
+
+                </div>
+
+                @unless (filled($article->video_url))
+
+                    <div class="rounded-xl bg-white shadow-md p-7 md:p-10">
+
+                        <livewire:pages::articles.comments.index :article="$article" />
+
+                    </div>
+
+                @endunless
 
             </div>
 

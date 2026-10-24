@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
+use App\Support\UserActivityRecorder;
 
 new class extends Component
 {
@@ -18,6 +19,8 @@ new class extends Component
     public string $display_name = '';
 
     public string $email = '';
+
+    public ?string $location = null;
 
     public ?string $bio = null;
 
@@ -47,6 +50,7 @@ new class extends Component
         $this->surname = $user->surname;
         $this->display_name = $user->display_name;
         $this->email = $user->email;
+        $this->location = $user->location;
         $this->bio = $user->bio;
         $this->website = $user->website;
         $this->social_link_1 = $user->social_link_1;
@@ -73,6 +77,7 @@ new class extends Component
                 'max:255',
                 Rule::unique('users', 'email')->ignore(Auth::id()),
             ],
+            'location' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:1000'],
             'website' => ['nullable', 'url', 'max:255'],
             'social_link_1' => ['nullable', 'url', 'max:255'],
@@ -95,6 +100,7 @@ new class extends Component
         $user->surname = $validated['surname'];
         $user->display_name = $validated['display_name'];
         $user->email = $validated['email'];
+        $user->location = filled($validated['location']) ? trim($validated['location']) : null;
         $user->bio = $validated['bio'];
         $user->website = $validated['website'];
         $user->social_link_1 = $validated['social_link_1'];
@@ -112,20 +118,22 @@ new class extends Component
                 ->toMediaCollection('user_avatar');
         }
 
-        auth()->user()->forceFill([
+        $user->forceFill([
             'last_activity_at' => now(),
         ])->save();
 
-        $user->save();
+        app(UserActivityRecorder::class)->record($user, 'Updated profile');
 
         $this->reset('password', 'password_confirmation', 'avatar');
 
         session()->flash('status', 'Profile updated successfully.');
+
+        $this->dispatch('profile-updated');
     }
 };
 ?>
 
-<div class="max-w-3xl">
+<div class="max-w-3xl" x-on:profile-updated.window="window.scrollTo({ top: 0, behavior: 'smooth' })">
 
     <form wire:submit="save" class="space-y-8">
 
@@ -141,7 +149,7 @@ new class extends Component
 
             @if (session('status'))
 
-                <div role="status" class="rounded-sm bg-green-50 border border-green-200 p-4 text-sm text-green-800">{{ session('status') }}</div>
+                <div class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md">{{ session('status') }}</div>
 
             @endif
 
@@ -213,6 +221,30 @@ new class extends Component
                        class="w-full rounded-sm border border-gray-300 px-4 py-3">
 
                 @error('email')
+
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+
+                @enderror
+
+            </div>
+
+            <div>
+
+                <label for="location" class="block text-sm font-bold mb-2">Location</label>
+
+                <input id="location"
+                       type="text"
+                       wire:model="location"
+                       maxlength="255"
+                       placeholder="San Francisco, California, USA"
+                       aria-describedby="location-help location-privacy"
+                       class="w-full rounded-sm border border-gray-300 px-4 py-3">
+
+                <p id="location-help" class="mt-1 text-sm text-gray-500">Enter your city, state or region, and country. You can choose how specific you want to be.</p>
+
+                <p id="location-privacy" class="mt-1 text-sm text-gray-500">Your location may be visible on your public profile. If you don't want to display your location, leave this field empty.</p>
+
+                @error('location')
 
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
 

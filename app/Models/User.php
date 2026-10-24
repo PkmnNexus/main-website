@@ -32,6 +32,7 @@ use Filament\Models\Contracts\HasAvatar;
  * @property string|null $flair
  * @property string $slug
  * @property string|null $bio
+ * @property string|null $location
  * @property string|null $website
  * @property string|null $social_link_1
  * @property string|null $social_link_2
@@ -60,6 +61,7 @@ use Filament\Models\Contracts\HasAvatar;
     'flair',
     'slug',
     'bio',
+    'location',
     'website',
     'social_link_1',
     'social_link_2',
@@ -172,6 +174,22 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser, Fila
         return $this->hasMany(Article::class);
     }
 
+    /**
+     * Get all non-deleted comments written by the user.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get all activities recorded for the user.
+     */
+    public function loginActivities(): HasMany
+    {
+        return $this->hasMany(UserActivity::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helpers
@@ -246,7 +264,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser, Fila
             return null;
         }
 
-        return 'www.' . preg_replace('/^www\./i', '', $host);
+        return 'www.'.preg_replace('/^www\./i', '', $host);
     }
 
     /**
@@ -299,7 +317,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser, Fila
         ];
 
         foreach ($platforms as $domain => $platform) {
-            if ($host === $domain || str_ends_with($host, '.' . $domain)) {
+            if ($host === $domain || str_ends_with($host, '.'.$domain)) {
                 return $platform;
             }
         }

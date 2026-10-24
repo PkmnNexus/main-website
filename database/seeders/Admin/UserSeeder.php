@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             $admin->assignRole('admin');
         }
 
-        if (app()->isLocal()) {
+        if (! app()->isProduction()) {
             // Editor
             $editorPassword = '_8%b{raT7i;z|~8}CZ{aCUm?y7qZOmW%';
 
