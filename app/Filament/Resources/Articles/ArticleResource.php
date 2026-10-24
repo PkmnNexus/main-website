@@ -25,7 +25,7 @@ class ArticleResource extends Resource
 
     protected static ?string $navigationLabel = 'Articles';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = -3;
 
     protected static ?string $recordTitleAttribute = 'title';
 

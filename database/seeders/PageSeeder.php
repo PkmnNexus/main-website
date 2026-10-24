@@ -529,7 +529,7 @@ class PageSeeder extends Seeder
                 ],
             ],
             [
-                'slug' => 'member-profile',
+                'slug' => 'profile',
                 'data' => [
                     'page' => 'Member Profile',
                     'title' => 'My Profile | PkmnNexus',
@@ -537,6 +537,19 @@ class PageSeeder extends Seeder
                     'meta_description' => 'Manage your PkmnNexus member profile and account details.',
                     'meta_keywords' => 'PkmnNexus member profile, account settings',
                     'og_title' => 'My Profile | PkmnNexus',
+                    'og_description' => 'Manage your PkmnNexus profile.',
+                    'is_active' => true,
+                ],
+            ],
+            [
+                'slug' => 'edit-profile',
+                'data' => [
+                    'page' => 'Edit Profile',
+                    'title' => 'Edit Profile | PkmnNexus',
+                    'content' => 'Manage your PkmnNexus member profile and account details.',
+                    'meta_description' => 'Manage your PkmnNexus member profile and account details.',
+                    'meta_keywords' => 'PkmnNexus member profile, account settings',
+                    'og_title' => 'Edit Profile | PkmnNexus',
                     'og_description' => 'Manage your PkmnNexus profile.',
                     'is_active' => true,
                 ],

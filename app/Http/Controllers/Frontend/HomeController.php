@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $pageSeo = Page::where('slug', 'home')->firstOrFail();
+        $pageSeo = Page::where('slug', 'home')->where('is_active', true)->firstOrFail();
 
         return view('frontend.home.index', compact('pageSeo'));
     }

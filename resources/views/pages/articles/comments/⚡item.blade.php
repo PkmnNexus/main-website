@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Comment;
+use App\Models\CommentReport;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -8,6 +10,20 @@ new class extends Component {
     public Comment $comment;
 
     public int $depth = 1;
+
+    public bool $showReportForm = false;
+
+    public bool $reportSubmitted = false;
+
+    public string $reportReason = '';
+
+    public ?string $reportDetails = null;
+
+    public string $reportFirstName = '';
+
+    public string $reportLastName = '';
+
+    public string $reportEmail = '';
 
     /*
     |--------------------------------------------------------------------------
@@ -81,6 +97,111 @@ new class extends Component {
             'reply-to-comment',
             commentId: $this->comment->id,
         );
+    }
+
+    /**
+     * Open the report form.
+     */
+    public function openReportForm(): void
+    {
+        abort_unless(! $this->isDeleted(), 403);
+
+        abort_unless(
+            ! auth()->user()
+            || auth()->id() !== $this->comment->user_id,
+            403,
+        );
+
+        $this->resetValidation();
+
+        $this->reportSubmitted = false;
+        $this->reportReason = '';
+        $this->reportDetails = null;
+        $this->reportFirstName = '';
+        $this->reportLastName = '';
+        $this->reportEmail = '';
+
+        $this->showReportForm = true;
+    }
+
+    /**
+     * Close the report form.
+     */
+    public function cancelReport(): void
+    {
+        $this->showReportForm = false;
+
+        $this->reset(
+            'reportReason',
+            'reportDetails',
+            'reportFirstName',
+            'reportLastName',
+            'reportEmail',
+        );
+
+        $this->resetValidation();
+    }
+
+    /**
+     * Submit a report for this comment.
+     */
+    public function submitReport(): void
+    {
+        abort_unless(! $this->isDeleted(), 403);
+
+        $user = auth()->user();
+
+        abort_unless(
+            ! $user || $user->id !== $this->comment->user_id,
+            403,
+        );
+
+        $rules = [
+            'reportReason' => [
+                'required',
+                'string',
+                Rule::in([
+                    'spam',
+                    'harassment',
+                    'hate_speech',
+                    'inappropriate_content',
+                    'other',
+                ]),
+            ],
+            'reportDetails' => ['nullable', 'string', 'max:1000'],
+        ];
+
+        if (! $user) {
+            $rules['reportFirstName'] = ['required', 'string', 'max:255'];
+            $rules['reportLastName'] = ['required', 'string', 'max:255'];
+            $rules['reportEmail'] = ['required', 'email', 'max:255'];
+        }
+
+        $validated = $this->validate($rules);
+
+        CommentReport::create([
+            'comment_id' => $this->comment->id,
+            'user_id' => $user?->id,
+            'first_name' => $user?->name ?? $validated['reportFirstName'] ?? null,
+            'last_name' => $user?->surname ?? $validated['reportLastName'] ?? null,
+            'email' => $user?->email ?? $validated['reportEmail'] ?? null,
+            'reason' => $validated['reportReason'],
+            'details' => $validated['reportDetails'] ?? null,
+            'status' => CommentReport::STATUS_PENDING,
+        ]);
+
+        $this->showReportForm = false;
+        $this->reportSubmitted = true;
+
+        $this->reset(
+            'reportReason',
+            'reportDetails',
+            'reportFirstName',
+            'reportLastName',
+            'reportEmail',
+        );
+
+        $this->resetValidation();
     }
 
     /**
@@ -227,17 +348,185 @@ new class extends Component {
 
             @endif
 
-            <span title="Report comment" aria-label="Report comment" class="inline-flex items-center gap-1 text-xs text-gray-500">
+            @if (! $this->isDeleted()
+                 && (! auth()->check() || auth()->id() !== $comment->user_id))
 
-                <x-heroicon-o-flag class="h-4 w-4" />
+                <button type="button"
+                        wire:click="openReportForm"
+                        class="inline-flex cursor-pointer items-center gap-1 text-xs text-gray-500 transition-colors duration-200 hover:text-[var(--color-primary)]"
+                        aria-label="Report comment"
+                        title="Report comment">
 
-                <span>Report comment</span>
+                    <x-heroicon-o-flag class="h-4 w-4" />
 
-            </span>
+                    <span>Report comment</span>
+
+                </button>
+
+            @endif
 
         </div>
 
     </div>
+
+    @if ($reportSubmitted)
+
+        <div role="status" class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md">Thank you. Your report has been submitted for review.</div>
+
+    @endif
+
+    @if ($showReportForm)
+
+        <form wire:submit="submitReport" class="space-y-4 rounded-sm border border-gray-200 bg-white p-4">
+
+            <div>
+
+                <h3 class="font-display text-base font-bold text-[var(--color-secondary)]">Report comment</h3>
+
+                <p class="mt-1 text-sm text-gray-600">Tell us why you are reporting this comment. Reports are reviewed by our moderation team.</p>
+
+            </div>
+
+            @guest
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    <div>
+
+                        <label for="reportFirstName-{{ $comment->id }}" class="mb-1 block text-sm font-bold">First name</label>
+
+                        <input id="reportFirstName-{{ $comment->id }}"
+                               type="text"
+                               wire:model="reportFirstName"
+                               autocomplete="given-name"
+                               required
+                               maxlength="255"
+                               class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm">
+
+                        @error('reportFirstName')
+
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+
+                        @enderror
+
+                    </div>
+
+                    <div>
+
+                        <label for="reportLastName-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Last name</label>
+
+                        <input id="reportLastName-{{ $comment->id }}"
+                               type="text"
+                               wire:model="reportLastName"
+                               autocomplete="family-name"
+                               required
+                               maxlength="255"
+                               class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm">
+
+                        @error('reportLastName')
+
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+
+                        @enderror
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <label for="reportEmail-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Email address</label>
+
+                    <input id="reportEmail-{{ $comment->id }}"
+                           type="email"
+                           wire:model="reportEmail"
+                           autocomplete="email"
+                           required
+                           maxlength="255"
+                           class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm">
+
+                    @error('reportEmail')
+
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+
+                    @enderror
+
+                </div>
+
+            @endguest
+
+            <div>
+
+                <label for="reportReason-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Reason for reporting</label>
+
+                <select id="reportReason-{{ $comment->id }}"
+                        wire:model="reportReason"
+                        required
+                        class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm">
+
+                    <option value="">Select a reason</option>
+                    <option value="spam">Spam or advertising</option>
+                    <option value="harassment">Harassment or bullying</option>
+                    <option value="hate_speech">Hate speech</option>
+                    <option value="inappropriate_content">Inappropriate content</option>
+                    <option value="other">Other</option>
+
+                </select>
+
+                @error('reportReason')
+
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+
+                @enderror
+
+            </div>
+
+            <div>
+
+                <label for="reportDetails-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Additional details <span class="font-normal text-gray-500">(optional)</span></label>
+
+                <textarea id="reportDetails-{{ $comment->id }}"
+                          wire:model="reportDetails"
+                          rows="3"
+                          maxlength="1000"
+                          class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm"
+                          placeholder="Provide any additional context..."></textarea>
+
+                <p class="mt-1 text-xs text-gray-500">Maximum 1000 characters.</p>
+
+                @error('reportDetails')
+
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+
+                @enderror
+
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+
+                <button type="submit"
+                        wire:loading.attr="disabled"
+                        wire:target="submitReport"
+                        class="cursor-pointer rounded-sm bg-gradient px-4 py-2 text-sm font-bold text-white transition-opacity duration-200 disabled:opacity-50">
+
+                    <span wire:loading.remove wire:target="submitReport">Submit report</span>
+                    <span wire:loading wire:target="submitReport">Submitting...</span>
+
+                </button>
+
+                <button type="button"
+                        wire:click="cancelReport"
+                        class="cursor-pointer rounded-sm border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors duration-200 hover:bg-gray-50">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+        </form>
+
+    @endif
 
     @if ($depth < 3)
 

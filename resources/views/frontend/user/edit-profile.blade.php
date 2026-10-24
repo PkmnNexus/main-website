@@ -1,3 +1,7 @@
+@php
+    $pageSeo = \App\Models\Page::where('slug', 'edit-profile')->where('is_active', true)->firstOrFail();
+@endphp
+
 <x-app :pageSeo="$pageSeo ?? null">
 
     <div class="flex flex-col xl:flex-row flex-1">

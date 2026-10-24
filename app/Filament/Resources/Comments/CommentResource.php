@@ -27,17 +27,17 @@ class CommentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Posts';
+    protected static string|UnitEnum|null $navigationGroup = 'Comments';
 
     protected static ?string $navigationLabel = 'Comments';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = -2;
 
     protected static ?string $modelLabel = 'comment';
 
     protected static ?string $pluralModelLabel = 'comments';
 
-    protected static ?string $recordTitleAttribute = 'body';
+    protected static ?string $recordTitleAttribute = 'id';
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +51,26 @@ class CommentResource extends Resource
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasAnyRole(['admin', 'editor']) ?? false;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Record Titles
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Generate a concise, recognizable title for a comment record.
+     */
+    public static function getRecordTitle(?\Illuminate\Database\Eloquent\Model $record): ?string
+    {
+        if (! $record instanceof Comment) {
+            return null;
+        }
+
+        $username = $record->user?->display_name ?? 'Guest';
+
+        return "Comment #{$record->getKey()} - {$username}";
     }
 
     /*

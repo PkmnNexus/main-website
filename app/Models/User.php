@@ -190,6 +190,22 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser, Fila
         return $this->hasMany(UserActivity::class);
     }
 
+    /**
+     * Get all comment reports submitted by the user.
+     */
+    public function commentReports(): HasMany
+    {
+        return $this->hasMany(CommentReport::class, 'user_id');
+    }
+
+    /**
+     * Get all comment reports reviewed by the user.
+     */
+    public function reviewedCommentReports(): HasMany
+    {
+        return $this->hasMany(CommentReport::class, 'reviewed_by');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helpers

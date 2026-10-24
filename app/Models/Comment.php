@@ -108,6 +108,14 @@ class Comment extends Model
         return $this->hasMany(self::class, 'parent_id')->withTrashed();
     }
 
+    /**
+     * Get the reports submitted for this comment.
+     */
+    public function reports(): HasMany
+    {
+        return $this->hasMany(CommentReport::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helpers

@@ -30,6 +30,8 @@ class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'display_name';
 
+    protected static ?int $navigationSort = 0;
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);
