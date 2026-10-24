@@ -2,15 +2,18 @@
 
 namespace App\Filament\Resources\Comments\Tables;
 
+use App\Models\Comment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class CommentsTable
 {
@@ -71,17 +74,52 @@ class CommentsTable
             ->recordActions([
                 EditAction::make(),
 
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->visible(fn (Comment $record): bool => ! self::isOwnComment($record)),
 
                 RestoreAction::make(),
             ])
 
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(function (Collection $records): void {
+                            if ($records->contains(
+                                fn (Comment $record): bool => self::isOwnComment($record)
+                            )) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Cannot delete your own comments')
+                                    ->body('Remove your own comments from the selection before deleting.')
+                                    ->send();
+
+                                return;
+                            }
+
+                            $records->each(
+                                fn (Comment $record) => $record->delete()
+                            );
+                        }),
 
                     RestoreBulkAction::make(),
                 ]),
             ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Determine whether the comment belongs to the authenticated user.
+     */
+    private static function isOwnComment(Comment $comment): bool
+    {
+        $userId = auth()->id();
+
+        return $userId !== null
+            && (int) $comment->user_id === (int) $userId;
     }
 }

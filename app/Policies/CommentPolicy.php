@@ -21,6 +21,15 @@ class CommentPolicy
         return $user->hasAnyRole(['admin', 'editor']);
     }
 
+    /**
+     * Determine whether the comment belongs to the authenticated user.
+     */
+    protected function isOwnComment(User $user, Comment $comment): bool
+    {
+        return $comment->user_id !== null
+            && (int) $comment->user_id === (int) $user->getKey();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Viewing
@@ -82,11 +91,14 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $this->canManageComments($user);
+        return $this->canManageComments($user)
+            && ! $this->isOwnComment($user, $comment);
     }
 
     /**
      * Determine whether the user may bulk soft-delete comments.
+     *
+     * The actual selected records must also be checked by the bulk action.
      */
     public function deleteAny(User $user): bool
     {
