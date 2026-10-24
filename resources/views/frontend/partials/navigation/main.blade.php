@@ -9,6 +9,8 @@
 
             <x-social-media size="icon-sm"/>
 
+            <x-member-menu />
+
         </div>
 
     </div>
