@@ -11,6 +11,10 @@ return [
         // Michiel Home Torhout
         '141.135.250.160',
         '2a02:1811:a42a:fd00::/64',
+
+        // Maarten Home Torhout
+        '178.118.8.31',
+        '2a02:1811:a430:a800::/64',
     ],
 
     'features' => [
