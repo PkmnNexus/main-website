@@ -10,7 +10,7 @@ return [
 
         // Michiel Home Torhout
         '141.135.250.160',
-        '2a02:1811:a42a:fd00:5cc0:64ea:f915:590b',
+        '2a02:1811:a42a:fd00::/64',
     ],
 
     'features' => [
