@@ -27,15 +27,15 @@
 
                 </div>
 
-                @unless (filled($article->video_url))
+                @if (!filled($article->video_url) && config('website.features.comment'))
 
                     <div class="rounded-xl bg-white shadow-md p-7 md:p-10">
 
                         <livewire:pages::articles.comments.index :article="$article" />
-
+                        
                     </div>
 
-                @endunless
+                @endif
 
             </div>
 
