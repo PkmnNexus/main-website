@@ -116,16 +116,12 @@ hooks:
     exit 0
 
 
-  sharedsymlink_after: |
-    # .env is automatically linked by AutoGit.
-    #
-    # Example shared folders:
-    #
-    # storage
-    # logs
-    #
-    exit 0
 
+  sharedsymlink_after: |
+    # Link public storage to the persistent shared storage directory.
+    ln -sfn "/data/sites/web/pkmnnexuscom/checkout/main/shared/storage/app/public" "$3/public/storage"
+
+    exit 0
 
 
 #######################################################################################
