@@ -554,6 +554,19 @@ class PageSeeder extends Seeder
                     'is_active' => true,
                 ],
             ],
+            [
+                'slug' => 'sitemap',
+                'data' => [
+                    'page' => 'sitemap',
+                    'title' => 'Sitemap | PkmnNexus',
+                    'content' => 'Manage your PkmnNexus member profile and account details.',
+                    'meta_description' => 'Manage your PkmnNexus member profile and account details.',
+                    'meta_keywords' => 'PkmnNexus member profile, account settings',
+                    'og_title' => 'Sitemap | PkmnNexus',
+                    'og_description' => 'Manage your PkmnNexus profile.',
+                    'is_active' => true,
+                ],
+            ],
         ];
         foreach ($pages as $page) {
             Page::updateOrCreate(

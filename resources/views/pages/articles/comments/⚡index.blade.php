@@ -275,7 +275,7 @@ new class extends Component {
 
         <div class="mt-5 border-t border-gray-200 pt-5 text-sm text-gray-600">
 
-            <p>You need to <a href="{{ route('login') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">sign in</a>to comment.</p>
+            <p>You need to <a href="{{ route('login') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">sign in</a> to comment.</p>
 
             @if (config('website.features.registration'))
 
