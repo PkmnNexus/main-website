@@ -15,6 +15,10 @@ return [
         // Maarten Home Torhout
         '178.118.8.31',
         '2a02:1811:a430:a800::/64',
+
+        // Sebastiaan Home Sas van Gent
+        '145.53.107.21',
+        '2a02:a455:a10b:ea60::/64',
     ],
 
     'features' => [
