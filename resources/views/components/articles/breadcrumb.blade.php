@@ -1,4 +1,4 @@
-<nav aria-label="Breadcrumb"
+<nav aria-label="{{ __('navigation.breadcrumb') }}"
      class="border-b border-[#F0F0F0] py-3 my-5 hidden md:block"
      itemscope
      itemtype="https://schema.org/BreadcrumbList">
@@ -13,7 +13,7 @@
                itemprop="item"
                class="text-primary transition-colors hover:opacity-80">
 
-                <span itemprop="name">Home</span>
+                <span itemprop="name">{{ __('navigation.home') }}</span>
 
             </a>
 
@@ -31,7 +31,7 @@
                itemprop="item"
                class="text-primary transition-colors hover:opacity-80">
 
-                <span itemprop="name">Articles</span>
+                <span itemprop="name">{{ __('navigation.articles') }}</span>
 
             </a>
 
@@ -51,7 +51,7 @@
                    itemprop="item"
                    class="text-primary transition-colors hover:opacity-80">
 
-                    <span itemprop="name">Video</span>
+                    <span itemprop="name">{{ __('navigation.videos') }}</span>
 
                 </a>
 

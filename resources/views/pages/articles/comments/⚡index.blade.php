@@ -170,7 +170,7 @@ new class extends Component {
                             $value,
                         )
                     ) {
-                        $fail('Links are not allowed in comments.');
+                        $fail(__('general.comment_links_not_allowed'));
                     }
                 },
             ],
@@ -182,7 +182,7 @@ new class extends Component {
             $seconds = RateLimiter::availableIn($rateLimitKey);
 
             throw ValidationException::withMessages([
-                'body' => "You are commenting too quickly. Please try again in {$seconds} seconds.",
+                'body' => __('general.comment_rate_limit', ['seconds' => $seconds]),
             ]);
         }
 
@@ -269,17 +269,17 @@ new class extends Component {
             }, 150)
          ">
 
-    <h2 id="comments-heading" class="font-display text-2xl font-black text-[var(--color-secondary)]">Comments ({{ $this->commentCount }})</h2>
+    <h2 id="comments-heading" class="font-display text-2xl font-black text-[var(--color-secondary)]">{{ __('general.comments_heading', ['count' => $this->commentCount]) }}</h2>
 
     @if (! auth()->check())
 
         <div class="mt-5 border-t border-gray-200 pt-5 text-sm text-gray-600">
 
-            <p>You need to <a href="{{ route('login') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">sign in</a> to comment.</p>
+            <p>{{ __('general.comment_sign_in_prompt') }} <a href="{{ route('login') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">{{ __('general.sign_in') }}</a> {{ __('general.to_comment') }}</p>
 
             @if (config('website.features.registration'))
 
-                <p class="mt-1">Not a member yet? <a href="{{ route('register') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">Register an account</a> to join the conversation.</p>
+                <p class="mt-1">{{ __('general.not_a_member_yet') }} <a href="{{ route('register') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">{{ __('general.register_account') }}</a> {{ __('general.join_conversation') }}</p>
 
             @endif
 
@@ -289,7 +289,7 @@ new class extends Component {
 
         <div class="mt-5 border-t border-gray-200 pt-5 text-sm text-gray-600">
 
-            <p>Please verify your email address before commenting. <a href="{{ route('verification.notice') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">Verify your email</a></p>
+            <p>{{ __('general.verify_email_before_commenting') }} <a href="{{ route('verification.notice') }}" class="font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline cursor-pointer">{{ __('general.verify_your_email') }}</a></p>
 
         </div>
 
@@ -297,7 +297,7 @@ new class extends Component {
 
         <div class="mt-5 border-t border-gray-200 pt-5 text-sm text-gray-600">
 
-            Your account cannot currently post comments.
+            {{ __('general.account_cannot_comment') }}
 
         </div>
 
@@ -307,15 +307,15 @@ new class extends Component {
 
             @if ($replyToId)
 
-                <p class="mb-2 text-sm text-gray-600">Replying to <span class="font-semibold text-[var(--color-secondary)]">{{ $this->replyToComment?->user?->display_name ?? 'this comment' }}</span>
+                <p class="mb-2 text-sm text-gray-600">{{ __('general.replying_to') }} <span class="font-semibold text-[var(--color-secondary)]">{{ $this->replyToComment?->user?->display_name ?? __('general.this_comment') }}</span>
 
-                    <button type="button" wire:click="cancelReply" class="ml-2 cursor-pointer font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline">Cancel</button>
+                    <button type="button" wire:click="cancelReply" class="ml-2 cursor-pointer font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline">{{ __('general.cancel') }}</button>
 
                 </p>
 
             @endif
 
-            <label for="comment-body" class="mb-2 block text-sm font-bold">{{ $replyToId ? 'Your reply' : 'Write a comment' }}</label>
+            <label for="comment-body" class="mb-2 block text-sm font-bold">{{ $replyToId ? __('general.your_reply') : __('general.write_a_comment') }}</label>
 
             <div x-data="{ remaining: 2000 }" x-init="remaining = 2000 - $refs.commentBody.value.length">
 
@@ -326,7 +326,7 @@ new class extends Component {
                           rows="4"
                           maxlength="2000"
                           required
-                          placeholder="Join the conversation..."
+                          placeholder="{{ __('general.join_conversation_placeholder') }}"
                           class="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm focus:border-[var(--color-primary)] focus:outline-none"></textarea>
 
                 <div class="mt-1 flex items-start justify-between gap-3">
@@ -343,7 +343,7 @@ new class extends Component {
 
                     <p class="shrink-0 text-xs" :class="remaining <= 100 ? 'font-semibold text-red-600' : 'text-gray-500'" aria-live="polite">
 
-                        <span x-text="remaining"></span> characters remaining
+                        <span x-text="remaining"></span> {{ __('general.characters_remaining') }}
 
                     </p>
 
@@ -360,11 +360,11 @@ new class extends Component {
 
                     <span wire:loading.remove wire:target="submit">
 
-                        {{ $replyToId ? 'Post Reply' : 'Post Comment' }}
+                        {{ $replyToId ? __('general.post_reply') : __('general.post_comment') }}
 
                     </span>
 
-                    <span wire:loading wire:target="submit">Posting...</span>
+                    <span wire:loading wire:target="submit">{{ __('general.posting') }}</span>
 
                 </button>
 
@@ -386,7 +386,7 @@ new class extends Component {
 
         @empty
 
-            <p class="py-6 text-sm text-gray-500">No comments yet. Be the first to join the conversation!</p>
+            <p class="py-6 text-sm text-gray-500">{{ __('general.no_comments_yet') }}</p>
 
         @endforelse
 

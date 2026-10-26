@@ -10,9 +10,9 @@ new class extends Component {
 
 <div class="mx-auto max-w-md px-6 py-12">
 
-    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">Forgot Your Password?</h2>
+    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">{{ __('general.forgot_password_heading') }}</h2>
 
-    <p class="mt-2 text-sm text-gray-600">Enter your email address and we'll send you a password reset link.</p>
+    <p class="mt-2 text-sm text-gray-600">{{ __('general.password_reset_description') }}</p>
 
     @if (session('status'))
 
@@ -26,7 +26,7 @@ new class extends Component {
 
         <div>
 
-            <label for="email" class="mb-1 block text-sm font-bold">Email Address</label>
+            <label for="email" class="mb-1 block text-sm font-bold">{{ __('general.email_address') }}</label>
 
             <input id="email"
                    name="email"
@@ -47,17 +47,17 @@ new class extends Component {
 
         <button type="submit" class="w-full rounded-sm bg-gradient px-4 py-3 font-bold text-white transition-opacity hover:opacity-90">
 
-            Send Password Reset Link
+            {{ __('general.send_password_reset_link') }}
 
         </button>
 
         <p class="text-center text-sm">
 
-            Remember your password?
+            {{ __('general.remember_password') }}
 
             <a href="{{ route('login') }}" class="font-semibold text-[var(--color-primary)] hover:underline">
 
-                Sign In
+                {{ __('general.sign_in') }}
 
             </a>
 

@@ -15,9 +15,9 @@ new class extends Component {
 
 <div class="mx-auto max-w-md px-6 py-12">
 
-    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">Create an Account</h2>
+    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">{{ __('general.create_account_heading') }}</h2>
 
-    <p class="mt-2 text-sm text-gray-600">Join the PkmnNexus community.</p>
+    <p class="mt-2 text-sm text-gray-600">{{ __('general.create_account_description') }}</p>
 
     <form method="POST" action="{{ route('register.store') }}" class="mt-6 space-y-5">
 
@@ -25,7 +25,7 @@ new class extends Component {
 
         <div>
 
-            <label for="name" class="mb-1 block text-sm font-bold">First Name</label>
+            <label for="name" class="mb-1 block text-sm font-bold">{{ __('general.first_name') }}</label>
 
             <input id="name"
                    name="name"
@@ -46,7 +46,7 @@ new class extends Component {
 
         <div>
 
-            <label for="surname" class="mb-1 block text-sm font-bold">Last Name (optional)</label>
+            <label for="surname" class="mb-1 block text-sm font-bold">{{ __('general.last_name_optional') }}</label>
 
             <input id="surname"
                    name="surname"
@@ -65,7 +65,7 @@ new class extends Component {
 
         <div>
 
-            <label for="display_name" class="mb-1 block text-sm font-bold">Display Name</label>
+            <label for="display_name" class="mb-1 block text-sm font-bold">{{ __('general.display_name') }}</label>
 
             <input id="display_name"
                    name="display_name"
@@ -85,7 +85,7 @@ new class extends Component {
 
         <div>
 
-            <label for="email" class="mb-1 block text-sm font-bold">Email Address</label>
+            <label for="email" class="mb-1 block text-sm font-bold">{{ __('general.email_address') }}</label>
 
             <input id="email"
                    name="email"
@@ -106,19 +106,26 @@ new class extends Component {
         <div
             x-data="{
                 password: '',
+                messages: {
+                    minLength: @js(__('general.password_rule_min_length', ['count' => 12])),
+                    uppercase: @js(__('general.password_rule_uppercase')),
+                    lowercase: @js(__('general.password_rule_lowercase')),
+                    number: @js(__('general.password_rule_number')),
+                    specialCharacter: @js(__('general.password_rule_special_character')),
+                },
                 get checks() {
                     return [
-                        { label: 'At least 12 characters', valid: this.password.length >= 12 },
-                        { label: 'At least one uppercase letter', valid: /[A-Z]/.test(this.password) },
-                        { label: 'At least one lowercase letter', valid: /[a-z]/.test(this.password) },
-                        { label: 'At least one number', valid: /[0-9]/.test(this.password) },
-                        { label: 'At least one special character', valid: /[^A-Za-z0-9]/.test(this.password) },
+                        { label: this.messages.minLength, valid: this.password.length >= 12 },
+                        { label: this.messages.uppercase, valid: /[A-Z]/.test(this.password) },
+                        { label: this.messages.lowercase, valid: /[a-z]/.test(this.password) },
+                        { label: this.messages.number, valid: /[0-9]/.test(this.password) },
+                        { label: this.messages.specialCharacter, valid: /[^A-Za-z0-9]/.test(this.password) },
                     ];
                 }
             }"
         >
 
-            <label for="password" class="mb-1 block text-sm font-bold">Password</label>
+            <label for="password" class="mb-1 block text-sm font-bold">{{ __('general.password') }}</label>
 
             <input id="password"
                    name="password"
@@ -130,7 +137,7 @@ new class extends Component {
 
             <div x-show="password.length > 0" x-cloak class="mt-3 rounded-sm border border-gray-200 p-3">
 
-                <p class="mb-2 text-sm font-bold">Password requirements</p>
+                <p class="mb-2 text-sm font-bold">{{ __('general.password_requirements') }}</p>
 
                 <ul class="space-y-1">
 
@@ -152,7 +159,7 @@ new class extends Component {
                 <p x-show="checks.every(check => check.valid)"
                    x-cloak
                    class="mt-2 text-sm font-bold text-green-700">
-                    Your password meets all requirements.
+                    {{ __('general.password_meets_all_requirements') }}
                 </p>
 
             </div>
@@ -167,7 +174,7 @@ new class extends Component {
 
         <div>
 
-            <label for="password_confirmation" class="mb-1 block text-sm font-bold">Confirm Password</label>
+            <label for="password_confirmation" class="mb-1 block text-sm font-bold">{{ __('general.confirm_password') }}</label>
 
             <input id="password_confirmation"
                    name="password_confirmation"
@@ -180,15 +187,15 @@ new class extends Component {
 
         <button type="submit" class="w-full rounded-sm bg-gradient px-4 py-3 font-bold text-white transition-opacity hover:opacity-90">
 
-            Create Account
+            {{ __('general.create_account_button') }}
 
         </button>
 
         <p class="text-center text-sm">
 
-            Already have an account?
+            {{ __('general.already_have_account') }}
 
-            <a href="{{ route('login') }}" class="font-semibold text-[var(--color-primary)] hover:underline">Sign in</a>
+            <a href="{{ route('login') }}" class="font-semibold text-[var(--color-primary)] hover:underline">{{ __('general.sign_in') }}</a>
 
         </p>
 

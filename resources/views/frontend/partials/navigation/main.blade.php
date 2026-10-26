@@ -9,6 +9,8 @@
 
             <x-social-media size="icon-sm"/>
 
+            <x-language-switcher />
+
             <x-member-menu />
 
         </div>
@@ -74,7 +76,7 @@
                                     : 'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' }}">
 
                                 
-                                {{ $item['label'] }}
+                                {{ __($item['label']) }}
 
                             </a>
 
@@ -89,6 +91,8 @@
             <div class="hidden lg:flex justify-end items-center w-2/12">
 
                 <x-social-media />
+
+                <x-language-switcher />
 
                 <x-member-menu />
 
@@ -156,7 +160,7 @@
                                 : 'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' }}"
                             @click="open = false">
 
-                            {{ $item['label'] }}
+                            {{ __($item['label']) }}
 
                         </a>
 
@@ -173,6 +177,8 @@
             <div class="flex items-center">
 
                 <x-social-media />
+
+                <x-language-switcher />
 
                 <x-member-menu />
 

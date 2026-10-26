@@ -7,6 +7,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
+
     public Comment $comment;
 
     public int $depth = 1;
@@ -37,6 +38,7 @@ new class extends Component {
     public function getAvatarUrl(): string
     {
         return $this->comment->user?->getFirstMediaUrl('user_avatar')
+
             ?: asset('images/default_avatar.png');
     }
 
@@ -45,7 +47,7 @@ new class extends Component {
      */
     public function getDisplayName(): string
     {
-        return $this->comment->user?->display_name ?? 'Former member';
+        return $this->comment->user?->display_name ?? __('general.former_member');
     }
 
     /**
@@ -113,14 +115,12 @@ new class extends Component {
         );
 
         $this->resetValidation();
-
         $this->reportSubmitted = false;
         $this->reportReason = '';
         $this->reportDetails = null;
         $this->reportFirstName = '';
         $this->reportLastName = '';
         $this->reportEmail = '';
-
         $this->showReportForm = true;
     }
 
@@ -223,9 +223,7 @@ new class extends Component {
             ->findOrFail($this->comment->id);
     }
 };
-
 ?>
-
 <div id="comment-{{ $comment->id }}"
      @class([
         'space-y-3',
@@ -235,7 +233,7 @@ new class extends Component {
     <div class="flex items-start gap-3">
 
         <img src="{{ $this->getAvatarUrl() }}"
-             alt="{{ $this->getDisplayName() }}'s avatar"
+             alt="{{ __('general.comment_author_avatar', ['name' => $this->getDisplayName()]) }}"
              width="44"
              height="44"
              loading="lazy"
@@ -245,7 +243,7 @@ new class extends Component {
 
             @if ($this->isDeleted())
 
-                <p class="text-sm italic text-gray-500">This comment has been removed.</p>
+                <p class="text-sm italic text-gray-500">{{ __('general.comment_removed') }}</p>
 
             @else
 
@@ -282,13 +280,17 @@ new class extends Component {
                     @if (filled($comment->user->location))
 
                         <span class="inline-flex items-center gap-1 mr-1">
+
                             <x-heroicon-o-map-pin class="h-3.5 w-3.5 shrink-0" />
+
                             <span>{{ $comment->user->location }}</span>
+
                             @if (filled($comment->user->website) || $comment->user->social_links)
 
                                 <span class="mx-1 text-gray-400">·</span>
 
                             @endif
+
                         </span>
 
                     @endif
@@ -298,7 +300,7 @@ new class extends Component {
                         <a href="{{ $comment->user->website }}"
                            target="_blank"
                            rel="noopener noreferrer"
-                           aria-label="Visit website"
+                           aria-label="{{ __('general.visit_website') }}"
                            title="{{ $comment->user->website }}"
                            class="inline-flex items-center gap-1 mr-1 transition-colors duration-200 hover:text-[var(--color-primary)]">
 
@@ -307,7 +309,9 @@ new class extends Component {
                             <span>{{ $comment->user->formatted_website }}</span>
 
                             @if ($comment->user->social_links)
+
                                 <span class="ml-1 mr-1 text-gray-400">·</span>
+
                             @endif
 
                         </a>
@@ -344,22 +348,21 @@ new class extends Component {
                  && $depth < 3
                  && ! $this->isDeleted())
 
-                <button type="button" wire:click="startReply" class="cursor-pointer text-xs font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline">Reply</button>
+                <button type="button" wire:click="startReply" class="cursor-pointer text-xs font-semibold text-[var(--color-secondary)] no-underline transition-colors duration-200 hover:text-[var(--color-primary)] hover:no-underline">{{ __('general.reply') }}</button>
 
             @endif
 
-            @if (! $this->isDeleted()
-                 && (! auth()->check() || auth()->id() !== $comment->user_id))
+            @if (! $this->isDeleted() && (! auth()->check() || auth()->id() !== $comment->user_id))
 
                 <button type="button"
                         wire:click="openReportForm"
                         class="inline-flex cursor-pointer items-center gap-1 text-xs text-gray-500 transition-colors duration-200 hover:text-[var(--color-primary)]"
-                        aria-label="Report comment"
-                        title="Report comment">
+                        aria-label="{{ __('general.report_comment') }}"
+                        title="{{ __('general.report_comment') }}">
 
                     <x-heroicon-o-flag class="h-4 w-4" />
 
-                    <span>Report comment</span>
+                    <span>{{ __('general.report_comment') }}</span>
 
                 </button>
 
@@ -371,7 +374,7 @@ new class extends Component {
 
     @if ($reportSubmitted)
 
-        <div role="status" class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md">Thank you. Your report has been submitted for review.</div>
+        <div role="status" class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md">{{ __('general.comment_report_submitted') }}</div>
 
     @endif
 
@@ -381,9 +384,9 @@ new class extends Component {
 
             <div>
 
-                <h3 class="font-display text-base font-bold text-[var(--color-secondary)]">Report comment</h3>
+                <h3 class="font-display text-base font-bold text-[var(--color-secondary)]">{{ __('general.report_comment') }}</h3>
 
-                <p class="mt-1 text-sm text-gray-600">Tell us why you are reporting this comment. Reports are reviewed by our moderation team.</p>
+                <p class="mt-1 text-sm text-gray-600">{{ __('general.comment_report_description') }}</p>
 
             </div>
 
@@ -393,7 +396,7 @@ new class extends Component {
 
                     <div>
 
-                        <label for="reportFirstName-{{ $comment->id }}" class="mb-1 block text-sm font-bold">First name</label>
+                        <label for="reportFirstName-{{ $comment->id }}" class="mb-1 block text-sm font-bold">{{ __('general.first_name') }}</label>
 
                         <input id="reportFirstName-{{ $comment->id }}"
                                type="text"
@@ -413,7 +416,7 @@ new class extends Component {
 
                     <div>
 
-                        <label for="reportLastName-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Last name</label>
+                        <label for="reportLastName-{{ $comment->id }}" class="mb-1 block text-sm font-bold">{{ __('general.last_name') }}</label>
 
                         <input id="reportLastName-{{ $comment->id }}"
                                type="text"
@@ -435,7 +438,7 @@ new class extends Component {
 
                 <div>
 
-                    <label for="reportEmail-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Email address</label>
+                    <label for="reportEmail-{{ $comment->id }}" class="mb-1 block text-sm font-bold">{{ __('general.email_address') }}</label>
 
                     <input id="reportEmail-{{ $comment->id }}"
                            type="email"
@@ -457,19 +460,24 @@ new class extends Component {
 
             <div>
 
-                <label for="reportReason-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Reason for reporting</label>
+                <label for="reportReason-{{ $comment->id }}" class="mb-1 block text-sm font-bold">{{ __('general.reason_for_reporting') }}</label>
 
                 <select id="reportReason-{{ $comment->id }}"
                         wire:model="reportReason"
                         required
                         class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm">
 
-                    <option value="">Select a reason</option>
-                    <option value="spam">Spam or advertising</option>
-                    <option value="harassment">Harassment or bullying</option>
-                    <option value="hate_speech">Hate speech</option>
-                    <option value="inappropriate_content">Inappropriate content</option>
-                    <option value="other">Other</option>
+                    <option value="">{{ __('general.select_a_reason') }}</option>
+
+                    <option value="spam">{{ __('general.report_reason_spam') }}</option>
+
+                    <option value="harassment">{{ __('general.report_reason_harassment') }}</option>
+
+                    <option value="hate_speech">{{ __('general.report_reason_hate_speech') }}</option>
+
+                    <option value="inappropriate_content">{{ __('general.report_reason_inappropriate_content') }}</option>
+
+                    <option value="other">{{ __('general.report_reason_other') }}</option>
 
                 </select>
 
@@ -483,16 +491,16 @@ new class extends Component {
 
             <div>
 
-                <label for="reportDetails-{{ $comment->id }}" class="mb-1 block text-sm font-bold">Additional details <span class="font-normal text-gray-500">(optional)</span></label>
+                <label for="reportDetails-{{ $comment->id }}" class="mb-1 block text-sm font-bold">{{ __('general.additional_details') }} <span class="font-normal text-gray-500">({{ __('general.optional') }})</span></label>
 
                 <textarea id="reportDetails-{{ $comment->id }}"
                           wire:model="reportDetails"
                           rows="3"
                           maxlength="1000"
                           class="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm"
-                          placeholder="Provide any additional context..."></textarea>
+                          placeholder="{{ __('general.report_details_placeholder') }}"></textarea>
 
-                <p class="mt-1 text-xs text-gray-500">Maximum 1000 characters.</p>
+                <p class="mt-1 text-xs text-gray-500">{{ __('general.maximum_characters', ['count' => 1000]) }}</p>
 
                 @error('reportDetails')
 
@@ -509,16 +517,19 @@ new class extends Component {
                         wire:target="submitReport"
                         class="cursor-pointer rounded-sm bg-gradient px-4 py-2 text-sm font-bold text-white transition-opacity duration-200 disabled:opacity-50">
 
-                    <span wire:loading.remove wire:target="submitReport">Submit report</span>
-                    <span wire:loading wire:target="submitReport">Submitting...</span>
+                    <span wire:loading.remove wire:target="submitReport">{{ __('general.submit_report') }}</span>
+
+                    <span wire:loading wire:target="submitReport">{{ __('general.submitting') }}</span>
 
                 </button>
 
                 <button type="button"
+
                         wire:click="cancelReport"
+
                         class="cursor-pointer rounded-sm border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors duration-200 hover:bg-gray-50">
 
-                    Cancel
+                    {{ __('general.cancel') }}
 
                 </button>
 

@@ -15,7 +15,7 @@
                 fetchpriority="high"
             />
 
-            <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-md font-black font-display uppercase rounded">{{ filled($article->video_url) ? 'Video' : $article->category->name }}</span>
+            <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-md font-black font-display uppercase rounded">{{ filled($article->video_url) ? __('general.video') : $article->category->name }}</span>
 
             <x-play-button :article="$article" />
 

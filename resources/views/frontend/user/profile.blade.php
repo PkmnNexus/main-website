@@ -14,9 +14,9 @@
 
                 <div class="mb-8">
 
-                    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">My Profile</h2>
+                    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">{{ __('general.my_profile') }}</h2>
 
-                    <p class="mt-2 text-gray-600">Manage your account and profile information.</p>
+                    <p class="mt-2 text-gray-600">{{ __('general.manage_account_profile') }}</p>
 
                 </div>
 
@@ -26,13 +26,13 @@
 
                         <div>
 
-                            <h3 class="font-display text-lg font-bold text-[var(--color-secondary)]">Account Information</h3>
+                            <h3 class="font-display text-lg font-bold text-[var(--color-secondary)]">{{ __('general.account_information') }}</h3>
 
                         </div>
 
                         <div>
 
-                            <p class="text-sm text-gray-500">Name</p>
+                            <p class="text-sm text-gray-500">{{ __('general.name') }}</p>
 
                             <p class="font-medium">{{ auth()->user()->name }} {{ auth()->user()->surname }}</p>
 
@@ -40,7 +40,7 @@
 
                         <div>
 
-                            <p class="text-sm text-gray-500">Display name</p>
+                            <p class="text-sm text-gray-500">{{ __('general.display_name') }}</p>
 
                             <p class="font-medium">{{ auth()->user()->display_name }}</p>
 
@@ -48,7 +48,7 @@
 
                         <div>
 
-                            <p class="text-sm text-gray-500">Email address</p>
+                            <p class="text-sm text-gray-500">{{ __('general.email_address') }}</p>
 
                             <p class="font-medium">{{ auth()->user()->email }}</p>
 
@@ -56,17 +56,17 @@
 
                         <div>
 
-                            <p class="text-sm text-gray-500">Location</p>
+                            <p class="text-sm text-gray-500">{{ __('general.location') }}</p>
 
-                            <p class="font-medium">{{ auth()->user()->location ?: 'No location set.'}}</p>
+                            <p class="font-medium">{{ auth()->user()->location ?: __('general.no_location_set') }}</p>
 
                         </div>
 
                         <div>
 
-                            <p class="text-sm text-gray-500">Bio</p>
+                            <p class="text-sm text-gray-500">{{ __('general.bio') }}</p>
 
-                            <p class="font-medium whitespace-pre-line">{{ auth()->user()->bio ?: 'No bio added yet.' }}</p>
+                            <p class="font-medium whitespace-pre-line">{{ auth()->user()->bio ?: __('general.no_bio_added') }}</p>
 
                         </div>
 
@@ -78,13 +78,11 @@
 
                             <div class="w-[250px] h-[250px] rounded-md border border-[var(--color-primary)] p-2">
 
-                                <img
-                                    src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
-                                    alt="{{ auth()->user()->display_name }}'s profile picture"
-                                    width="250"
-                                    height="250"
-                                    class="w-full h-full object-cover rounded-sm"
-                                >
+                                <img src="{{ auth()->user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
+                                     alt="{{ __('general.users_profile_picture', ['name' => auth()->user()->display_name]) }}"
+                                     width="250"
+                                     height="250"
+                                     class="w-full h-full object-cover rounded-sm">
 
                             </div>
 
@@ -94,7 +92,7 @@
 
                             <div>
 
-                                <h3 class="font-display text-lg font-bold text-[var(--color-secondary)]">Website</h3>
+                                <h3 class="font-display text-lg font-bold text-[var(--color-secondary)]">{{ __('general.website') }}</h3>
 
                             </div>
 
@@ -113,7 +111,7 @@
 
                                 @else
 
-                                    <p class="text-sm text-gray-500">There is no website.</p>
+                                    <p class="text-sm text-gray-500">{{ __('general.no_website') }}</p>
 
                                 @endif
 
@@ -121,7 +119,7 @@
 
                             <div class="border-t border-gray-200 pt-6">
 
-                                <h3 class="font-display text-lg font-bold text-[var(--color-secondary)]">Social media</h3>
+                                <h3 class="font-display text-lg font-bold text-[var(--color-secondary)]">{{ __('general.social_media') }}</h3>
 
                             </div>
 

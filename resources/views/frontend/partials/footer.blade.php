@@ -9,7 +9,7 @@
              itemscope 
              itemtype="https://schema.org/Organization">
 
-            <p class="text-sm md:text-xs m-0 font-semibold" itemprop="name">&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+            <p class="text-sm md:text-xs m-0 font-semibold" itemprop="name">&copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('general.all_rights_reserved') }}</p>
 
         </div>
 
@@ -28,7 +28,7 @@
                            class="text-white text-sm md:text-xs"
                            itemprop="url">
 
-                            {{ $item['label'] }}
+                            {{ __($item['label']) }}
                             
                         </a>
 

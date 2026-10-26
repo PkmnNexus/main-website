@@ -5,7 +5,7 @@
              itemscope
              itemtype="https://schema.org/ItemList">
 
-        <h2 id="sources-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">Sources</h2>
+        <h2 id="sources-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">{{ __('navigation.sources') }}</h2>
 
         <ul class="mt-4 !list-[square] leading-tight list-square space-y-2 pl-4 marker:text-[var(--color-primary)]">
     @foreach($article->sources as $source)

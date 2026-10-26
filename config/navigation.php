@@ -3,14 +3,14 @@
 return [
     'main' => [
         [
-            'label' => 'Home',
+            'label' => 'navigation.home',
             'route' => 'home',
             'active_routes' => [
                 'home',
             ],
         ],
         [
-            'label' => 'Articles',
+            'label' => 'navigation.articles',
             'route' => 'article.index',
             'active_routes' => [
                 'article.index',
@@ -21,7 +21,7 @@ return [
             ],
         ],
         [
-            'label' => 'Videos',
+            'label' => 'navigation.videos',
             'route' => 'articles.videos',
             'active_routes' => [
                 'articles.videos',
@@ -31,60 +31,60 @@ return [
     ],
     'subfooter' => [
         [
-            'label' => 'About',
-            'route' => 'page.about'
+            'label' => 'navigation.about',
+            'route' => 'page.about',
         ],
         [
-            'label' => 'Disclaimer',
-            'route' => 'page.disclaimer'
+            'label' => 'navigation.disclaimer',
+            'route' => 'page.disclaimer',
         ],
         [
-            'label' => 'Privacy Policy',
-            'route' => 'page.privacy-policy'
+            'label' => 'navigation.privacy_policy',
+            'route' => 'page.privacy-policy',
         ],
         [
-            'label' => 'Terms and Conditions',
-            'route' => 'page.terms-and-conditions'
+            'label' => 'navigation.terms_and_conditions',
+            'route' => 'page.terms-and-conditions',
         ],
         [
-            'label' => 'Cookie Policy',
-            'route' => 'page.cookie-policy'
+            'label' => 'navigation.cookie_policy',
+            'route' => 'page.cookie-policy',
         ],
     ],
     'categories' => [
         [
-            'label' => 'Pokémon TCG',
-            'route' => 'home'
+            'label' => 'navigation.pokemon_tcg',
+            'route' => 'home',
         ],
         [
-            'label' => 'Pokémon GO',
-            'route' => 'home'
+            'label' => 'navigation.pokemon_go',
+            'route' => 'home',
         ],
         [
-            'label' => 'Pokémon Horizons',
-            'route' => 'home'
+            'label' => 'navigation.pokemon_horizons',
+            'route' => 'home',
         ],
         [
-            'label' => 'Pokémon Legends: Z-A',
-            'route' => 'home'
+            'label' => 'navigation.pokemon_legends_za',
+            'route' => 'home',
         ],
         [
-            'label' => 'Nintendo Switch',
-            'route' => 'home'
-        ]
+            'label' => 'navigation.nintendo_switch',
+            'route' => 'home',
+        ],
     ],
     'footer' => [
         [
-            'label' => 'Disclaimer',
-            'route' => 'page.disclaimer'
+            'label' => 'navigation.disclaimer',
+            'route' => 'page.disclaimer',
         ],
         [
-            'label' => 'Cookie Policy',
-            'route' => 'page.cookie-policy'
+            'label' => 'navigation.cookie_policy',
+            'route' => 'page.cookie-policy',
         ],
         [
-            'label' => 'Sitemap',
-            'route' => 'sitemap'
-        ]
-    ]
+            'label' => 'navigation.sitemap',
+            'route' => 'sitemap',
+        ],
+    ],
 ];

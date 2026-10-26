@@ -2,7 +2,7 @@
 
     <section class="rounded-xl bg-white shadow-md p-6" aria-labelledby="video-information-heading">
 
-        <h2 id="video-information-heading" class="font-display !text-2xl font-bold text-[var(--color-primary)] mb-6">Video Information</h2>
+        <h2 id="video-information-heading" class="font-display !text-2xl font-bold text-[var(--color-primary)] mb-6">{{ __('navigation.video_information') }}</h2>
 
         <div class="space-y-5">
 
@@ -17,7 +17,7 @@
 
                     <div class="min-w-0">
 
-                        <p class="text-sm text-[var(--color-secondary)]">Published</p>
+                        <p class="text-sm text-[var(--color-secondary)]">{{ __('navigation.published') }}</p>
 
                         <time class="font-bold text-[var(--color-primary)]" datetime="{{ $article->youtube_published_at->toIso8601String() }}">{{ $article->youtube_published_at->translatedFormat('F jS, Y') }}</time>
 
@@ -38,7 +38,7 @@
 
                     <div class="min-w-0">
 
-                        <p class="text-sm text-[var(--color-secondary)]">Duration</p>
+                        <p class="text-sm text-[var(--color-secondary)]">{{ __('navigation.duration') }}</p>
 
                         <p class="font-bold text-[var(--color-primary)]">{{ $duration }}</p>
 
@@ -56,7 +56,7 @@
                         <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
                     </svg>
 
-                    <span>Watch on YouTube</span>
+                    <span>{{ __('navigation.watch_on_youtube') }}</span>
 
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                         <path d="M14 3h7v7M10 14 21 3M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6" />
@@ -64,7 +64,7 @@
 
                 </a>
 
-                <p class="text-xs text-center text-[var(--color-secondary)]">Open the original video on YouTube</p>
+                <p class="text-xs text-center text-[var(--color-secondary)]">{{ __('navigation.open_original_video_on_youtube') }}</p>
 
             @endif
 

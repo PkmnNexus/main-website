@@ -71,7 +71,7 @@ new class extends Component
     @else
 
         <div class="px-4 py-3 text-white text-sm font-display font-black uppercase rounded" style="background: linear-gradient(115deg, rgba(85, 65, 240, 1) 10%, rgba(71, 204, 189, 1) 100%);">
-            There are currently no videos available.
+            {{ __('general.no_videos') }}
         </div>
 
     @endif

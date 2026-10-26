@@ -1,4 +1,4 @@
-<nav aria-label="Account navigation" class="w-full bg-white border-b border-gray-200 shadow-md xl:flex xl:w-[250px] xl:shrink-0 xl:border-b-0 xl:border-r xl:shadow-none">
+<nav aria-label="{{ __('general.account_general') }}" class="w-full bg-white border-b border-gray-200 shadow-md xl:flex xl:w-[250px] xl:shrink-0 xl:border-b-0 xl:border-r xl:shadow-none">
 
     <ul class="flex flex-col items-stretch gap-1 w-full p-4 font-display font-bold text-sm">
 
@@ -11,7 +11,7 @@
                    'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' => ! request()->routeIs('account.profile'),
                ])>
 
-                Profile
+                {{ __('general.profile') }}
 
             </a>
 
@@ -26,7 +26,7 @@
                    'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' => ! request()->routeIs('account.profile.edit'),
                ])>
 
-                Edit Profile
+                {{ __('general.edit_profile') }}
 
             </a>
 
@@ -38,7 +38,7 @@
                 @csrf
 
                 <button type="submit" class="flex items-center w-full cursor-pointer rounded-sm px-4 py-2 text-[var(--color-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200">
-                    Log out
+                    {{ __('general.log_out') }}
                 </button>
 
             </form>
@@ -49,7 +49,7 @@
 
         <li>
 
-            <a href="{{ route('home') }}" class="flex items-center w-full rounded-sm px-4 py-2 text-[var(--color-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200">Back to website</a>
+            <a href="{{ route('home') }}" class="flex items-center w-full rounded-sm px-4 py-2 text-[var(--color-secondary)] hover:text-[var(--color-primary)] transition-colors duration-200">{{ __('general.back_to_website') }}</a>
 
         </li>
 

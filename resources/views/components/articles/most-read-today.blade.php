@@ -8,7 +8,7 @@
         <meta itemprop="name" content="Most read today">
         <meta itemprop="numberOfItems" content="{{ $articles->count() }}">
 
-        <h2 id="most-read-today-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">Most read today</h2>
+        <h2 id="most-read-today-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">{{ __('navigation.most_read_today') }}</h2>
 
         <div class="flex flex-col gap-3">
 

@@ -24,28 +24,28 @@ new class extends Component {
 
 <div class="mx-auto max-w-md px-6 py-12">
 
-    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">Verify Your Email Address</h2>
+    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">{{ __('general.email_verification_heading') }}</h2>
 
-    <p class="mt-2 text-sm text-gray-600">Before continuing, please verify your email address using the link we sent you.</p>
+    <p class="mt-2 text-sm text-gray-600">{{ __('general.email_verification_description') }}</p>
 
     @if (session('status') === 'verification-link-sent')
 
-        <div class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md"">A new verification link has been sent to your email address.</div>
+        <div class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md">{{ __('general.verification_link_sent') }}</div>
 
     @endif
 
     <div class="mt-6 space-y-5">
 
-        <p class="text-sm text-gray-600">If you did not receive the email, you can request another verification link.</p>
+        <p class="text-sm text-gray-600">{{ __('general.verification_email_not_received') }}</p>
 
         <button type="button"
                 wire:click="resendVerificationEmail"
                 wire:loading.attr="disabled"
                 class="w-full rounded-sm bg-gradient px-4 py-3 font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50">
 
-            <span wire:loading.remove wire:target="resendVerificationEmail">Resend Verification Email</span>
+            <span wire:loading.remove wire:target="resendVerificationEmail">{{ __('general.resend_verification_email') }}</span>
 
-            <span wire:loading wire:target="resendVerificationEmail">Sending...</span>
+            <span wire:loading wire:target="resendVerificationEmail">{{ __('general.sending') }}</span>
 
         </button>
 
@@ -55,7 +55,7 @@ new class extends Component {
 
             <button type="submit" class="w-full rounded-sm border border-gray-300 px-4 py-3 font-bold text-gray-700 transition-colors hover:bg-gray-50">
 
-                Sign Out
+                {{ __('general.sign_out') }}
 
             </button>
 

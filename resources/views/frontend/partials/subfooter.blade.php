@@ -19,7 +19,7 @@
 
                         <li itemprop="name">
 
-                            <a href="{{ route($item['route']) }}"itemprop="url">{{ $item['label'] }}</a>
+                            <a href="{{ route($item['route']) }}"itemprop="url">{{ __($item['label']) }}</a>
 
                         </li>
 
@@ -41,7 +41,7 @@
 
                         <li itemprop="name">
 
-                            <a href="{{ route($item['route']) }}" itemprop="url">{{ $item['label'] }}</a>
+                            <a href="{{ route($item['route']) }}" itemprop="url">{{ __($item['label']) }}</a>
 
                         </li>
 
@@ -65,7 +65,7 @@
 
                             <a href="{{ route($item['route']) }}" itemprop="url">
 
-                                {{ $item['label'] }}
+                                {{ __($item['label']) }}
 
                             </a>
 
@@ -95,9 +95,9 @@
              itemscope 
              itemtype="https://schema.org/CreativeWork">
 
-            <p class="mb-3 md:mb-1" itemprop="text">Pokémon and all related trademarks are © 1995-2025 Nintendo, Creatures, and GAME FREAK. English card images on this website are the property of The Pokémon Company International, Inc.</p>
+            <p class="mb-3 md:mb-1" itemprop="text">{{ __('general.copyright_notice') }}</p>
 
-            <p itemprop="text">PkmnInsider is an independent fan site. We are not official in any way, nor affiliated, sponsored, or endorsed by Nintendo, Creatures, GAME FREAK, or TPCi.</p>
+            <p itemprop="text">{{ __('general.independence_notice') }}</p>
 
         </div>
 

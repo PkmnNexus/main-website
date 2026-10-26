@@ -25,7 +25,7 @@
 
                 @if (filled($article->video_url))
 
-                    Video
+                    __('general.video')
 
                 @else
 

@@ -8,11 +8,11 @@
 
                 <div class="flex items-center justify-between gap-4 text-sm font-semibold text-gray-900 xl:text-white">
 
-                    <span class="font-black">Welcome {{ auth()->user()->name }} {{ auth()->user()->surname }}</span>
+                    <span class="font-black">{{ __('general.welcome') }} {{ auth()->user()->name }} {{ auth()->user()->surname }}</span>
 
                     <a href="{{ url('/admin') }}" class="inline-flex shrink-0 items-center gap-2 hover:underline font-black">
 
-                        Go to the admin page
+                        {{ __('general.go_to_admin') }}
                         <x-heroicon-o-arrow-right class="h-4 w-4" />
 
                     </a>

@@ -7,7 +7,7 @@
 
         <div class="space-y-3">
 
-            <h2 class="font-display !text-2xl font-bold text-[var(--color-primary)]">Related articles</h2>
+            <h2 class="font-display !text-2xl font-bold text-[var(--color-primary)]">{{ __('navigation.related_articles') }}</h2>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 gap-4">
 

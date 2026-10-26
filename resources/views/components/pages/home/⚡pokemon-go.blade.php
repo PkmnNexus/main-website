@@ -42,7 +42,7 @@ new class extends Component {
 
         <div class="rounded px-4 py-3 text-sm font-display font-black uppercase text-white"
                 style="background: linear-gradient(115deg, rgba(85, 65, 240, 1) 10%, rgba(71, 204, 189, 1) 100%);">
-            There are currently no Pokémon GO articles available.
+            {{ __('general.no_pokemon_go_articles') }}
         </div>
 
     @endif

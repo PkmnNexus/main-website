@@ -19,7 +19,7 @@
 
                     <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-white"></span>
 
-                    <span class="font-display text-sm font-black uppercase tracking-wider">Breaking News</span>
+                    <span class="font-display text-sm font-black uppercase tracking-wider">{{ __('general.breaking_news') }}</span>
 
                 </div>
 

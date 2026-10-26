@@ -10,7 +10,7 @@
 
         @if($showHeading)
 
-            <h2 id="tag-cloud-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">Tags</h2>
+            <h2 id="tag-cloud-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">{{ __('navigation.tags') }}</h2>
 
         @endif
 

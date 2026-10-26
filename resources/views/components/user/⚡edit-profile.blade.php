@@ -126,7 +126,7 @@ new class extends Component
 
         $this->reset('password', 'password_confirmation', 'avatar');
 
-        session()->flash('status', 'Profile updated successfully.');
+        session()->flash('status', __('general.profile_updated_successfully'));
 
         $this->dispatch('profile-updated');
     }
@@ -141,9 +141,9 @@ new class extends Component
 
             <div>
 
-                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">Personal information</h2>
+                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">{{ __('general.personal_information') }}</h2>
 
-                <p class="mt-1 text-sm text-gray-600">Update your profile information.</p>
+                <p class="mt-1 text-sm text-gray-600">{{ __('general.update_profile_information') }}</p>
 
             </div>
 
@@ -155,7 +155,7 @@ new class extends Component
 
             <div>
 
-                <label for="name" class="block text-sm font-bold mb-2">Name</label>
+                <label for="name" class="block text-sm font-bold mb-2">{{ __('general.name') }}</label>
 
                 <input id="name"
                        type="text"
@@ -174,7 +174,7 @@ new class extends Component
 
             <div>
 
-                <label for="surname" class="block text-sm font-bold mb-2">Surname</label>
+                <label for="surname" class="block text-sm font-bold mb-2">{{ __('general.surname') }}</label>
 
                 <input id="surname"
                        type="text"
@@ -192,7 +192,7 @@ new class extends Component
 
             <div>
 
-                <label for="display_name" class="block text-sm font-bold mb-2">Display name</label>
+                <label for="display_name" class="block text-sm font-bold mb-2">{{ __('general.display_name') }}</label>
 
                 <input id="display_name"
                        type="text"
@@ -211,7 +211,7 @@ new class extends Component
 
             <div>
 
-                <label for="email" class="block text-sm font-bold mb-2">Email address</label>
+                <label for="email" class="block text-sm font-bold mb-2">{{ __('general.email_address') }}</label>
 
                 <input id="email"
                        type="email"
@@ -230,19 +230,19 @@ new class extends Component
 
             <div>
 
-                <label for="location" class="block text-sm font-bold mb-2">Location</label>
+                <label for="location" class="block text-sm font-bold mb-2">{{ __('general.location') }}</label>
 
                 <input id="location"
                        type="text"
                        wire:model="location"
                        maxlength="255"
-                       placeholder="San Francisco, California, USA"
+                       placeholder="{{ __('general.location_placeholder') }}"
                        aria-describedby="location-help location-privacy"
                        class="w-full rounded-sm border border-gray-300 px-4 py-3">
 
-                <p id="location-help" class="mt-1 text-sm text-gray-500">Enter your city, state or region, and country. You can choose how specific you want to be.</p>
+                <p id="location-help" class="mt-1 text-sm text-gray-500">{{ __('general.location_help') }}</p>
 
-                <p id="location-privacy" class="mt-1 text-sm text-gray-500">Your location may be visible on your public profile. If you don't want to display your location, leave this field empty.</p>
+                <p id="location-privacy" class="mt-1 text-sm text-gray-500">{{ __('general.location_privacy') }}</p>
 
                 @error('location')
 
@@ -254,7 +254,7 @@ new class extends Component
 
             <div>
 
-                <label for="bio" class="block text-sm font-bold mb-2">Bio</label>
+                <label for="bio" class="block text-sm font-bold mb-2">{{ __('general.bio') }}</label>
 
                 <textarea id="bio"
                           wire:model="bio"
@@ -262,7 +262,7 @@ new class extends Component
                           maxlength="1000"
                           class="w-full rounded-sm border border-gray-300 px-4 py-3"></textarea>
 
-                <p class="mt-1 text-sm text-gray-500">Maximum 1000 characters.</p>
+                <p class="mt-1 text-sm text-gray-500">{{ __('general.maximum_characters', ['count' => 1000]) }}</p>
 
                 @error('bio')
 
@@ -278,15 +278,15 @@ new class extends Component
 
             <div>
 
-                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">Social</h2>
+                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">{{ __('general.social') }}</h2>
 
-                <p class="mt-1 text-sm text-gray-600">Add your website and social profile links. All fields are optional.</p>
+                <p class="mt-1 text-sm text-gray-600">{{ __('general.social_links_description') }}</p>
 
             </div>
 
             <div>
 
-                <label for="website" class="block text-sm font-bold mb-2">Website</label>
+                <label for="website" class="block text-sm font-bold mb-2">{{ __('general.website') }}</label>
 
                 <input id="website"
                        type="url"
@@ -305,7 +305,7 @@ new class extends Component
 
             <div>
 
-                <label for="social_link_1" class="block text-sm font-bold mb-2">Social link 1</label>
+                <label for="social_link_1" class="block text-sm font-bold mb-2">{{ __('general.social_link_number', ['number' => 1]) }}</label>
 
                 <input id="social_link_1"
                        type="url"
@@ -323,7 +323,7 @@ new class extends Component
 
             <div>
 
-                <label for="social_link_2" class="block text-sm font-bold mb-2">Social link 2</label>
+                <label for="social_link_2" class="block text-sm font-bold mb-2">{{ __('general.social_link_number', ['number' => 2]) }}</label>
 
                 <input id="social_link_2"
                        type="url"
@@ -341,7 +341,7 @@ new class extends Component
 
             <div>
 
-                <label for="social_link_3" class="block text-sm font-bold mb-2">Social link 3</label>
+                <label for="social_link_3" class="block text-sm font-bold mb-2">{{ __('general.social_link_number', ['number' => 3]) }}</label>
 
                 <input id="social_link_3"
                        type="url"
@@ -359,7 +359,7 @@ new class extends Component
 
             <div>
 
-                <label for="social_link_4" class="block text-sm font-bold mb-2">Social link 4</label>
+                <label for="social_link_4" class="block text-sm font-bold mb-2">{{ __('general.social_link_number', ['number' => 4]) }}</label>
 
                 <input id="social_link_4"
                        type="url"
@@ -381,9 +381,9 @@ new class extends Component
 
             <div>
 
-                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">Profile picture</h2>
+                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">{{ __('general.profile_picture') }}</h2>
 
-                <p class="mt-1 text-sm text-gray-600">Upload a new profile picture. Maximum file size: 2 MB.</p>
+                <p class="mt-1 text-sm text-gray-600">{{ __('general.profile_picture_upload_help') }}</p>
 
             </div>
 
@@ -394,13 +394,13 @@ new class extends Component
                     @if ($avatar)
 
                         <img src="{{ $avatar->temporaryUrl() }}"
-                             alt="Profile picture preview"
+                             alt="{{ __('general.profile_picture_preview') }}"
                              class="w-full h-full object-cover rounded-sm">
 
                     @else
 
                         <img src="{{ Auth::user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
-                             alt="{{ Auth::user()->display_name }}'s profile picture"
+                             alt="{{ __('general.users_profile_picture', ['name' => Auth::user()->display_name]) }}"
                              class="w-full h-full object-cover rounded-sm">
 
                     @endif
@@ -413,7 +413,7 @@ new class extends Component
                            type="file"
                            wire:model="avatar"
                            accept="image/*"
-                           aria-label="Choose a profile picture"
+                           aria-label="{{ __('general.choose_profile_picture') }}"
                            class="block w-full min-w-0 text-sm text-gray-600 file:mr-4 file:rounded-sm file:border-0 file:bg-gradient file:px-4 file:py-2 file:font-display file:font-bold file:text-white">
 
                     @error('avatar')
@@ -423,7 +423,7 @@ new class extends Component
                     @enderror
 
                     <div wire:loading wire:target="avatar" class="mt-2 text-sm text-gray-500">
-                        Uploading image...
+                        {{ __('general.uploading_image') }}
                     </div>
 
                 </div>
@@ -436,15 +436,15 @@ new class extends Component
 
             <div>
 
-                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">Change password</h2>
+                <h2 class="font-display font-bold text-xl text-[var(--color-secondary)]">{{ __('general.change_password') }}</h2>
 
-                <p class="mt-1 text-sm text-gray-600">Leave both password fields empty if you do not want to change your password.</p>
+                <p class="mt-1 text-sm text-gray-600">{{ __('general.change_password_help') }}</p>
 
             </div>
 
             <div>
 
-                <label for="password" class="block text-sm font-bold mb-2">New password</label>
+                <label for="password" class="block text-sm font-bold mb-2">{{ __('general.new_password') }}</label>
 
                 <input id="password"
                        type="password"
@@ -462,7 +462,7 @@ new class extends Component
 
             <div>
 
-                <label for="password_confirmation" class="block text-sm font-bold mb-2">Confirm new password</label>
+                <label for="password_confirmation" class="block text-sm font-bold mb-2">{{ __('general.confirm_new_password') }}</label>
 
                 <input id="password_confirmation"
                        type="password"
@@ -481,8 +481,8 @@ new class extends Component
                     wire:target="save, avatar"
                     class="rounded-sm bg-gradient px-6 py-3 font-display font-bold text-white transition-opacity duration-200 disabled:opacity-50">
 
-                <span wire:loading.remove wire:target="save">Save changes</span>
-                <span wire:loading wire:target="save">Saving...</span>
+                <span wire:loading.remove wire:target="save">{{ __('general.save_changes') }}</span>
+                <span wire:loading wire:target="save">{{ __('general.saving') }}</span>
 
             </button>
 

@@ -8,7 +8,7 @@
         <meta itemprop="name" content="Explore categories">
         <meta itemprop="numberOfItems" content="{{ $categories->count() }}">
 
-        <h2 id="categories-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">Explore categories</h2>
+        <h2 id="categories-heading" class="font-display text-xl font-bold text-[var(--color-primary)]">{{ __('navigation.explore_categories') }}</h2>
 
         <nav aria-label="Article categories">
 

@@ -12,9 +12,7 @@
 
             <section class="max-w-5xl mx-auto py-12">
 
-                <h2 class="font-display font-bold text-2xl mb-8">
-                    Edit profile
-                </h2>
+                <h2 class="font-display font-bold text-2xl mb-8">{{ __('general.edit_profile') }}</h2>
 
                 <livewire:user.edit-profile />
 

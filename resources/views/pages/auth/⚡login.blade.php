@@ -10,9 +10,9 @@ new class extends Component {
 
 <div class="mx-auto max-w-md px-6 py-12">
 
-    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">Member Login</h2>
+    <h2 class="font-display text-3xl font-black text-[var(--color-secondary)]">{{ __('general.member_login') }}</h2>
 
-    <p class="mt-2 text-sm text-gray-600">Sign in to your PkmnNexus account.</p>
+    <p class="mt-2 text-sm text-gray-600">{{ __('general.sign_in_to_account') }}</p>
 
     @if (session('status'))
 
@@ -26,7 +26,7 @@ new class extends Component {
 
         <div>
 
-            <label for="email" class="mb-1 block text-sm font-bold">Email Address</label>
+            <label for="email" class="mb-1 block text-sm font-bold">{{ __('general.email_address') }}</label>
 
             <input id="email"
                    name="email"
@@ -47,7 +47,7 @@ new class extends Component {
 
         <div>
 
-            <label for="password" class="mb-1 block text-sm font-bold">Password</label>
+            <label for="password" class="mb-1 block text-sm font-bold">{{ __('general.password') }}</label>
 
             <input id="password"
                    name="password"
@@ -66,14 +66,14 @@ new class extends Component {
 
         <label class="flex items-center gap-2 text-sm">
 
-            <input type="checkbox" name="remember" value="1" class="rounded-sm">Remember me
+            <input type="checkbox" name="remember" value="1" class="rounded-sm">{{ __('general.remember_me') }}
 
         </label>
 
         <button type="submit"
                 class="w-full rounded-sm bg-gradient px-4 py-3 font-bold text-white transition-opacity hover:opacity-90">
 
-            Sign In
+            {{ __('general.sign_in') }}
 
         </button>
 
@@ -83,7 +83,7 @@ new class extends Component {
 
                 <a href="{{ route('password.request') }}" class="font-semibold text-[var(--color-primary)] hover:underline">
 
-                    Forgot your password?
+                    {{ __('general.forgot_your_password') }}
 
                 </a>
 
@@ -97,11 +97,11 @@ new class extends Component {
 
         <p class="mt-6 text-center text-sm">
 
-            Don't have an account yet?
+            {{ __('general.dont_have_account_yet') }}
 
             <a href="{{ route('register') }}" class="font-semibold text-[var(--color-primary)] hover:underline">
 
-                Register here
+                {{ __('general.register_here') }}
 
             </a>
 

@@ -32,6 +32,6 @@
 
 @else
 
-    <p class="text-sm text-gray-500">There are no social media links.</p>
+    <p class="text-sm text-gray-500">{{ __('general.no_social_media_links') }}</p>
 
 @endif

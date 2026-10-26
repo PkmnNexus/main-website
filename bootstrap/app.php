@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Sentry\Laravel\Integration;
+use App\Http\Middleware\SetLocale;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,15 +15,22 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+
         $middleware->alias([
             'under-construction' => UnderConstruction::class,
         ]);
         
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+
         $middleware->appendToGroup(
             'web',
             \App\Http\Middleware\EnsureMemberLoginEnabled::class,
         );
+
         $middleware->redirectUsersTo('/account/profile');
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         Integration::handles($exceptions);
