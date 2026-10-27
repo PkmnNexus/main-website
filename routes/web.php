@@ -95,10 +95,18 @@ if (config('localization.enabled')) {
         
     });
 
-    Route::prefix('{locale}')->group($registerFrontendRoutes);
+    Route::prefix('{locale}')->group(function () use ($registerFrontendRoutes) {
+
+        $registerFrontendRoutes();
+
+        require base_path('vendor/laravel/fortify/routes/routes.php');
+
+    });
 
 } else {
 
     $registerFrontendRoutes();
+
+    require base_path('vendor/laravel/fortify/routes/routes.php');
 
 }
