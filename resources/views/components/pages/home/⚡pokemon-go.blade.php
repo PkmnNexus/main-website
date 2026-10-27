@@ -12,7 +12,7 @@ new class extends Component {
 
         $this->articles = Article::query()
             ->published()
-            ->whereHas('category', fn ($query) => $query->where("slug->{$locale}", 'pokemon-go'))
+            ->whereHas('category', fn ($q) => $q->where('key', 'pokemon-go'))
             ->with([
                 'category',
                 'heroImage.media',

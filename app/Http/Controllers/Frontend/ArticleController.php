@@ -59,8 +59,6 @@ class ArticleController extends Controller
             ->whereNotNull('video_url')
             ->firstOrFail();
 
-        $this->registerArticleView($article);
-
         $pageSeo = $article;
 
         $description = $article->meta_description ?: $article->excerpt;

@@ -16,7 +16,7 @@ new class extends Component
         $locale = app()->getLocale();
 
         $this->articles = Article::query()
-             ->whereHas('category', fn ($q) => $q->where("slug->{$locale}", 'news'))
+             ->whereHas('category', fn ($q) => $q->where('key', 'news'))
              ->published()
              ->latest('published_at')
              ->take(6)
