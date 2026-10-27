@@ -25,17 +25,18 @@ class AssetsTable
                     ->size(80),
 
                 TextColumn::make('title')
+                    ->label(__('admin.title'))
                     ->searchable()
                     ->sortable()
                     ->description(fn ($record) => $record->alt),
 
                 TextColumn::make('folder.name')
-                    ->label('Folder')
+                    ->label(__('admin.folder'))
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('dimensions')
-                    ->label('Dimensions')
+                    ->label(__('admin.dimensions'))
                     ->state(fn ($record) => $record->width && $record->height
                         ? "{$record->width} × {$record->height}"
                         : '—'
@@ -46,7 +47,7 @@ class AssetsTable
                     }),
 
                 TextColumn::make('file_size')
-                    ->label('Size')
+                    ->label(__('admin.size'))
                     ->formatStateUsing(fn (?int $state) => $state
                         ? Number::fileSize($state)
                         : '—'
@@ -54,11 +55,11 @@ class AssetsTable
                     ->sortable(),
 
                 TextColumn::make('mime_type')
-                    ->label('Type')
+                    ->label(__('admin.type'))
                     ->badge(),
 
                 TextColumn::make('created_at')
-                    ->label('Uploaded')
+                    ->label(__('admin.uploaded'))
                     ->since()
                     ->sortable(),
             ])

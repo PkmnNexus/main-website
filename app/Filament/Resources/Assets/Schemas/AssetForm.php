@@ -16,74 +16,74 @@ class AssetForm
     {
         return $schema
             ->components([
-                Section::make('Image')
-                ->description('Upload an image.')
-                ->schema([
-                    SpatieMediaLibraryFileUpload::make('asset')
-                        ->label('Image')
-                        ->collection('asset')
-                        ->image()
-                        ->imageEditor()
-                        ->responsiveImages()
-                        ->required()
-                        ->maxSize(10240)
-                        ->acceptedFileTypes([
-                            'image/jpeg',
-                            'image/png',
-                            'image/webp',
-                            'image/avif',
-                        ])
-                        ->live()
-                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                            if (! $state || filled($get('title'))) {
-                                return;
-                            }
+                Section::make(__('admin.image'))
+                    ->description(__('admin.upload_an_image'))
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('asset')
+                            ->label(__('admin.image'))
+                            ->collection('asset')
+                            ->image()
+                            ->imageEditor()
+                            ->responsiveImages()
+                            ->required()
+                            ->maxSize(10240)
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                                'image/avif',
+                            ])
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                if (! $state || filled($get('title'))) {
+                                    return;
+                                }
 
-                            if (method_exists($state, 'getClientOriginalName')) {
-                                $filename = pathinfo(
-                                    $state->getClientOriginalName(),
-                                    PATHINFO_FILENAME
-                                );
+                                if (method_exists($state, 'getClientOriginalName')) {
+                                    $filename = pathinfo(
+                                        $state->getClientOriginalName(),
+                                        PATHINFO_FILENAME
+                                    );
 
-                                $set('title', Str::headline($filename));
-                            }
-                        }),
-                ]),
+                                    $set('title', Str::headline($filename));
+                                }
+                            }),
+                    ]),
 
-                Section::make('Metadata')
-                    ->description('General information.')
+                Section::make(__('admin.metadata'))
+                    ->description(__('admin.general_information'))
                     ->schema([
                         Select::make('media_folder_id')
-                            ->label('Folder')
+                            ->label(__('admin.folder'))
                             ->relationship('folder', 'name')
                             ->searchable()
                             ->preload(),
 
                         TextInput::make('title')
-                            ->label('Title')
+                            ->label(__('admin.title'))
                             ->maxLength(255),
 
                         TextInput::make('alt')
-                            ->label('Alt text')
+                            ->label(__('admin.alt_text'))
                             ->maxLength(255),
 
                         Textarea::make('caption')
-                            ->label('Caption')
+                            ->label(__('admin.caption'))
                             ->rows(3),
 
                         Textarea::make('description')
-                            ->label('Description')
+                            ->label(__('admin.description'))
                             ->rows(5),
                     ]),
 
-                Section::make('Credits')
-                    ->description('Copyright information.')
+                Section::make(__('admin.credits'))
+                    ->description(__('admin.copyright_information'))
                     ->schema([
                         TextInput::make('photographer')
-                            ->label('Photographer'),
+                            ->label(__('admin.photographer')),
 
                         TextInput::make('copyright')
-                            ->label('Copyright'),
+                            ->label(__('admin.copyright')),
                     ]),
             ]);
     }

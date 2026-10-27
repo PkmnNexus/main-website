@@ -21,17 +21,42 @@ class AssetResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Media';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Media';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'Media';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'Media';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.media');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.media');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.media');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.media');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -45,10 +45,10 @@ class ArticleForm
                 ])
                     ->columnSpanFull()
                     ->schema([
-                        Section::make('Content')
+                        Section::make(__('admin.content'))
                             ->schema([
                                 TextInput::make('title')
-                                    ->label('Title')
+                                    ->label(__('admin.title'))
                                     ->required()
                                     ->minLength(3)
                                     ->maxLength(255)
@@ -58,7 +58,7 @@ class ArticleForm
                                     }),
 
                                 TextInput::make('slug')
-                                    ->label('Slug')
+                                    ->label(__('admin.slug'))
                                     ->required()
                                     ->disabled()
                                     ->dehydrated()
@@ -66,28 +66,28 @@ class ArticleForm
                                     ->maxLength(255),
 
                                 Textarea::make('excerpt')
-                                    ->label('Excerpt')
+                                    ->label(__('admin.excerpt'))
                                     ->required()
                                     ->rows(4)
                                     ->minLength(25)
                                     ->maxLength(225)
                                     ->columnSpanFull()
-                                    ->helperText('Used on article overviews and as the default meta description.')
+                                    ->helperText(__('admin.excerpt_helper'))
                                     ->live()
                                     ->hint(fn (?string $state) => strlen($state ?? '') . ' / 225'),
 
                                 Textarea::make('summary')
-                                    ->label('Summary')
+                                    ->label(__('admin.summary'))
                                     ->rows(4)
                                     ->maxLength(600)
                                     ->columnSpanFull()
-                                    ->placeholder('A concise summary of the article.')
-                                    ->helperText('Summarize the actual content of the article in no more than 4 sentences.')
+                                    ->placeholder(__('admin.summary_placeholder'))
+                                    ->helperText(__('admin.summary_helper'))
                                     ->live()
                                     ->hint(fn (?string $state) => strlen($state ?? '') . ' / 600')
                                     ->hintAction(
                                         Action::make('generateSummary')
-                                            ->label('Generate with AI')
+                                            ->label(__('admin.generate_with_ai'))
                                             ->icon(Heroicon::Sparkles)
                                             ->action(function (
                                                 Get $get,
@@ -104,7 +104,7 @@ class ArticleForm
                                                     && blank($content)
                                                 ) {
                                                     throw new \RuntimeException(
-                                                        'First fill in the article information.'
+                                                        __('admin.first_fill_in_article_information')
                                                     );
                                                 }
 
@@ -119,12 +119,12 @@ class ArticleForm
                                     ),
 
                                 RichEditor::make('content')
-                                    ->label('Content')
+                                    ->label(__('admin.content'))
                                     ->required(fn (Get $get): bool => blank($get('video_url')))
                                     ->columnSpanFull()
                                     ->tools([
                                         RichEditorTool::make('assetBrowser')
-                                            ->label('Asset browser')
+                                            ->label(__('admin.asset_browser'))
                                             ->icon(Heroicon::Photo)
                                             ->jsHandler(<<<'JS'
                                                 (() => {
@@ -165,10 +165,10 @@ class ArticleForm
                                     ]),
 
                                 TagsInput::make('tags')
-                                    ->label('Tags')
-                                    ->placeholder('Add a tag')
+                                    ->label(__('admin.tags'))
+                                    ->placeholder(__('admin.add_a_tag'))
                                     ->separator(',')
-                                    ->helperText('Press Enter after each tag.')
+                                    ->helperText(__('admin.press_enter_after_each_tag'))
                                     ->afterStateHydrated(function (TagsInput $component, $record): void {
                                         $component->state(
                                             $record?->tags
@@ -195,17 +195,17 @@ class ArticleForm
 
                         Grid::make(1)
                             ->schema([
-                                Section::make('Media')
+                                Section::make(__('admin.media'))
                                     ->schema([
                                         AssetPicker::make('hero_asset_id')
-                                            ->label('Hero image'),
+                                            ->label(__('admin.hero_image')),
                                     ])
                                     ->collapsible(),
 
-                                Section::make('Publishing')
+                                Section::make(__('admin.publishing'))
                                     ->schema([
                                         TextInput::make('video_url')
-                                            ->label('YouTube URL')
+                                            ->label(__('admin.youtube_url'))
                                             ->url()
                                             ->nullable()
                                             ->live(onBlur: true)
@@ -213,18 +213,18 @@ class ArticleForm
                                             ->maxLength(255)
                                             ->rule('regex:/^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)[A-Za-z0-9_-]{11}.*$/')
                                             ->validationMessages([
-                                                'regex' => 'Please enter a valid YouTube URL.',
+                                                'regex' => __('admin.valid_youtube_url'),
                                             ]),
 
                                         Select::make('category_id')
-                                            ->label('Category')
+                                            ->label(__('admin.category'))
                                             ->relationship('category', 'name')
                                             ->searchable()
                                             ->preload()
                                             ->required(),
 
                                         Select::make('user_id')
-                                            ->label('Author')
+                                            ->label(__('admin.author'))
                                             ->relationship(
                                                 name: 'user',
                                                 titleAttribute: 'name',
@@ -245,7 +245,7 @@ class ArticleForm
                                             ->dehydrated(),
 
                                         Select::make('status')
-                                            ->label('Status')
+                                            ->label(__('admin.status'))
                                             ->options(ArticleStatus::class)
                                             ->default(ArticleStatus::Draft)
                                             ->required()
@@ -253,27 +253,27 @@ class ArticleForm
                                             ->dehydrated(),
 
                                         DateTimePicker::make('published_at')
-                                            ->label('Published at')
+                                            ->label(__('admin.published_at'))
                                             ->seconds(false)
                                             ->visible(fn () => $canManagePublishing),
 
                                         DateTimePicker::make('expires_at')
-                                            ->label('Expires at')
+                                            ->label(__('admin.expires_at'))
                                             ->seconds(false)
-                                            ->helperText('Leave empty to keep this article online indefinitely.')
+                                            ->helperText(__('admin.expires_at_helper'))
                                             ->rule('after:published_at')
                                             ->visible(fn () => $canManagePublishing),
 
                                         Toggle::make('is_breaking')
-                                            ->label('Breaking News')
+                                            ->label(__('admin.breaking_news'))
                                             ->visible(fn () => $canManagePublishing),
 
                                         Toggle::make('is_featured')
-                                            ->label('Featured')
+                                            ->label(__('admin.featured'))
                                             ->visible(fn () => $canManagePublishing),
 
                                         Toggle::make('is_pokemon_go_featured')
-                                            ->label('Pokémon GO Featured')
+                                            ->label(__('admin.pokemon_go_featured'))
                                             ->visible(fn () => $canManagePublishing),
                                     ])
                                     ->collapsible(),
@@ -284,22 +284,22 @@ class ArticleForm
                             ]),
                     ]),
 
-                Section::make('Sources')
+                Section::make(__('admin.sources'))
                     ->schema([
                         Select::make('sources')
-                            ->label('Sources')
+                            ->label(__('admin.sources'))
                             ->relationship(titleAttribute: 'name')
                             ->multiple()
                             ->searchable()
                             ->preload()
                             ->createOptionForm($canCreateSources ? [
                                 TextInput::make('name')
-                                    ->label('Name')
+                                    ->label(__('admin.name'))
                                     ->required()
                                     ->maxLength(255),
 
                                 TextInput::make('url')
-                                    ->label('URL')
+                                    ->label(__('admin.url'))
                                     ->url()
                                     ->required()
                                     ->maxLength(255),
@@ -326,23 +326,23 @@ class ArticleForm
 
                                 return (int) $source->getKey();
                             })
-                            ->helperText('Search for existing sources or create a new one.'),
+                            ->helperText(__('admin.sources_helper')),
                     ])
                     ->columnSpanFull()
                     ->collapsible(),
 
-                Section::make('SEO')
+                Section::make(__('admin.seo'))
                     ->schema([
                         TextInput::make('meta_title')
-                            ->label('Meta title')
+                            ->label(__('admin.meta_title'))
                             ->maxLength(60)
-                            ->placeholder('Leave empty to use the article title.')
-                            ->helperText('Recommended maximum of 60 characters.')
+                            ->placeholder(__('admin.meta_title_placeholder'))
+                            ->helperText(__('admin.meta_title_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 60')
                             ->hintAction(
                                 Action::make('generateSeoMetadata')
-                                    ->label('Generate SEO & OG')
+                                    ->label(__('admin.generate_seo_og'))
                                     ->icon(Heroicon::Sparkles)
                                     ->action(function (
                                         Get $get,
@@ -360,7 +360,7 @@ class ArticleForm
                                             && blank($content)
                                         ) {
                                             throw new \RuntimeException(
-                                                'Please enter the article content first.'
+                                                __('admin.please_enter_article_content_first')
                                             );
                                         }
 
@@ -380,23 +380,23 @@ class ArticleForm
                             ),
 
                         Textarea::make('meta_description')
-                            ->label('Meta description')
+                            ->label(__('admin.meta_description'))
                             ->rows(3)
                             ->maxLength(160)
                             ->columnSpanFull()
-                            ->placeholder('Leave empty to use the article excerpt.')
-                            ->helperText('Recommended maximum of 160 characters.')
+                            ->placeholder(__('admin.meta_description_placeholder'))
+                            ->helperText(__('admin.meta_description_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
 
                         TagsInput::make('meta_keywords')
-                            ->label('Meta keywords')
-                            ->placeholder('Type a keyword and press Enter')
+                            ->label(__('admin.meta_keywords'))
+                            ->placeholder(__('admin.meta_keywords_placeholder'))
                             ->separator(',')
-                            ->helperText('Press Enter after each keyword.')
+                            ->helperText(__('admin.meta_keywords_helper'))
                             ->hintAction(
                                 Action::make('generateKeywords')
-                                    ->label('Generate with AI')
+                                    ->label(__('admin.generate_with_ai'))
                                     ->icon(Heroicon::Sparkles)
                                     ->action(function (
                                         Get $get,
@@ -409,7 +409,7 @@ class ArticleForm
 
                                         if (blank($title) && blank($excerpt) && blank($content)) {
                                             throw new \RuntimeException(
-                                                'First fill in the article information.'
+                                                __('admin.first_fill_in_article_information')
                                             );
                                         }
 
@@ -425,62 +425,62 @@ class ArticleForm
                             ->columnSpanFull(),
 
                         TextInput::make('canonical')
-                            ->label('Canonical URL')
+                            ->label(__('admin.canonical_url'))
                             ->url()
                             ->maxLength(255)
                             ->placeholder('https://pkmnnexus.com/articles/example')
-                            ->helperText('Leave empty to use the article URL.'),
+                            ->helperText(__('admin.canonical_url_helper')),
 
-                        Fieldset::make('Robots')
+                        Fieldset::make(__('admin.robots'))
                             ->schema([
                                 Toggle::make('robots_index')
-                                    ->label('Allow indexing')
+                                    ->label(__('admin.allow_indexing'))
                                     ->default(true)
                                     ->inline(false)
-                                    ->helperText('Allow search engines to index this page.'),
+                                    ->helperText(__('admin.allow_indexing_helper')),
 
                                 Toggle::make('robots_follow')
-                                    ->label('Follow links')
+                                    ->label(__('admin.follow_links'))
                                     ->default(true)
                                     ->inline(false)
-                                    ->helperText('Allow search engines to follow links on this page.'),
+                                    ->helperText(__('admin.follow_links_helper')),
                             ]),
                     ])
                     ->columnSpanFull()
                     ->collapsible()
                     ->collapsed(),
 
-                Section::make('OG Tags')
+                Section::make(__('admin.og_tags'))
                     ->schema([
                         TextInput::make('og_title')
-                            ->label('Open Graph title')
+                            ->label(__('admin.open_graph_title'))
                             ->maxLength(60)
-                            ->placeholder('Leave empty to use the meta title.')
-                            ->helperText('Defaults to the meta title or article title.')
+                            ->placeholder(__('admin.og_title_placeholder'))
+                            ->helperText(__('admin.og_title_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 60'),
 
                         Textarea::make('og_description')
-                            ->label('Open Graph description')
+                            ->label(__('admin.open_graph_description'))
                             ->rows(3)
                             ->maxLength(160)
                             ->columnSpanFull()
-                            ->placeholder('Leave empty to use the meta description.')
-                            ->helperText('Defaults to the meta description or article excerpt.')
+                            ->placeholder(__('admin.og_description_placeholder'))
+                            ->helperText(__('admin.og_description_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
 
                         Select::make('og_type')
-                            ->label('Open Graph type')
+                            ->label(__('admin.open_graph_type'))
                             ->options([
-                                'article' => 'Article',
-                                'website' => 'Website',
-                                'video.other' => 'Video',
+                                'article' => __('admin.article'),
+                                'website' => __('admin.website'),
+                                'video.other' => __('admin.video'),
                             ])
                             ->default('article')
                             ->required()
                             ->native(false)
-                            ->helperText('Select how this content should be presented on social media.'),
+                            ->helperText(__('admin.open_graph_type_helper')),
                     ])
                     ->columnSpanFull()
                     ->collapsible()

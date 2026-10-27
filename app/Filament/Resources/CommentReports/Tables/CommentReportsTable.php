@@ -30,29 +30,29 @@ class CommentReportsTable
 
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('admin.id'))
                     ->sortable(),
 
                 TextColumn::make('comment.article.title')
-                    ->label('Article')
-                    ->placeholder('Article unavailable')
+                    ->label(__('admin.article'))
+                    ->placeholder(__('admin.article_unavailable'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
 
                 TextColumn::make('comment.body')
-                    ->label('Reported comment')
-                    ->placeholder('Comment unavailable')
+                    ->label(__('admin.reported_comment'))
+                    ->placeholder(__('admin.comment_unavailable'))
                     ->limit(80)
                     ->wrap(),
 
                 TextColumn::make('reporter_name')
-                    ->label('Reporter')
+                    ->label(__('admin.reporter'))
                     ->state(fn (CommentReport $record): string => filled($record->reporter?->display_name)
                         ? $record->reporter->display_name
                         : (filled(trim(($record->first_name ?? '').' '.($record->last_name ?? '')))
                             ? trim(($record->first_name ?? '').' '.($record->last_name ?? ''))
-                            : 'Guest'))
+                            : __('admin.guest')))
                     ->searchable(query: function (Builder $query, string $search): Builder {
                         return $query->where(function (Builder $query) use ($search): void {
                             $query
@@ -64,26 +64,26 @@ class CommentReportsTable
                     ->wrap(),
 
                 TextColumn::make('reason')
-                    ->label('Reason')
+                    ->label(__('admin.reason'))
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'spam' => 'Spam or advertising',
-                        'harassment' => 'Harassment or bullying',
-                        'hate_speech' => 'Hate speech',
-                        'inappropriate_content' => 'Inappropriate content',
-                        'other' => 'Other',
+                        'spam' => __('admin.spam_or_advertising'),
+                        'harassment' => __('admin.harassment_or_bullying'),
+                        'hate_speech' => __('admin.hate_speech'),
+                        'inappropriate_content' => __('admin.inappropriate_content'),
+                        'other' => __('admin.other'),
                         default => str($state)->headline()->toString(),
                     })
                     ->searchable()
                     ->wrap(),
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('admin.status'))
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        CommentReport::STATUS_PENDING => 'Pending',
-                        CommentReport::STATUS_REVIEWING => 'Reviewing',
-                        CommentReport::STATUS_RESOLVED => 'Resolved',
-                        CommentReport::STATUS_DISMISSED => 'Dismissed',
+                        CommentReport::STATUS_PENDING => __('admin.pending'),
+                        CommentReport::STATUS_REVIEWING => __('admin.reviewing'),
+                        CommentReport::STATUS_RESOLVED => __('admin.resolved'),
+                        CommentReport::STATUS_DISMISSED => __('admin.dismissed'),
                         default => str($state)->headline()->toString(),
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -96,17 +96,17 @@ class CommentReportsTable
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Reported')
+                    ->label(__('admin.reported'))
                     ->dateTime()
                     ->sortable(),
 
                 TextColumn::make('reviewer.display_name')
-                    ->label('Reviewed by')
+                    ->label(__('admin.reviewed_by'))
                     ->placeholder('—')
                     ->toggleable(),
 
                 TextColumn::make('reviewed_at')
-                    ->label('Reviewed at')
+                    ->label(__('admin.reviewed_at'))
                     ->dateTime()
                     ->placeholder('—')
                     ->toggleable(),
@@ -114,25 +114,25 @@ class CommentReportsTable
 
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('admin.status'))
                     ->options([
-                        CommentReport::STATUS_PENDING => 'Pending',
-                        CommentReport::STATUS_REVIEWING => 'Reviewing',
-                        CommentReport::STATUS_RESOLVED => 'Resolved',
-                        CommentReport::STATUS_DISMISSED => 'Dismissed',
+                        CommentReport::STATUS_PENDING => __('admin.pending'),
+                        CommentReport::STATUS_REVIEWING => __('admin.reviewing'),
+                        CommentReport::STATUS_RESOLVED => __('admin.resolved'),
+                        CommentReport::STATUS_DISMISSED => __('admin.dismissed'),
                     ]),
             ])
 
             ->recordActions([
                 Action::make('view')
-                    ->label('View report')
+                    ->label(__('admin.view_report'))
                     ->icon('heroicon-o-eye')
                     ->url(fn (CommentReport $record): string => CommentReportResource::getUrl('view', [
                         'record' => $record,
                     ])),
 
                 Action::make('viewComment')
-                    ->label('View comment')
+                    ->label(__('admin.view_comment'))
                     ->icon('heroicon-o-chat-bubble-left-right')
                     ->url(fn (CommentReport $record): ?string => $record->comment
                         ? CommentResource::getUrl('edit', [
@@ -143,7 +143,7 @@ class CommentReportsTable
                     ->openUrlInNewTab(),
 
                 Action::make('markReviewing')
-                    ->label('Mark reviewing')
+                    ->label(__('admin.mark_reviewing'))
                     ->icon('heroicon-o-eye')
                     ->color('info')
                     ->visible(fn (CommentReport $record): bool => $record->status === CommentReport::STATUS_PENDING)
@@ -153,12 +153,12 @@ class CommentReportsTable
                     )),
 
                 Action::make('resolve')
-                    ->label('Resolve')
+                    ->label(__('admin.resolve'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->modalHeading('Resolve report')
-                    ->modalDescription('Mark this report as resolved?')
+                    ->modalHeading(__('admin.resolve_report'))
+                    ->modalDescription(__('admin.confirm_resolve_report'))
                     ->visible(fn (CommentReport $record): bool => in_array($record->status, [
                         CommentReport::STATUS_PENDING,
                         CommentReport::STATUS_REVIEWING,
@@ -169,12 +169,12 @@ class CommentReportsTable
                     )),
 
                 Action::make('dismiss')
-                    ->label('Dismiss')
+                    ->label(__('admin.dismiss'))
                     ->icon('heroicon-o-x-circle')
                     ->color('gray')
                     ->requiresConfirmation()
-                    ->modalHeading('Dismiss report')
-                    ->modalDescription('Mark this report as dismissed?')
+                    ->modalHeading(__('admin.dismiss_report'))
+                    ->modalDescription(__('admin.confirm_dismiss_report'))
                     ->visible(fn (CommentReport $record): bool => in_array($record->status, [
                         CommentReport::STATUS_PENDING,
                         CommentReport::STATUS_REVIEWING,

@@ -28,23 +28,23 @@ class CommentReportInfolist
                 |--------------------------------------------------------------------------
                 */
 
-                Section::make('Report details')
-                    ->description('The reason and details provided with this report.')
+                Section::make(__('admin.report_details'))
+                    ->description(__('admin.report_details_description'))
                     ->icon('heroicon-o-flag')
                     ->columns(2)
                     ->schema([
                         TextEntry::make('id')
-                            ->label('Report ID')
+                            ->label(__('admin.report_id'))
                             ->copyable(),
 
                         TextEntry::make('status')
-                            ->label('Status')
+                            ->label(__('admin.status'))
                             ->badge()
                             ->formatStateUsing(fn (string $state): string => match ($state) {
-                                CommentReport::STATUS_PENDING => 'Pending',
-                                CommentReport::STATUS_REVIEWING => 'Reviewing',
-                                CommentReport::STATUS_RESOLVED => 'Resolved',
-                                CommentReport::STATUS_DISMISSED => 'Dismissed',
+                                CommentReport::STATUS_PENDING => __('admin.pending'),
+                                CommentReport::STATUS_REVIEWING => __('admin.reviewing'),
+                                CommentReport::STATUS_RESOLVED => __('admin.resolved'),
+                                CommentReport::STATUS_DISMISSED => __('admin.dismissed'),
                                 default => str($state)->headline()->toString(),
                             })
                             ->color(fn (string $state): string => match ($state) {
@@ -56,24 +56,24 @@ class CommentReportInfolist
                             }),
 
                         TextEntry::make('reason')
-                            ->label('Reason')
+                            ->label(__('admin.reason'))
                             ->formatStateUsing(fn (string $state): string => match ($state) {
-                                'spam' => 'Spam or advertising',
-                                'harassment' => 'Harassment or bullying',
-                                'hate_speech' => 'Hate speech',
-                                'inappropriate_content' => 'Inappropriate content',
-                                'other' => 'Other',
+                                'spam' => __('admin.spam_or_advertising'),
+                                'harassment' => __('admin.harassment_or_bullying'),
+                                'hate_speech' => __('admin.hate_speech'),
+                                'inappropriate_content' => __('admin.inappropriate_content'),
+                                'other' => __('admin.other'),
                                 default => str($state)->headline()->toString(),
                             }),
 
                         TextEntry::make('created_at')
-                            ->label('Reported at')
+                            ->label(__('admin.reported_at'))
                             ->dateTime()
                             ->since(),
 
                         TextEntry::make('details')
-                            ->label('Additional details')
-                            ->placeholder('No additional details provided')
+                            ->label(__('admin.additional_details'))
+                            ->placeholder(__('admin.no_additional_details_provided'))
                             ->columnSpanFull(),
                     ]),
 
@@ -83,18 +83,18 @@ class CommentReportInfolist
                 |--------------------------------------------------------------------------
                 */
 
-                Section::make('Reported comment')
-                    ->description('The article and comment associated with this report.')
+                Section::make(__('admin.reported_comment'))
+                    ->description(__('admin.reported_comment_description'))
                     ->icon('heroicon-o-chat-bubble-left-right')
                     ->schema([
                         TextEntry::make('comment.article.title')
-                            ->label('Article')
-                            ->placeholder('Article unavailable')
+                            ->label(__('admin.article'))
+                            ->placeholder(__('admin.article_unavailable'))
                             ->columnSpanFull(),
 
                         TextEntry::make('comment.body')
-                            ->label('Comment')
-                            ->placeholder('Comment unavailable')
+                            ->label(__('admin.comment'))
+                            ->placeholder(__('admin.comment_unavailable'))
                             ->columnSpanFull()
                             ->prose(),
                     ]),
@@ -105,28 +105,28 @@ class CommentReportInfolist
                 |--------------------------------------------------------------------------
                 */
 
-                Section::make('Reporter information')
-                    ->description('Details about the person who submitted this report.')
+                Section::make(__('admin.reporter_information'))
+                    ->description(__('admin.reporter_information_description'))
                     ->icon('heroicon-o-user')
                     ->columns(2)
                     ->schema([
                         TextEntry::make('reporter.display_name')
-                            ->label('Registered user')
-                            ->placeholder('Guest reporter')
+                            ->label(__('admin.registered_user'))
+                            ->placeholder(__('admin.guest_reporter'))
                             ->visible(fn (CommentReport $record): bool => $record->user_id !== null),
 
                         TextEntry::make('first_name')
-                            ->label('First name')
+                            ->label(__('admin.first_name'))
                             ->placeholder('—')
                             ->visible(fn (CommentReport $record): bool => $record->user_id === null),
 
                         TextEntry::make('last_name')
-                            ->label('Last name')
+                            ->label(__('admin.last_name'))
                             ->placeholder('—')
                             ->visible(fn (CommentReport $record): bool => $record->user_id === null),
 
                         TextEntry::make('email')
-                            ->label('Email address')
+                            ->label(__('admin.email_address'))
                             ->placeholder('—')
                             ->columnSpanFull(),
                     ]),
@@ -137,17 +137,17 @@ class CommentReportInfolist
                 |--------------------------------------------------------------------------
                 */
 
-                Section::make('Review information')
-                    ->description('Information about the moderation of this report.')
+                Section::make(__('admin.review_information'))
+                    ->description(__('admin.review_information_description'))
                     ->icon('heroicon-o-clipboard-document-check')
                     ->columns(2)
                     ->schema([
                         TextEntry::make('reviewer.display_name')
-                            ->label('Reviewed by')
-                            ->placeholder('Not reviewed yet'),
+                            ->label(__('admin.reviewed_by'))
+                            ->placeholder(__('admin.not_reviewed_yet')),
 
                         TextEntry::make('reviewed_at')
-                            ->label('Last status change')
+                            ->label(__('admin.last_status_change'))
                             ->dateTime()
                             ->placeholder('—'),
                     ])

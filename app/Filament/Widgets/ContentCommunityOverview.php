@@ -17,13 +17,23 @@ class ContentCommunityOverview extends BaseWidget
     |--------------------------------------------------------------------------
     */
 
-    protected ?string $heading = 'Content & Community';
+    protected ?string $heading = null;
 
-    protected ?string $description = 'An overview of your website activity.';
+    protected ?string $description = null;
 
     protected ?string $pollingInterval = '60s';
 
     protected static ?int $sort = 1;
+
+    protected function getHeading(): ?string
+    {
+        return __('admin.content_community');
+    }
+
+    protected function getDescription(): ?string
+    {
+        return __('admin.website_activity_overview');
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -69,33 +79,33 @@ class ContentCommunityOverview extends BaseWidget
             ->count();
 
         return [
-            Stat::make('Published articles', number_format($publishedArticles))
-                ->description('Currently published')
+            Stat::make(__('admin.published_articles'), number_format($publishedArticles))
+                ->description(__('admin.currently_published'))
                 ->descriptionIcon('heroicon-m-newspaper')
                 ->color('primary'),
 
-            Stat::make('Published today', number_format($articlesPublishedToday))
-                ->description('Articles published today')
+            Stat::make(__('admin.published_today'), number_format($articlesPublishedToday))
+                ->description(__('admin.articles_published_today'))
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('success'),
 
-            Stat::make('Verified users', number_format($verifiedUsers))
-                ->description('Email address verified')
+            Stat::make(__('admin.verified_users'), number_format($verifiedUsers))
+                ->description(__('admin.email_address_verified'))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
 
-            Stat::make('New registrations', number_format($newVerifiedUsersThisMonth))
-                ->description('Verified registrations this month')
+            Stat::make(__('admin.new_registrations'), number_format($newVerifiedUsersThisMonth))
+                ->description(__('admin.verified_registrations_this_month'))
                 ->descriptionIcon('heroicon-m-user-plus')
                 ->color('success'),
 
-            Stat::make('Comments today', number_format($commentsToday))
-                ->description('Comments submitted today')
+            Stat::make(__('admin.comments_today'), number_format($commentsToday))
+                ->description(__('admin.comments_submitted_today'))
                 ->descriptionIcon('heroicon-m-chat-bubble-left-right')
                 ->color('info'),
 
-            Stat::make('Pending reports', number_format($pendingReports))
-                ->description('Reports awaiting review')
+            Stat::make(__('admin.pending_reports'), number_format($pendingReports))
+                ->description(__('admin.reports_awaiting_review'))
                 ->descriptionIcon('heroicon-m-flag')
                 ->color($pendingReports > 0 ? 'warning' : 'success'),
         ];

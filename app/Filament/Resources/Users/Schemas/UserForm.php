@@ -18,56 +18,56 @@ class UserForm
     {
         return $schema
             ->components([
-                Section::make('Profile')
+                Section::make(__('admin.profile'))
                     ->schema([
                         Placeholder::make('name')
-                            ->label('Name')
+                            ->label(__('admin.name'))
                             ->content(fn ($record): string => $record?->name ?? '—'),
 
                         Placeholder::make('display_name')
-                            ->label('Display name')
+                            ->label(__('admin.display_name'))
                             ->content(fn ($record): string => $record?->display_name ?? '—'),
 
                         Placeholder::make('flair')
-                            ->label('Flair')
+                            ->label(__('admin.flair'))
                             ->content(fn ($record): string => $record?->flair ?? '—'),
 
                         Placeholder::make('slug')
-                            ->label('Slug')
+                            ->label(__('admin.slug'))
                             ->content(fn ($record): string => $record?->slug ?? '—'),
 
                         Placeholder::make('email')
-                            ->label('Email address')
+                            ->label(__('admin.email_address'))
                             ->content(fn ($record): string => $record?->email ?? '—'),
 
                         Placeholder::make('email_verified_at')
-                            ->label('Email verified at')
-                            ->content(fn ($record): string => $record?->email_verified_at?->format('Y-m-d H:i') ?? 'Not verified'),
+                            ->label(__('admin.email_verified_at'))
+                            ->content(fn ($record): string => $record?->email_verified_at?->format('Y-m-d H:i') ?? __('admin.not_verified')),
 
                         Placeholder::make('bio')
-                            ->label('Bio')
+                            ->label(__('admin.bio'))
                             ->content(fn ($record): string => $record?->bio ?: '—')
                             ->columnSpanFull(),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
 
-                Section::make('Community flair')
-                    ->description('Give this user a special flair that appears next to their name in comments.')
+                Section::make(__('admin.community_flair'))
+                    ->description(__('admin.community_flair_description'))
                     ->schema([
                         TextInput::make('flair')
-                            ->label('Flair')
-                            ->placeholder('e.g. Shiny Hunter')
+                            ->label(__('admin.flair'))
+                            ->placeholder(__('admin.flair_placeholder'))
                             ->maxLength(50)
                             ->nullable()
-                            ->helperText('Optional. Leave empty if this user has no flair.'),
+                            ->helperText(__('admin.flair_helper')),
                     ])
                     ->columnSpanFull(),
 
-                Section::make('Roles & permissions')
+                Section::make(__('admin.roles_permissions'))
                     ->schema([
                         Select::make('roles')
-                            ->label('Roles')
+                            ->label(__('admin.roles'))
                             ->relationship(
                                 name: 'roles',
                                 titleAttribute: 'name',
@@ -81,52 +81,52 @@ class UserForm
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->helperText('Assign the roles this user should have.'),
+                            ->helperText(__('admin.assign_user_roles')),
                     ])
                     ->columnSpanFull(),
 
-                Section::make('Account status')
+                Section::make(__('admin.account_status'))
                     ->schema([
                         Toggle::make('is_active')
-                            ->label('Active')
+                            ->label(__('admin.active'))
                             ->required(),
 
                         Placeholder::make('last_login_at')
-                            ->label('Last login')
-                            ->content(fn ($record): string => $record?->last_login_at?->format('Y-m-d H:i') ?? 'Never'),
+                            ->label(__('admin.last_login'))
+                            ->content(fn ($record): string => $record?->last_login_at?->format('Y-m-d H:i') ?? __('admin.never')),
 
                         Placeholder::make('last_activity_at')
-                            ->label('Last activity')
-                            ->content(fn ($record): string => $record?->last_activity_at?->format('Y-m-d H:i') ?? 'No activity'),
+                            ->label(__('admin.last_activity'))
+                            ->content(fn ($record): string => $record?->last_activity_at?->format('Y-m-d H:i') ?? __('admin.no_activity')),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
 
-                Section::make('Suspension')
+                Section::make(__('admin.suspension'))
                     ->schema([
                         DateTimePicker::make('suspended_at')
-                            ->label('Suspended at'),
+                            ->label(__('admin.suspended_at')),
 
                         DateTimePicker::make('suspended_until')
-                            ->label('Suspended until')
+                            ->label(__('admin.suspended_until'))
                             ->afterOrEqual('suspended_at'),
 
                         Textarea::make('suspended_reason')
-                            ->label('Suspension reason')
+                            ->label(__('admin.suspension_reason'))
                             ->columnSpanFull(),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
 
-                Section::make('Activity history')
+                Section::make(__('admin.activity_history'))
                     ->collapsed()
-                    ->description('User activity from the last 90 days. Older records remain stored in the database.')
+                    ->description(__('admin.activity_history_description'))
                     ->schema([
                         Placeholder::make('activity_history')
-                            ->label('Recent activity')
+                            ->label(__('admin.recent_activity'))
                             ->content(function ($record): string|HtmlString {
                                 if (! $record) {
-                                    return 'No activity recorded yet.';
+                                    return __('admin.no_activity_recorded_yet');
                                 }
 
                                 $activities = $record->loginActivities()
@@ -136,23 +136,28 @@ class UserForm
                                     ->get();
 
                                 if ($activities->isEmpty()) {
-                                    return 'No activity recorded in the last 90 days.';
+                                    return __('admin.no_activity_last_90_days');
                                 }
 
                                 $items = $activities->map(function ($activity): string {
                                     $type = e($activity->activity_type);
-                                    $date = e($activity->created_at?->format('Y-m-d H:i') ?? 'Unknown date');
-                                    $ip = e($activity->ip_address ?: 'Unknown');
+                                    $date = e($activity->created_at?->format('Y-m-d H:i') ?? __('admin.unknown_date'));
+                                    $ip = e($activity->ip_address ?: __('admin.unknown'));
                                     $browser = e(trim(implode(' ', array_filter([
                                         $activity->browser,
                                         $activity->browser_version,
-                                    ])) ?: 'Unknown'));
+                                    ])) ?: __('admin.unknown')));
                                     $platform = e(trim(implode(' ', array_filter([
                                         $activity->platform,
                                         $activity->platform_version,
-                                    ])) ?: 'Unknown'));
-                                    $deviceType = e($activity->device_type ?: 'Unknown');
-                                    $device = e($activity->device ?: 'Unknown');
+                                    ])) ?: __('admin.unknown')));
+                                    $deviceType = e($activity->device_type ?: __('admin.unknown'));
+                                    $device = e($activity->device ?: __('admin.unknown'));
+
+                                    $ipAddressLabel = e(__('admin.ip_address'));
+                                    $browserLabel = e(__('admin.browser'));
+                                    $operatingSystemLabel = e(__('admin.operating_system'));
+                                    $deviceLabel = e(__('admin.device'));
 
                                     return <<<HTML
                                         <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
@@ -162,19 +167,19 @@ class UserForm
                                             </div>
                                             <dl class="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
                                                 <div>
-                                                    <dt class="text-gray-500 dark:text-gray-400">IP address</dt>
+                                                    <dt class="text-gray-500 dark:text-gray-400">{$ipAddressLabel}</dt>
                                                     <dd class="mt-1 break-all text-gray-950 dark:text-white">{$ip}</dd>
                                                 </div>
                                                 <div>
-                                                    <dt class="text-gray-500 dark:text-gray-400">Browser</dt>
+                                                    <dt class="text-gray-500 dark:text-gray-400">{$browserLabel}</dt>
                                                     <dd class="mt-1 text-gray-950 dark:text-white">{$browser}</dd>
                                                 </div>
                                                 <div>
-                                                    <dt class="text-gray-500 dark:text-gray-400">Operating system</dt>
+                                                    <dt class="text-gray-500 dark:text-gray-400">{$operatingSystemLabel}</dt>
                                                     <dd class="mt-1 text-gray-950 dark:text-white">{$platform}</dd>
                                                 </div>
                                                 <div>
-                                                    <dt class="text-gray-500 dark:text-gray-400">Device</dt>
+                                                    <dt class="text-gray-500 dark:text-gray-400">{$deviceLabel}</dt>
                                                     <dd class="mt-1 text-gray-950 dark:text-white">{$deviceType} — {$device}</dd>
                                                 </div>
                                             </dl>

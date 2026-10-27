@@ -21,13 +21,28 @@ class PageResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Pages';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Pages';
+    protected static ?string $navigationLabel = null;
 
     protected static ?int $navigationSort = -2;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.pages');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.pages');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

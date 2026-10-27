@@ -17,25 +17,25 @@ class MediaFoldersTable
             ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label('Folder')
+                    ->label(__('admin.folder'))
                     ->icon(Heroicon::OutlinedFolder)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('parent.name')
-                    ->label('Parent folder')
+                    ->label(__('admin.parent_folder'))
                     ->placeholder('—')
                     ->sortable(),
 
                 TextColumn::make('assets_count')
-                    ->label('Assets')
+                    ->label(__('admin.assets'))
                     ->counts('assets')
                     ->numeric()
                     ->alignEnd()
                     ->sortable(),
 
                 TextColumn::make('updated_at')
-                    ->label('Updated')
+                    ->label(__('admin.updated'))
                     ->since()
                     ->sortable(),
             ])
@@ -51,7 +51,7 @@ class MediaFoldersTable
                 ]),
             ])
             ->emptyStateIcon(Heroicon::OutlinedFolder)
-            ->emptyStateHeading('No folders found')
-            ->emptyStateDescription('Create your first media folder to organize your assets.');
+            ->emptyStateHeading(__('admin.no_folders_found'))
+            ->emptyStateDescription(__('admin.create_first_media_folder'));
     }
 }

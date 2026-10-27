@@ -19,6 +19,9 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
+use App\Http\Middleware\SetLocale;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,6 +35,10 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->favicon(asset('favicon/favicon.ico'))
             ->brandLogo(asset('images/PkmnNexus-Logo.svg'))
+            ->renderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+                fn (): string => Blade::render('<x-language-switcher />'),
+            )
             ->login()
             ->databaseNotifications()
             ->profile(EditProfile::class, isSimple: false)
@@ -47,18 +54,6 @@ class AdminPanelProvider extends PanelProvider
                 for: 'App\Filament\Pages',
             )
             ->pages([])
-            ->navigationItems([
-                NavigationItem::make('Profile')
-                    ->url(fn (): string => EditProfile::getUrl())
-                    ->icon(Heroicon::OutlinedUserCircle)
-                    ->group('Users')
-                    ->sort(1)
-                    ->isActiveWhen(
-                        fn (): bool => request()->routeIs(
-                            'filament.admin.auth.profile'
-                        )
-                    ),
-            ])
             ->discoverWidgets(
                 in: app_path('Filament/Widgets'),
                 for: 'App\Filament\Widgets',
@@ -68,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                SetLocale::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 PreventRequestForgery::class,

@@ -23,25 +23,25 @@ class ListArticles extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('Alle'),
+            'all' => Tab::make(__('admin.all')),
 
             'draft' => Tab::make()
-                ->label('Drafts')
+                ->label(__('admin.drafts'))
                 ->badge(fn () => $this->getModel()::where('status', ArticleStatus::Draft)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', ArticleStatus::Draft)),
 
             'pending' => Tab::make()
-                ->label('Pending')
+                ->label(__('admin.pending'))
                 ->badge(fn () => $this->getModel()::where('status', ArticleStatus::Pending)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', ArticleStatus::Pending)),
 
             'published' => Tab::make()
-                ->label('Published')
+                ->label(__('admin.published'))
                 ->badge(fn () => $this->getModel()::where('status', ArticleStatus::Published)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', ArticleStatus::Published)),
 
             'archived' => Tab::make()
-                ->label('Archived')
+                ->label(__('admin.archived'))
                 ->badge(fn () => $this->getModel()::where('status', ArticleStatus::Archived)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', ArticleStatus::Archived)),
         ];

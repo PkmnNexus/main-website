@@ -15,18 +15,18 @@ class CategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('admin.name'))
                     ->searchable()
                     ->sortable()
                     ->weight('medium'),
                 TextColumn::make('slug')
-                    ->label('Slug')
+                    ->label(__('admin.slug'))
                     ->searchable()
                     ->copyable()
-                    ->copyMessage('Slug copied')
+                    ->copyMessage(__('admin.slug_copied'))
                     ->toggleable(),
                 TextColumn::make('articles_count')
-                    ->label('Articles')
+                    ->label(__('admin.articles'))
                     ->counts('articles')
                     ->badge()
                     ->color(fn (int $state) => $state === 0 ? 'gray' : 'primary')

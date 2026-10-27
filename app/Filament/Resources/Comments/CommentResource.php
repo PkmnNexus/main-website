@@ -27,17 +27,42 @@ class CommentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Comments';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Comments';
+    protected static ?string $navigationLabel = null;
 
     protected static ?int $navigationSort = -2;
 
-    protected static ?string $modelLabel = 'comment';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'comments';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.comments');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.comments');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.comment');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.comments');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -68,9 +93,12 @@ class CommentResource extends Resource
             return null;
         }
 
-        $username = $record->user?->display_name ?? 'Guest';
+        $username = $record->user?->display_name ?? __('admin.guest');
 
-        return "Comment #{$record->getKey()} - {$username}";
+        return __('admin.comment_record_title', [
+            'id' => $record->getKey(),
+            'username' => $username,
+        ]);
     }
 
     /*

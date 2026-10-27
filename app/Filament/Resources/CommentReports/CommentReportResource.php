@@ -26,17 +26,42 @@ class CommentReportResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-flag';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Comments';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Reports';
+    protected static ?string $navigationLabel = null;
 
     protected static ?int $navigationSort = -1;
 
-    protected static ?string $modelLabel = 'report';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'reports';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?string $recordTitleAttribute = 'reason';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.comments');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.reports');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.report');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.reports');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     /*
     |--------------------------------------------------------------------------

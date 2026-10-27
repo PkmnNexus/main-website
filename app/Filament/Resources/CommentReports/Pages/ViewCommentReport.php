@@ -29,7 +29,9 @@ class ViewCommentReport extends ViewRecord
      */
     public function getTitle(): string
     {
-        return 'Report #' . $this->getRecord()->getKey();
+        return __('admin.report_number', [
+            'id' => $this->getRecord()->getKey(),
+        ]);
     }
 
     /*
@@ -45,7 +47,7 @@ class ViewCommentReport extends ViewRecord
     {
         return [
             Action::make('viewComment')
-                ->label('View comment')
+                ->label(__('admin.view_comment'))
                 ->icon('heroicon-o-chat-bubble-left-right')
                 ->url(fn (CommentReport $record): ?string => $record->comment
                     ? CommentResource::getUrl('edit', [

@@ -23,7 +23,7 @@ class ArticlesTable
             ->defaultSort('published_at', 'desc')
             ->columns([
                 TextColumn::make('title')
-                    ->label('Articles')
+                    ->label(__('admin.articles'))
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold)
@@ -36,12 +36,12 @@ class ArticlesTable
                     ->falseIcon('')
                     ->trueColor('primary'),
                 TextColumn::make('category.name')
-                    ->label('Category')
+                    ->label(__('admin.category'))
                     ->badge()
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('user.name')
-                    ->label('Author')
+                    ->label(__('admin.author'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('status')
@@ -50,22 +50,23 @@ class ArticlesTable
                     ->formatStateUsing(fn ($state) => $state?->getLabel())
                     ->color(fn ($state) => $state?->getColor()),
                 TextColumn::make('published_at')
-                    ->label('Published')
+                    ->label(__('admin.published'))
                     ->since()
                     ->sortable(),
                 TextColumn::make('views')
-                    ->label('Views')
+                    ->label(__('admin.views'))
                     ->numeric()
                     ->alignEnd()
                     ->sortable(),
                 TextColumn::make('updated_at')
-                    ->label('Updated')
+                    ->label(__('admin.updated'))
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('admin.status'))
                     ->options(
                         collect(ArticleStatus::cases())
                             ->mapWithKeys(fn (ArticleStatus $status) => [
@@ -75,22 +76,23 @@ class ArticlesTable
                     ),
 
                 SelectFilter::make('category')
+                    ->label(__('admin.category'))
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
 
                 SelectFilter::make('user')
-                    ->label('Author')
+                    ->label(__('admin.author'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
 
                 Filter::make('featured')
-                    ->label('Only featured')
+                    ->label(__('admin.only_featured'))
                     ->query(fn (Builder $query): Builder => $query->where('is_featured', true)),
 
                 Filter::make('pokemon_go_featured')
-                    ->label('Only Pokémon GO featured')
+                    ->label(__('admin.only_pokemon_go_featured'))
                     ->query(fn (Builder $query): Builder => $query->where('is_pokemon_go_featured', true)),
             ])
             ->recordActions([

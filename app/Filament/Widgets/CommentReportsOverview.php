@@ -32,8 +32,8 @@ class CommentReportsOverview extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Comment reports')
-            ->description('Recent reports that require attention.')
+            ->heading(__('admin.comment_reports'))
+            ->description(__('admin.recent_reports_require_attention'))
             ->query(
                 CommentReport::query()
                     ->whereIn('status', [
@@ -46,20 +46,20 @@ class CommentReportsOverview extends TableWidget
             )
             ->columns([
                 TextColumn::make('comment.body')
-                    ->label('Reported comment')
+                    ->label(__('admin.reported_comment'))
                     ->limit(70)
                     ->tooltip(fn (CommentReport $record): string =>
-                        $record->comment?->body ?? 'Comment unavailable'
+                        $record->comment?->body ?? __('admin.comment_unavailable')
                     )
-                    ->placeholder('Comment unavailable'),
+                    ->placeholder(__('admin.comment_unavailable')),
 
                 TextColumn::make('reason')
-                    ->label('Reason')
+                    ->label(__('admin.reason'))
                     ->badge()
                     ->searchable(),
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('admin.status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         CommentReport::STATUS_PENDING => 'warning',
@@ -68,23 +68,23 @@ class CommentReportsOverview extends TableWidget
                     }),
 
                 TextColumn::make('created_at')
-                    ->label('Reported')
+                    ->label(__('admin.reported'))
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('admin.status'))
                     ->options([
-                        CommentReport::STATUS_PENDING => 'Pending',
-                        CommentReport::STATUS_REVIEWING => 'Reviewing',
+                        CommentReport::STATUS_PENDING => __('admin.pending'),
+                        CommentReport::STATUS_REVIEWING => __('admin.reviewing'),
                     ]),
             ])
             ->defaultSort('created_at', 'desc')
             ->paginated(false)
-            ->emptyStateHeading('No reports require attention')
+            ->emptyStateHeading(__('admin.no_reports_require_attention'))
             ->emptyStateDescription(
-                'New pending reports will appear here.'
+                __('admin.new_pending_reports_will_appear_here')
             );
     }
 }

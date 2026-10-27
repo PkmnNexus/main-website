@@ -21,17 +21,42 @@ class MediaFolderResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Media';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Folders';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'Folder';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'Folders';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?int $navigationSort = -1;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.media');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.folders');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.folder');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.folders');
+    }
+    
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

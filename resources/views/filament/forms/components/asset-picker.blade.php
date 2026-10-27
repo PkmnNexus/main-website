@@ -18,30 +18,24 @@
     :component="$getFieldWrapperView()"
     :field="$field"
 >
+    <div
+        x-data="{
+            state: @entangle($getStatePath()),
+            browserOpen: false,
+            assets: @js($assetsJson),
 
-<div
-    x-data="{
-        state: @entangle($getStatePath()),
-        browserOpen: false,
-        assets: @js($assetsJson),
-
-        get selectedAsset() {
-            return this.assets.find(asset => asset.id == this.state) ?? null
-        },
-    }"
-
-    x-on:asset-selected.window="
-        state = $event.detail.id;
-        $dispatch('close-modal', { id: 'asset-browser' });
-    "
->
-
+            get selectedAsset() {
+                return this.assets.find(asset => asset.id == this.state) ?? null
+            },
+        }"
+        x-on:asset-selected.window="
+            state = $event.detail.id;
+            $dispatch('close-modal', { id: 'asset-browser' });
+        "
+    >
         <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
-
             <template x-if="selectedAsset">
-
                 <div class="space-y-6">
-
                     <img
                         :src="selectedAsset.thumb"
                         :alt="selectedAsset.title"
@@ -49,20 +43,15 @@
                     >
 
                     <div>
-
                         <h3
                             class="text-xl font-bold"
                             x-text="selectedAsset.title"
                         ></h3>
 
                         <div class="mt-3 space-y-1 text-sm text-gray-500">
-
                             <p x-text="selectedAsset.width + ' × ' + selectedAsset.height"></p>
-
                             <p x-text="selectedAsset.mime_type"></p>
-
                         </div>
-
                     </div>
 
                     <x-filament::button
@@ -71,52 +60,38 @@
                         icon="heroicon-m-photo"
                         x-on:click="$dispatch('open-modal', { id: 'asset-browser' })"
                     >
-                        Change image
+                        {{ __('admin.change_image') }}
                     </x-filament::button>
-
                 </div>
-
             </template>
 
             <template x-if="! selectedAsset">
-
                 <div class="py-10 text-center">
-
                     <p class="text-sm text-gray-500">
-                        No image selected
+                        {{ __('admin.no_image_selected') }}
                     </p>
 
                     <div class="mt-4">
-
                         <x-filament::button
                             type="button"
                             color="gray"
                             x-on:click="$dispatch('open-modal', { id: 'asset-browser' })"
                         >
-                            Select image
+                            {{ __('admin.select_image') }}
                         </x-filament::button>
-
                     </div>
-
                 </div>
-
             </template>
-
         </div>
 
         <template x-if="browserOpen">
-
             <div class="mt-6">
-
                 <x-media.asset-grid
                     :assets="$assets"
                     :selectedAssetId="$getState()"
                 />
-
             </div>
-
         </template>
-
     </div>
 
     @include(
@@ -126,5 +101,4 @@
             'selectedAssetId' => $getState(),
         ]
     )
-
 </x-dynamic-component>

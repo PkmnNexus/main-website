@@ -16,10 +16,10 @@ enum ArticleStatus: string implements HasLabel, HasColor, HasIcon
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Draft => 'Draft',
-            self::Pending => 'Pending Review',
-            self::Published => 'Published',
-            self::Archived => 'Archived',
+            self::Draft => __('admin.draft'),
+            self::Pending => __('admin.pending_review'),
+            self::Published => __('admin.published'),
+            self::Archived => __('admin.archived'),
         };
     }
 

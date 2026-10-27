@@ -20,17 +20,42 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Users';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Users';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'user';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'users';
+    protected static ?string $pluralModelLabel = null;
 
     protected static ?string $recordTitleAttribute = 'display_name';
 
     protected static ?int $navigationSort = 0;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.users');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.users');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.user');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.users');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

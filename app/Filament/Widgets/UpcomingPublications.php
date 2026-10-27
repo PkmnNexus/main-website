@@ -32,8 +32,8 @@ class UpcomingPublications extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Upcoming publications')
-            ->description('Articles scheduled for publication in the future.')
+            ->heading(__('admin.upcoming_publications'))
+            ->description(__('admin.upcoming_publications_description'))
             ->query(
                 Article::query()
                     ->where('status', ArticleStatus::Published->value)
@@ -48,30 +48,30 @@ class UpcomingPublications extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Article')
+                    ->label(__('admin.article'))
                     ->searchable()
                     ->limit(60)
                     ->tooltip(fn (Article $record): string => $record->title),
 
                 TextColumn::make('category.name')
-                    ->label('Category')
-                    ->placeholder('Uncategorized'),
+                    ->label(__('admin.category'))
+                    ->placeholder(__('admin.uncategorized')),
 
                 TextColumn::make('published_at')
-                    ->label('Publication date')
+                    ->label(__('admin.publication_date'))
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('admin.created'))
                     ->dateTime('d M Y')
                     ->sortable(),
             ])
             ->defaultSort('published_at', 'asc')
             ->paginated(false)
-            ->emptyStateHeading('No upcoming publications')
+            ->emptyStateHeading(__('admin.no_upcoming_publications'))
             ->emptyStateDescription(
-                'Scheduled articles will appear here once they have a future publication date.'
+                __('admin.scheduled_articles_will_appear_when_publication_date_is_future')
             );
     }
 }

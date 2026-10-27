@@ -39,8 +39,8 @@ class CreateArticle extends CreateRecord
 
             if ($metadata === null) {
                 Notification::make()
-                    ->title('YouTube metadata not found')
-                    ->body('The article was saved, but the video metadata could not be retrieved.')
+                    ->title(__('admin.youtube_metadata_not_found'))
+                    ->body(__('admin.article_saved_video_metadata_unavailable'))
                     ->warning()
                     ->send();
 
@@ -56,8 +56,8 @@ class CreateArticle extends CreateRecord
             report($exception);
 
             Notification::make()
-                ->title('YouTube metadata could not be retrieved')
-                ->body('The article was saved successfully. You can try retrieving the video metadata again later.')
+                ->title(__('admin.youtube_metadata_retrieval_failed'))
+                ->body(__('admin.article_saved_retry_metadata_later'))
                 ->warning()
                 ->send();
         }

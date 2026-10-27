@@ -13,16 +13,16 @@ class MediaFolderForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Folder name')
+                    ->label(__('admin.folder_name'))
                     ->required()
                     ->maxLength(255),
 
                 Select::make('parent_id')
-                    ->label('Parent folder')
+                    ->label(__('admin.parent_folder'))
                     ->relationship('parent', 'name')
                     ->searchable()
                     ->preload()
-                    ->placeholder('Root folder'),
+                    ->placeholder(__('admin.root_folder')),
             ]);
     }
 }

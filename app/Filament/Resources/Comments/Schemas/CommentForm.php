@@ -21,7 +21,7 @@ class CommentForm
         return $schema
             ->components([
                 Textarea::make('body')
-                    ->label('Comment')
+                    ->label(__('admin.comment'))
                     ->required()
                     ->string()
                     ->minLength(2)

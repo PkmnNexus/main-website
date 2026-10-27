@@ -31,7 +31,7 @@ class EditArticle extends EditRecord
             abort_unless(
                 $this->record->user_id === $user->id,
                 403,
-                'You can only edit your own articles.',
+                __('admin.can_only_edit_own_articles'),
             );
         }
     }
@@ -121,8 +121,8 @@ class EditArticle extends EditRecord
 
             if ($metadata === null) {
                 Notification::make()
-                    ->title('YouTube metadata not found')
-                    ->body('The article was saved, but the video metadata could not be retrieved.')
+                    ->title(__('admin.youtube_metadata_not_found'))
+                    ->body(__('admin.article_saved_video_metadata_unavailable'))
                     ->warning()
                     ->send();
 
@@ -138,8 +138,8 @@ class EditArticle extends EditRecord
             report($exception);
 
             Notification::make()
-                ->title('YouTube metadata could not be retrieved')
-                ->body('The article was saved successfully. You can try retrieving the video metadata again later.')
+                ->title(__('admin.youtube_metadata_retrieval_failed'))
+                ->body(__('admin.article_saved_retry_metadata_later'))
                 ->warning()
                 ->send();
         }

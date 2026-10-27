@@ -33,8 +33,8 @@ class EditorialPlanning extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Editorial planning')
-            ->description('Drafts, pending articles and upcoming publications.')
+            ->heading(__('admin.editorial_planning'))
+            ->description(__('admin.editorial_planning_description'))
             ->query(
                 Article::query()
                     ->where(function (Builder $query): void {
@@ -58,21 +58,21 @@ class EditorialPlanning extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Article')
+                    ->label(__('admin.article'))
                     ->searchable()
                     ->limit(60)
                     ->tooltip(fn (Article $record): string => $record->title),
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('admin.status'))
                     ->badge()
                     ->formatStateUsing(
                         fn (Article $record): string => match ($record->status) {
-                            ArticleStatus::Draft => 'Draft',
-                            ArticleStatus::Pending => 'Pending',
+                            ArticleStatus::Draft => __('admin.draft'),
+                            ArticleStatus::Pending => __('admin.pending'),
                             ArticleStatus::Published => $record->published_at?->isFuture()
-                                ? 'Scheduled'
-                                : 'Published',
+                                ? __('admin.scheduled')
+                                : __('admin.published'),
                             default => $record->status->value,
                         }
                     )
@@ -86,21 +86,21 @@ class EditorialPlanning extends TableWidget
                     ),
 
                 TextColumn::make('published_at')
-                    ->label('Publication date')
+                    ->label(__('admin.publication_date'))
                     ->dateTime('d M Y, H:i')
-                    ->placeholder('Not scheduled')
+                    ->placeholder(__('admin.not_scheduled'))
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('admin.created'))
                     ->dateTime('d M Y')
                     ->sortable(),
             ])
             ->defaultSort('published_at', 'asc')
             ->paginated(false)
-            ->emptyStateHeading('No articles to plan')
+            ->emptyStateHeading(__('admin.no_articles_to_plan'))
             ->emptyStateDescription(
-                'Drafts, pending articles and scheduled publications will appear here.'
+                __('admin.editorial_planning_empty_description')
             );
     }
 }

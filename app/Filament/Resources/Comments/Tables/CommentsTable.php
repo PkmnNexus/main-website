@@ -33,35 +33,35 @@ class CommentsTable
 
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('admin.id'))
                     ->sortable(),
 
                 TextColumn::make('article.title')
-                    ->label('Article')
+                    ->label(__('admin.article'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
 
                 TextColumn::make('user.display_name')
-                    ->label('Author')
+                    ->label(__('admin.author'))
                     ->searchable()
                     ->sortable()
-                    ->placeholder('Former member')
+                    ->placeholder(__('admin.former_member'))
                     ->wrap(),
 
                 TextColumn::make('body')
-                    ->label('Comment')
+                    ->label(__('admin.comment'))
                     ->searchable()
                     ->limit(100)
                     ->wrap(),
 
                 TextColumn::make('created_at')
-                    ->label('Posted')
+                    ->label(__('admin.posted'))
                     ->dateTime()
                     ->sortable(),
 
                 TextColumn::make('deleted_at')
-                    ->label('Deleted')
+                    ->label(__('admin.deleted'))
                     ->dateTime()
                     ->placeholder('—')
                     ->toggleable(),
@@ -89,8 +89,8 @@ class CommentsTable
                             )) {
                                 Notification::make()
                                     ->danger()
-                                    ->title('Cannot delete your own comments')
-                                    ->body('Remove your own comments from the selection before deleting.')
+                                    ->title(__('admin.cannot_delete_own_comments'))
+                                    ->body(__('admin.remove_own_comments_before_deleting'))
                                     ->send();
 
                                 return;

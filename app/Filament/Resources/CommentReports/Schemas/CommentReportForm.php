@@ -15,25 +15,43 @@ class CommentReportForm
         return $schema
             ->components([
                 Select::make('comment_id')
+                    ->label(__('admin.reported_comment'))
                     ->relationship('comment', 'id')
                     ->required(),
+
                 TextInput::make('user_id')
+                    ->label(__('admin.user'))
                     ->numeric(),
-                TextInput::make('first_name'),
-                TextInput::make('last_name'),
+
+                TextInput::make('first_name')
+                    ->label(__('admin.first_name')),
+
+                TextInput::make('last_name')
+                    ->label(__('admin.last_name')),
+
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('admin.email_address'))
                     ->email(),
+
                 TextInput::make('reason')
+                    ->label(__('admin.reason'))
                     ->required(),
+
                 Textarea::make('details')
+                    ->label(__('admin.details'))
                     ->columnSpanFull(),
+
                 TextInput::make('status')
+                    ->label(__('admin.status'))
                     ->required()
                     ->default('pending'),
+
                 TextInput::make('reviewed_by')
+                    ->label(__('admin.reviewed_by'))
                     ->numeric(),
-                DateTimePicker::make('reviewed_at'),
+
+                DateTimePicker::make('reviewed_at')
+                    ->label(__('admin.reviewed_at')),
             ]);
     }
 }

@@ -34,8 +34,8 @@ class PopularArticles extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Popular articles')
-            ->description('Your 10 most viewed published articles for the selected period.')
+            ->heading(__('admin.popular_articles'))
+            ->description(__('admin.popular_articles_description'))
             ->query(
                 Article::query()
                     ->published()
@@ -52,33 +52,38 @@ class PopularArticles extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Article')
+                    ->label(__('admin.article'))
                     ->searchable()
                     ->limit(60)
                     ->tooltip(fn (Article $record): string => $record->title),
 
                 TextColumn::make('period_views')
-                    ->label('Views')
+                    ->label(__('admin.views'))
                     ->numeric()
                     ->sortable()
                     ->default(0),
 
                 TextColumn::make('published_at')
-                    ->label('Published')
+                    ->label(__('admin.published'))
                     ->dateTime('d M Y')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('period')
-                    ->label('Period')
+                    ->label(__('admin.period'))
                     ->options([
-                        'today' => 'Today',
-                        'week' => 'This week',
-                        'month' => 'This month',
+                        'all' => __('admin.all_time'),
+                        'today' => __('admin.today'),
+                        'week' => __('admin.this_week'),
+                        'month' => __('admin.this_month'),
                     ])
                     ->default('week')
                     ->query(function (Builder $query, array $data): Builder {
                         $period = $data['value'] ?? 'week';
+
+                        if ($period === 'all') {
+                            return $query;
+                        }
 
                         [$startDate, $endDate] = match ($period) {
                             'today' => [
@@ -99,13 +104,13 @@ class PopularArticles extends TableWidget
                             'article_daily_views.view_date',
                             [$startDate, $endDate],
                         );
-                    }),
+                    })
             ])
             ->defaultSort('period_views', 'desc')
             ->paginated(false)
-            ->emptyStateHeading('No article views yet')
+            ->emptyStateHeading(__('admin.no_article_views_yet'))
             ->emptyStateDescription(
-                'Published articles will appear here once they receive views.'
+                __('admin.published_articles_will_appear_after_receiving_views')
             );
     }
 }

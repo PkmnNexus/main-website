@@ -21,11 +21,26 @@ class CategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Posts';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Categories';
+    protected static ?string $navigationLabel = null;
 
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.posts');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.categories');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

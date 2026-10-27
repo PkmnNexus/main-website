@@ -71,10 +71,16 @@ Route::post('/language', function (Request $request) {
 
     $path = implode('/', $segments);
 
-    $targetPath = '/' . $validated['locale'];
+    $isAdminPath = isset($segments[0]) && $segments[0] === 'admin';
 
-    if ($path !== '' && $path !== 'language') {
-        $targetPath .= '/' . $path;
+    if ($isAdminPath) {
+        $targetPath = '/' . $path;
+    } else {
+        $targetPath = '/' . $validated['locale'];
+
+        if ($path !== '' && $path !== 'language') {
+            $targetPath .= '/' . $path;
+        }
     }
 
     $targetUrl = url($targetPath);
@@ -92,7 +98,7 @@ if (config('localization.enabled')) {
     Route::get('/', function () {
 
         return redirect('/' . config('localization.default', 'en'));
-        
+
     });
 
     Route::prefix('{locale}')->group(function () use ($registerFrontendRoutes) {

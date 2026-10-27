@@ -21,13 +21,28 @@ class ArticleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Posts';
+    protected static string|UnitEnum|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Articles';
+    protected static ?string $navigationLabel = null;
 
     protected static ?int $navigationSort = -3;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.posts');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.articles');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return static::getNavigationLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

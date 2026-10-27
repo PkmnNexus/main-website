@@ -31,10 +31,10 @@ class PageForm
                 ])
                     ->columnSpanFull()
                     ->schema([
-                        Section::make('Content')
+                        Section::make(__('admin.content'))
                             ->schema([
                                 TextInput::make('title')
-                                    ->label('Title')
+                                    ->label(__('admin.title'))
                                     ->required()
                                     ->minLength(3)
                                     ->maxLength(255)
@@ -44,7 +44,7 @@ class PageForm
                                     }),
 
                                 TextInput::make('slug')
-                                    ->label('Slug')
+                                    ->label(__('admin.slug'))
                                     ->required()
                                     ->disabled()
                                     ->dehydrated()
@@ -52,12 +52,12 @@ class PageForm
                                     ->maxLength(255),
 
                                 RichEditor::make('content')
-                                    ->label('Content')
+                                    ->label(__('admin.content'))
                                     ->required()
                                     ->columnSpanFull()
                                     ->tools([
                                         RichEditorTool::make('assetBrowser')
-                                            ->label('Asset browser')
+                                            ->label(__('admin.asset_browser'))
                                             ->icon(Heroicon::Photo)
                                             ->jsHandler(<<<'JS'
                                                 (() => {
@@ -105,17 +105,17 @@ class PageForm
 
                         Grid::make(1)
                             ->schema([
-                                Section::make('Media')
+                                Section::make(__('admin.media'))
                                     ->schema([
                                         AssetPicker::make('hero_asset_id')
-                                            ->label('Open Graph image'),
+                                            ->label(__('admin.open_graph_image')),
                                     ])
                                     ->collapsible(),
 
-                                Section::make('Publishing')
+                                Section::make(__('admin.publishing'))
                                     ->schema([
                                         Toggle::make('is_active')
-                                            ->label('Active')
+                                            ->label(__('admin.active'))
                                             ->default(true),
                                     ])
                                     ->collapsible(),
@@ -126,79 +126,78 @@ class PageForm
                             ]),
                     ]),
 
-                Section::make('SEO')
+                Section::make(__('admin.seo'))
                     ->schema([
-
                         Textarea::make('meta_description')
-                            ->label('Meta description')
+                            ->label(__('admin.meta_description'))
                             ->rows(3)
                             ->maxLength(160)
                             ->columnSpanFull()
-                            ->placeholder('Leave empty to use the page content.')
-                            ->helperText('Recommended maximum of 160 characters.')
+                            ->placeholder(__('admin.page_content_meta_description_placeholder'))
+                            ->helperText(__('admin.meta_description_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
 
                         TagsInput::make('meta_keywords')
-                            ->label('Meta keywords')
-                            ->placeholder('Type a keyword and press Enter')
+                            ->label(__('admin.meta_keywords'))
+                            ->placeholder(__('admin.meta_keywords_placeholder'))
                             ->separator(',')
-                            ->helperText('Press Enter after each keyword.')
+                            ->helperText(__('admin.meta_keywords_helper'))
                             ->columnSpanFull(),
 
                         TextInput::make('canonical')
-                            ->label('Canonical URL')
+                            ->label(__('admin.canonical_url'))
                             ->url()
                             ->maxLength(255)
-                            ->placeholder('https://pkmnnexus.com/example')
-                            ->helperText('Leave empty to use the page URL.'),
+                            ->placeholder(__('admin.canonical_url_placeholder'))
+                            ->helperText(__('admin.page_canonical_url_helper')),
 
-                        Fieldset::make('Robots')
+                        Fieldset::make(__('admin.robots'))
                             ->schema([
                                 Toggle::make('robots_index')
-                                    ->label('Allow indexing')
+                                    ->label(__('admin.allow_indexing'))
                                     ->default(true)
                                     ->inline(false)
-                                    ->helperText('Allow search engines to index this page.'),
+                                    ->helperText(__('admin.allow_indexing_helper')),
 
                                 Toggle::make('robots_follow')
-                                    ->label('Follow links')
+                                    ->label(__('admin.follow_links'))
                                     ->default(true)
                                     ->inline(false)
-                                    ->helperText('Allow search engines to follow links on this page.'),
+                                    ->helperText(__('admin.follow_links_helper')),
                             ]),
                     ])
                     ->columnSpanFull()
                     ->collapsible()
                     ->collapsed(),
 
-                Section::make('OG Tags')
+                Section::make(__('admin.og_tags'))
                     ->schema([
                         TextInput::make('og_title')
-                            ->label('Open Graph title')
+                            ->label(__('admin.open_graph_title'))
                             ->maxLength(60)
-                            ->placeholder('Leave empty to use the meta title.')
-                            ->helperText('Defaults to the meta title or page title.')
+                            ->placeholder(__('admin.og_title_placeholder'))
+                            ->helperText(__('admin.og_page_title_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 60'),
 
                         Textarea::make('og_description')
-                            ->label('Open Graph description')
+                            ->label(__('admin.open_graph_description'))
                             ->rows(3)
                             ->maxLength(160)
                             ->columnSpanFull()
-                            ->placeholder('Leave empty to use the meta description.')
-                            ->helperText('Defaults to the meta description or page content.')
+                            ->placeholder(__('admin.og_description_placeholder'))
+                            ->helperText(__('admin.og_page_content_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
 
                         TextInput::make('og_type')
-                            ->label('Open Graph type')
+                            ->label(__('admin.open_graph_type'))
                             ->default('website')
                             ->required()
                             ->disabled()
                             ->dehydrated()
-                            ->helperText('Pages use the Website Open Graph type.'),
+                            ->helperText(__('admin.page_og_type_helper')),
                     ])
                     ->columnSpanFull()
                     ->collapsible()

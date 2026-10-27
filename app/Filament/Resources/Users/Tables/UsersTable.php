@@ -18,90 +18,92 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('display_name')
-                    ->label('Display name')
+                    ->label(__('admin.display_name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('admin.name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('admin.email_address'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label(__('admin.roles'))
                     ->badge()
                     ->separator(',')
                     ->sortable(),
 
                 IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label(__('admin.active'))
                     ->boolean()
                     ->sortable(),
 
                 TextColumn::make('suspension_status')
-                    ->label('Suspension')
-                    ->state(fn ($record): string => $record->isSuspended() ? 'Suspended' : 'Not suspended')
+                    ->label(__('admin.suspension'))
+                    ->state(fn ($record): string => $record->isSuspended()
+                        ? __('admin.suspended')
+                        : __('admin.not_suspended'))
                     ->badge()
                     ->color(fn ($record): string => $record->isSuspended() ? 'danger' : 'success'),
 
                 TextColumn::make('last_login_at')
-                    ->label('Last login')
+                    ->label(__('admin.last_login'))
                     ->dateTime()
                     ->sortable()
-                    ->placeholder('Never'),
+                    ->placeholder(__('admin.never')),
 
                 TextColumn::make('last_activity_at')
-                    ->label('Last activity')
+                    ->label(__('admin.last_activity'))
                     ->dateTime()
                     ->sortable()
-                    ->placeholder('No activity'),
+                    ->placeholder(__('admin.no_activity')),
 
                 TextColumn::make('created_at')
-                    ->label('Registered at')
+                    ->label(__('admin.registered_at'))
                     ->dateTime()
                     ->sortable(),
 
                 TextColumn::make('email_verified_at')
-                    ->label('Email verified')
+                    ->label(__('admin.email_verified'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('suspended_until')
-                    ->label('Suspended until')
+                    ->label(__('admin.suspended_until'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Updated at')
+                    ->label(__('admin.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('roles')
-                    ->label('Role')
+                    ->label(__('admin.role'))
                     ->relationship('roles', 'name')
                     ->multiple(),
 
                 TernaryFilter::make('is_active')
-                    ->label('Account status')
-                    ->placeholder('All accounts')
-                    ->trueLabel('Active')
-                    ->falseLabel('Inactive'),
+                    ->label(__('admin.account_status'))
+                    ->placeholder(__('admin.all_accounts'))
+                    ->trueLabel(__('admin.active'))
+                    ->falseLabel(__('admin.inactive')),
 
                 TernaryFilter::make('suspended')
-                    ->label('Suspension status')
-                    ->placeholder('All accounts')
-                    ->trueLabel('Suspended')
-                    ->falseLabel('Not suspended')
+                    ->label(__('admin.suspension_status'))
+                    ->placeholder(__('admin.all_accounts'))
+                    ->trueLabel(__('admin.suspended'))
+                    ->falseLabel(__('admin.not_suspended'))
                     ->queries(
                         true: fn (Builder $query) => $query
                             ->whereNotNull('suspended_at')
@@ -120,10 +122,10 @@ class UsersTable
                     ),
 
                 TernaryFilter::make('email_verified_at')
-                    ->label('Email verification')
-                    ->placeholder('All users')
-                    ->trueLabel('Verified')
-                    ->falseLabel('Not verified')
+                    ->label(__('admin.email_verification'))
+                    ->placeholder(__('admin.all_users'))
+                    ->trueLabel(__('admin.verified'))
+                    ->falseLabel(__('admin.not_verified'))
                     ->nullable(),
             ])
             ->recordActions([

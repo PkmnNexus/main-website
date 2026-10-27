@@ -1,13 +1,12 @@
-
 <x-filament-widgets::widget>
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
         <x-filament::section>
 
-            <x-slot name="heading">Recent publications</x-slot>
+            <x-slot name="heading">{{ __('admin.recent_publications') }}</x-slot>
 
-            <x-slot name="description">The latest published articles on PkmnNexus.</x-slot>
+            <x-slot name="description">{{ __('admin.latest_published_articles_on_pkmnnexus') }}</x-slot>
 
             @php
                 $articles = $this->getRecentArticles();
@@ -21,7 +20,7 @@
 
                         <p class="text-sm font-medium text-gray-950 dark:text-white">{{ $article->title }}</p>
 
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $article->category?->name ?? 'Uncategorized' }}</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $article->category?->name ?? __('admin.uncategorized') }}</p>
 
                     </div>
 
@@ -35,7 +34,7 @@
 
             @empty
 
-                <p class="py-4 text-sm text-gray-500 dark:text-gray-400">No published articles yet.</p>
+                <p class="py-4 text-sm text-gray-500 dark:text-gray-400">{{ __('admin.no_published_articles_yet') }}</p>
 
             @endforelse
 
@@ -43,9 +42,9 @@
 
         <x-filament::section>
 
-            <x-slot name="heading">Recent comments</x-slot>
+            <x-slot name="heading">{{ __('admin.recent_comments') }}</x-slot>
 
-            <x-slot name="description">The latest comments submitted by your community.</x-slot>
+            <x-slot name="description">{{ __('admin.latest_comments_submitted_by_your_community') }}</x-slot>
 
             @php
                 $comments = $this->getRecentComments();
@@ -57,26 +56,26 @@
 
                     <div class="flex items-start justify-between gap-4">
 
-                        <p class="text-sm font-medium text-gray-950 dark:text-white">{{ $comment->user?->name ?? 'Unknown user' }}</p>
+                        <p class="text-sm font-medium text-gray-950 dark:text-white">{{ $comment->user?->name ?? __('admin.unknown_user') }}</p>
 
                         <time class="shrink-0 text-xs text-gray-500 dark:text-gray-400" datetime="{{ $comment->created_at?->toIso8601String() }}">{{ $comment->created_at?->diffForHumans() }}</time>
-                    
+
                     </div>
 
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ \Illuminate\Support\Str::limit($comment->body, 140) }}</p>
 
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Article: {{ $comment->article?->title ?? 'Article unavailable' }}</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('admin.article') }}: {{ $comment->article?->title ?? __('admin.article_unavailable') }}</p>
 
                 </div>
 
             @empty
 
-                <p class="py-4 text-sm text-gray-500 dark:text-gray-400">No comments yet.</p>
+                <p class="py-4 text-sm text-gray-500 dark:text-gray-400">{{ __('admin.no_comments_yet') }}</p>
 
             @endforelse
 
         </x-filament::section>
-        
+
     </div>
-    
+
 </x-filament-widgets::widget>
