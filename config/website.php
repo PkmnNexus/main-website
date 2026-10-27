@@ -18,7 +18,7 @@ return [
 
         // Sebastiaan Home Sas van Gent
         '145.53.107.21',
-        '2a02:a455:a10b:ea60::/64',
+        '2a02:a455:a10b:0::/64',
     ],
 
     'features' => [
