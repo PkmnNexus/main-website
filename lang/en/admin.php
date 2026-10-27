@@ -319,4 +319,6 @@ return [
     'no_image_selected' => 'No image selected',
     'select_image' => 'Select image',
     'all_time' => 'All time',
+    'slug_already_in_use' => 'This slug is already in use for this language.',
+    'key' => 'Key',
 ];

@@ -8,9 +8,11 @@ new class extends Component {
 
     public function mount(): void
     {
+        $locale = app()->getLocale();
+
         $this->article = Article::query()
             ->published()
-            ->whereHas('category', fn ($query) => $query->where('slug', 'deep-dive'))
+            ->whereHas('category', fn ($query) => $query->where("slug->{$locale}", 'deep-dive'))
             ->with([
                 'category',
                 'heroImage.media',
@@ -20,58 +22,62 @@ new class extends Component {
     }
 };
 ?>
-@if($article)
+<div>
 
-    <section class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-6 xl:px-0 py-12"
-             aria-labelledby="deep-dive-heading"
-             itemscope
-             itemtype="https://schema.org/ItemList">
+    @if($article)
 
-        <x-pages.section-heading title="Deep Dive" id="deep-dive-heading" />
-
-        <article class="group relative overflow-hidden rounded-xl shadow-lg transition duration-300 hover:shadow-2xl"
+        <section class="max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-6 xl:px-0 py-12"
+                 aria-labelledby="deep-dive-heading"
                  itemscope
-                 itemtype="https://schema.org/Article"
-                 itemprop="itemListElement">
+                 itemtype="https://schema.org/ItemList">
 
-            <meta itemprop="position" content="1">
+            <x-pages.section-heading title="Deep Dive" id="deep-dive-heading" />
 
-            <x-pages.links.article-link :article="$article" class="block cursor-pointer">
+            <article class="group relative overflow-hidden rounded-xl shadow-lg transition duration-300 hover:shadow-2xl"
+                     itemscope
+                     itemtype="https://schema.org/Article"
+                     itemprop="itemListElement">
 
-                <figure class="relative">
+                <meta itemprop="position" content="1">
 
-                    <x-pages.responsive-picture
-                        :article="$article"
-                        sizes="(min-width: 1280px) 1024px, (min-width: 768px) 768px, 100vw"
-                        class="w-full h-[420px] object-cover transition duration-300 group-hover:scale-105"
-                        loading="eager"
-                        fetchpriority="auto"
-                    />
+                <x-pages.links.article-link :article="$article" class="block cursor-pointer">
 
-                    <div class="absolute inset-y-0 right-0 w-full bg-gradient-to-l from-[var(--color-primary)]/100 via-[var(--color-primary)]/75 to-transparent"></div>
+                    <figure class="relative">
 
-                    <figcaption class="absolute bottom-6 inset-0 flex items-end justify-end px-6 md:px-12 text-white z-10">
+                        <x-pages.responsive-picture
+                            :article="$article"
+                            sizes="(min-width: 1280px) 1024px, (min-width: 768px) 768px, 100vw"
+                            class="w-full h-[420px] object-cover transition duration-300 group-hover:scale-105"
+                            loading="eager"
+                            fetchpriority="auto"
+                        />
 
-                        <div class="max-w-xl text-left">
+                        <div class="absolute inset-y-0 right-0 w-full bg-gradient-to-l from-[var(--color-primary)]/100 via-[var(--color-primary)]/75 to-transparent"></div>
 
-                            <meta itemprop="headline" content="{{ $article->title }}">
+                        <figcaption class="absolute bottom-6 inset-0 flex items-end justify-end px-6 md:px-12 text-white z-10">
 
-                            <h2 class="text-2xl md:text-4xl !text-white">{{ $article->title }}</h2>
+                            <div class="max-w-xl text-left">
 
-                            <p class="mt-4 mb-2 text-xl font-light opacity-90" itemprop="description">{{ $article->excerpt }}</p>
+                                <meta itemprop="headline" content="{{ $article->title }}">
 
-                            <x-pages.article-date :date="$article->published_at" class="text-sm font-bold text-white mb-2" />
+                                <h2 class="text-2xl md:text-4xl !text-white">{{ $article->title }}</h2>
 
-                        </div>
+                                <p class="mt-4 mb-2 text-xl font-light opacity-90" itemprop="description">{{ $article->excerpt }}</p>
 
-                    </figcaption>
+                                <x-pages.article-date :date="$article->published_at" class="text-sm font-bold text-white mb-2" />
 
-                </figure>
+                            </div>
 
-            </x-pages.links.article-link>
+                        </figcaption>
 
-        </article>
+                    </figure>
 
-    </section>
+                </x-pages.links.article-link>
 
-@endif
+            </article>
+
+        </section>
+
+    @endif
+
+</div>

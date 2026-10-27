@@ -62,7 +62,6 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->integer('reading_time')->nullable();
-            $table->unsignedBigInteger('views')->default(0);
 
             $table->timestamps();
         });

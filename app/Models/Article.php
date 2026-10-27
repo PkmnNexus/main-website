@@ -114,7 +114,6 @@ class Article extends Model implements Seoable, HasMedia
             'expires_at' => 'datetime',
 
             'reading_time' => 'integer',
-            'views' => 'integer',
         ];
     }
 
@@ -243,38 +242,6 @@ class Article extends Model implements Seoable, HasMedia
         $wordCount = str_word_count($text);
 
         return max(1, (int) ceil($wordCount / 200));
-    }
-
-    /**
-     * Register a view for the article.
-     */
-    public function registerView(): void
-    {
-        $today = now(config('app.timezone'))->toDateString();
-        $now = now(config('app.timezone'));
-
-        DB::transaction(function () use ($today, $now): void {
-            DB::table('articles')
-                ->where('id', $this->getKey())
-                ->increment('views');
-
-            DB::table('article_daily_views')->upsert(
-                [
-                    [
-                        'article_id' => $this->getKey(),
-                        'view_date' => $today,
-                        'views' => 1,
-                        'created_at' => $now,
-                        'updated_at' => $now,
-                    ],
-                ],
-                ['article_id', 'view_date'],
-                [
-                    'views' => DB::raw('views + 1'),
-                    'updated_at' => $now,
-                ],
-            );
-        });
     }
 
     /*

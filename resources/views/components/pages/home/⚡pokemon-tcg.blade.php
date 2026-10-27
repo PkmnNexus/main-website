@@ -10,9 +10,11 @@ new class extends Component {
 
     public function mount(): void
     {
+        $locale = app()->getLocale();
+
         $this->articles = Article::query()
             ->published()
-            ->whereHas('category', fn ($query) => $query->where('slug', 'pokemon-tcg'))
+            ->whereHas('category', fn ($query) => $query->where("slug->{$locale}", 'pokemon-tcg'))
             ->with([
                 'category',
                 'heroImage.media',

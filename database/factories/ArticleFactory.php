@@ -293,7 +293,6 @@ class ArticleFactory extends Factory
             'expires_at' => null,
 
             'reading_time' => $this->faker->numberBetween(2, 12),
-            'views' => $this->faker->numberBetween(0, 5000),
         ];
     }
 

@@ -20,7 +20,7 @@
 
                     @if(filled($article->video_url))
 
-                        <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-md font-black font-display uppercase rounded">__('general.video')</span>
+                        <span class="absolute top-0 right-0 m-[15px] px-2 py-1 bg-[var(--color-primary)] text-white text-md font-black font-display uppercase rounded">{{ __('general.video') }}</span>
                     
                     @endif
 

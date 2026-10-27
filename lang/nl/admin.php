@@ -319,4 +319,6 @@ return [
     'no_image_selected' => 'Geen afbeelding geselecteerd',
     'select_image' => 'Afbeelding selecteren',
     'all_time' => 'Alle tijden',
+    'slug_already_in_use' => 'Deze slug is al in gebruik voor deze taal.',
+    'key' => 'Sleutel',
 ];

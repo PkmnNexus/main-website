@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Tables;
 
+use Asignua\FilamentTranslatableFields\Tables\TranslatableColumn;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -14,27 +15,38 @@ class CategoriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('key')
                     ->label(__('admin.name'))
                     ->searchable()
                     ->sortable()
+                    ->copyable(),
+
+                TranslatableColumn::make('name')
+                    ->label(__('admin.name'))
+                    ->searchAcrossLocales()
+                    ->sortableByLocale()
                     ->weight('medium'),
-                TextColumn::make('slug')
+
+                TranslatableColumn::make('slug')
                     ->label(__('admin.slug'))
-                    ->searchable()
+                    ->searchAcrossLocales()
+                    ->sortableByLocale()
                     ->copyable()
                     ->copyMessage(__('admin.slug_copied'))
                     ->toggleable(),
+
                 TextColumn::make('articles_count')
                     ->label(__('admin.articles'))
                     ->counts('articles')
                     ->badge()
                     ->color(fn (int $state) => $state === 0 ? 'gray' : 'primary')
                     ->sortable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

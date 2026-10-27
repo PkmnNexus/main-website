@@ -33,18 +33,18 @@ new class extends Component {
 
     public function with(): array
     {
-        $title = $this->videosOnly ? 'Videos' : 'Articles';
+        $title = $this->videosOnly ? __('general.videos') : __('general.articles');
 
         if ($this->category) {
-            $title = 'Category: ' . $this->category->name;
+            $title = __('general.category') . ': ' . $this->category->name;
         }
 
         if ($this->tag) {
-            $title = 'Tag: ' . $this->tag;
+            $title = __('general.tag') . ': ' . $this->tag;
         }
 
         if ($this->user) {
-            $title = 'Author: ' . $this->user->username;
+            $title = __('general.author') . ': ' . $this->user->display_name;
         }
 
         return [
@@ -84,7 +84,7 @@ new class extends Component {
 ?>
 <section class="max-w-6xl mx-auto px-6 xl:px-0 py-12"
          aria-labelledby="article-heading"
-         itemscope 
+         itemscope
          itemtype="https://schema.org/ItemList">
 
     <x-pages.section-heading :title="$title" id="article-heading" />
@@ -95,13 +95,13 @@ new class extends Component {
              wire:target="gotoPage,previousPage,nextPage"
              class="transition-opacity duration-300">
 
-            <div id="articles"class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="articles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 @foreach($articles as $article)
 
                     <article class="bg-white rounded-lg shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col h-full"
-                            itemscope
-                            itemtype="https://schema.org/Article">
+                             itemscope
+                             itemtype="https://schema.org/Article">
 
                         <x-pages.links.article-link :article="$article" class="block">
 
@@ -178,7 +178,7 @@ new class extends Component {
     @else
 
         <div class="px-4 py-3 text-white text-sm font-display font-black uppercase rounded" style="background: linear-gradient(115deg, rgba(85, 65, 240, 1) 10%, rgba(71, 204, 189, 1) 100%);">
-            There are currently no articles available.
+            {{ __('general.no_articles_available') }}
         </div>
 
     @endif

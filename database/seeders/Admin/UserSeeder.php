@@ -35,6 +35,27 @@ class UserSeeder extends Seeder
             $admin->assignRole('admin');
         }
 
+        // Bassie
+        $bassie = User::updateOrCreate(
+            [
+                'email' => 'bastrahetfield@gmail.com',
+            ],
+            [
+                'name' => 'Sebastiaan',
+                'surname' => 'Elshout',
+                'display_name' => 'Bastrahetfield',
+                'slug' => 'bastrahetfield',
+                'bio' => 'PKMN Nexus administrator.',
+                'password' => Hash::make('7*mrsv*K4a9YG5wD'),
+                'email_verified_at' => now(),
+                'is_active' => true,
+            ]
+        );
+
+        if (! $bassie->hasRole('admin')) {
+            $bassie->assignRole('admin');
+        }
+
         if (! app()->isProduction()) {
             // Editor
             $editorPassword = '_8%b{raT7i;z|~8}CZ{aCUm?y7qZOmW%';

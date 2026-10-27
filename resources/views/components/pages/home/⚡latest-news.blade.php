@@ -13,8 +13,10 @@ new class extends Component
 
     public function mount(): void
     {
+        $locale = app()->getLocale();
+
         $this->articles = Article::query()
-             ->whereHas('category', fn ($q) => $q->where('slug', 'news'))
+             ->whereHas('category', fn ($q) => $q->where("slug->{$locale}", 'news'))
              ->published()
              ->latest('published_at')
              ->take(6)

@@ -5,6 +5,9 @@ use App\Http\Controllers\Frontend\ArticleController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\SitemapController;
 
+use App\Models\Article;
+use App\Models\Category;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,11 +29,11 @@ $registerFrontendRoutes = function () {
 
         Route::get('/articles', [ArticleController::class, 'index'])->name('article.index');
         Route::get('/articles/category/video', [ArticleController::class, 'videos'])->name('articles.videos');
-        Route::get('/articles/category/{category:slug}', [ArticleController::class, 'category'])->name('articles.category');
+        Route::get('/articles/category/{category}', [ArticleController::class, 'category'])->name('articles.category');
         Route::get('/articles/tag/{tag}', [ArticleController::class, 'tag'])->name('articles.tag');
         Route::get('/articles/author/{user:slug}', [ArticleController::class, 'author'])->name('articles.author');
         Route::get('/articles/video/{slug}', [ArticleController::class, 'video'])->name('article.video');
-        Route::get('/articles/{category:slug}/{slug:slug}', [ArticleController::class, 'show'])->name('article.show');
+        Route::get('/articles/{category}/{slug:slug}', [ArticleController::class, 'show'])->name('article.show');
 
         Route::get('/about', [PageController::class, 'show'])->defaults('page', 'about')->name('page.about');
         Route::get('/disclaimer', [PageController::class, 'show'])->defaults('page', 'disclaimer')->name('page.disclaimer');
@@ -60,13 +63,61 @@ Route::post('/language', function (Request $request) {
 
     $request->session()->put('locale', $validated['locale']);
 
-    $previousPath = parse_url(url()->previous(), PHP_URL_PATH) ?: '/';
-    $previousQuery = parse_url(url()->previous(), PHP_URL_QUERY);
+    $previousUrl = url()->previous();
+    $previousPath = parse_url($previousUrl, PHP_URL_PATH) ?: '/';
+    $previousQuery = parse_url($previousUrl, PHP_URL_QUERY);
 
     $segments = explode('/', trim($previousPath, '/'));
 
+    $currentLocale = config('localization.default', 'en');
+
     if (isset($segments[0]) && in_array($segments[0], $locales, true)) {
-        array_shift($segments);
+        $currentLocale = array_shift($segments);
+    }
+
+    $targetLocale = $validated['locale'];
+
+    // Translate article category and preserve the article slug.
+    if (
+        count($segments) === 3
+        && $segments[0] === 'articles'
+        && ! in_array($segments[1], ['category', 'tag', 'author', 'video'], true)
+    ) {
+        [$articlesPath, $categorySlug, $articleSlug] = $segments;
+
+        $article = Article::query()
+            ->where('slug', $articleSlug)
+            ->whereHas('category', fn ($query) => $query
+                ->where("slug->{$currentLocale}", $categorySlug))
+            ->with('category')
+            ->first();
+
+        if ($article) {
+            $translatedCategorySlug = $article->category
+                ->getTranslation('slug', $targetLocale);
+
+            $segments = [
+                $articlesPath,
+                $translatedCategorySlug,
+                $articleSlug,
+            ];
+        }
+    }
+
+    // Translate category overview URLs.
+    if (
+        count($segments) === 3
+        && $segments[0] === 'articles'
+        && $segments[1] === 'category'
+        && $segments[2] !== 'video'
+    ) {
+        $category = Category::query()
+            ->where("slug->{$currentLocale}", $segments[2])
+            ->first();
+
+        if ($category) {
+            $segments[2] = $category->getTranslation('slug', $targetLocale);
+        }
     }
 
     $path = implode('/', $segments);
@@ -76,7 +127,7 @@ Route::post('/language', function (Request $request) {
     if ($isAdminPath) {
         $targetPath = '/' . $path;
     } else {
-        $targetPath = '/' . $validated['locale'];
+        $targetPath = '/' . $targetLocale;
 
         if ($path !== '' && $path !== 'language') {
             $targetPath .= '/' . $path;
