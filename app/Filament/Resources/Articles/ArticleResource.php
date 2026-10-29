@@ -44,6 +44,11 @@ class ArticleResource extends Resource
         return static::getNavigationLabel();
     }
 
+    public static function getTitle(): string
+    {
+        return static::getNavigationLabel();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ArticleForm::configure($schema);

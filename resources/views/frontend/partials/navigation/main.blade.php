@@ -42,8 +42,8 @@
 
                     <figure>
 
-                        <img src="{{ asset('images/PkmnNexus-Logo.svg') }}" 
-                             alt="Logo PkmnNexus" 
+                        <img src="{{ asset('images/PkmnNexus-Logo.svg') }}"
+                             alt="Logo PkmnNexus"
                              class="h-8 w-auto" />
 
                     </figure>
@@ -53,29 +53,28 @@
             </div>
 
             <nav class="hidden md:flex h-full justify-end lg:justify-center items-center md:w-10/12 lg:w-8/12"
-                 role="navigation" 
+                 role="navigation"
                  aria-label="Main navigation"
-                 itemscope 
+                 itemscope
                  itemtype="https://schema.org/SiteNavigationElement">
 
                 <ul class="flex items-center font-display font-bold uppercase text-[var(--color-secondary)] text-sm space-x-1">
 
                     @foreach (config('navigation.main') as $item)
-                    
+
                         @php
                             $isActive = collect($item['active_routes'] ?? [$item['route']])->contains(fn ($pattern) => request()->routeIs($pattern));
                         @endphp
 
                         <li itemprop="name">
 
-                            <a href="{{ route($item['route']) }}"
+                            <a href="{{ app(\App\Support\NavigationUrl::class)->for($item) }}"
                                itemprop="url"
                                class="px-4 py-2 rounded-sm transition-colors duration-200
-                               {{ $isActive 
-                                    ? 'bg-gradient text-white' 
+                               {{ $isActive
+                                    ? 'bg-gradient text-white'
                                     : 'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' }}">
 
-                                
                                 {{ __($item['label']) }}
 
                             </a>
@@ -128,7 +127,7 @@
 
             <a href="{{ route('home') }}">
 
-                <img src="{{ asset('images/PkmnNexus-Logo.svg') }}" 
+                <img src="{{ asset('images/PkmnNexus-Logo.svg') }}"
                      alt="Logo PkmnInsider"
                      class="h-8 w-auto" />
 
@@ -153,10 +152,10 @@
                 @foreach (config('navigation.main') as $item)
 
                     <li>
-                        <a href="{{ route($item['route']) }}"
-                           class="w-full flex px-4 py-3 
-                           {{ request()->routeIs($item['route']) 
-                                ? 'bg-[var(--color-primary)] text-white' 
+                        <a href="{{ app(\App\Support\NavigationUrl::class)->for($item) }}"
+                           class="w-full flex px-4 py-3
+                           {{ request()->routeIs($item['active_routes'] ?? [$item['route']])
+                                ? 'bg-[var(--color-primary)] text-white'
                                 : 'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' }}"
                             @click="open = false">
 

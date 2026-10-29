@@ -16,7 +16,7 @@ class CategoriesTable
         return $table
             ->columns([
                 TextColumn::make('key')
-                    ->label(__('admin.name'))
+                    ->label(__('admin.key'))
                     ->searchable()
                     ->sortable()
                     ->copyable(),

@@ -185,4 +185,10 @@ return [
     'independence_notice' => 'PkmnInsider is an independent fan site. We are not official in any way, nor affiliated, sponsored, or endorsed by Nintendo, Creatures, GAME FREAK, or TPCi.',
     'all_rights_reserved' => 'All rights reserved.',
 
+    'select_language' => 'Select language',
+    'available_languages' => 'Available languages',
+    'site_navigation' => 'Site Navigation',
+    'pokemon' => 'Pokémon',
+    'social_media' => 'Social Media',
+
 ];

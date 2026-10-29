@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\Pages\Schemas;
 
 use App\Filament\Forms\Components\Media\AssetPicker;
-use Filament\Actions\Action;
+use App\Models\Page;
+use Closure;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\RichEditorTool;
 use Filament\Forms\Components\TagsInput;
@@ -13,18 +14,77 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class PageForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
+        $defaultLocale = config('localization.default', 'en');
+        $localizationEnabled = (bool) config('localization.enabled', false);
+
+        $locales = $localizationEnabled
+            ? (
+                config('filament-translatable-fields.locales')
+                ?: array_keys(config('localization.locales', []))
+            )
+            : [$defaultLocale];
+
+        $translatedLabel = function (
+            string $label,
+            ?string $locale,
+        ) use ($localizationEnabled): string|HtmlString {
+            if (! $localizationEnabled || $locale === null) {
+                return $label;
+            }
+
+            $flag = match ($locale) {
+                'en' => 'gb',
+                default => $locale,
+            };
+
+            $localeLabel = config(
+                "filament-translatable-fields.labels.{$locale}",
+                strtoupper($locale),
+            );
+
+            $flagSvg = svg(
+                "flag-country-{$flag}",
+                'h-3.5 w-5',
+                [
+                    'title' => $localeLabel,
+                    'aria-label' => $localeLabel,
+                ],
+            );
+
+            return new HtmlString(
+                '<span class="inline-flex items-center gap-2">'
+                    . '<span>' . e($label) . '</span>'
+                    . '<span class="inline-flex items-center opacity-70">'
+                    . $flagSvg->toHtml()
+                    . '</span>'
+                    . '</span>',
+            );
+        };
+
+        $buildSections = function (?string $locale = null) use (
+            $localizationEnabled,
+            $defaultLocale,
+            $translatedLabel,
+        ): array {
+            $localized = $localizationEnabled && $locale !== null;
+
+            $field = fn (string $name): string => $localized
+                ? "{$name}.{$locale}"
+                : $name;
+
+            return [
                 Grid::make([
                     'default' => 1,
                     'xl' => 3,
@@ -33,26 +93,79 @@ class PageForm
                     ->schema([
                         Section::make(__('admin.content'))
                             ->schema([
-                                TextInput::make('title')
-                                    ->label(__('admin.title'))
+                                TextInput::make($field('title'))
+                                    ->label(
+                                        $translatedLabel(
+                                            __('admin.title'),
+                                            $locale,
+                                        ),
+                                    )
                                     ->required()
                                     ->minLength(3)
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(function (Set $set, ?string $state) {
-                                        $set('slug', Str::slug($state));
-                                    }),
+                                    ->afterStateUpdated(
+                                        fn (Set $set, ?string $state) => $set(
+                                            $field('slug'),
+                                            Str::slug($state ?? ''),
+                                        ),
+                                    ),
 
-                                TextInput::make('slug')
-                                    ->label(__('admin.slug'))
+                                TextInput::make($field('slug'))
+                                    ->label(
+                                        $translatedLabel(
+                                            __('admin.slug'),
+                                            $locale,
+                                        ),
+                                    )
                                     ->required()
+                                    ->maxLength(255)
                                     ->disabled()
                                     ->dehydrated()
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(255),
+                                    ->rules([
+                                        fn (?Page $record): Closure => function (
+                                            string $attribute,
+                                            mixed $value,
+                                            Closure $fail,
+                                        ) use (
+                                            $record,
+                                            $locale,
+                                            $localized,
+                                            $defaultLocale,
+                                        ): void {
+                                            $slugLocale = $localized
+                                                ? $locale
+                                                : $defaultLocale;
 
-                                RichEditor::make('content')
-                                    ->label(__('admin.content'))
+                                            $query = Page::query()
+                                                ->where(
+                                                    "slug->{$slugLocale}",
+                                                    $value,
+                                                );
+
+                                            if ($record) {
+                                                $query->where(
+                                                    $record->getKeyName(),
+                                                    '!=',
+                                                    $record->getKey(),
+                                                );
+                                            }
+
+                                            if ($query->exists()) {
+                                                $fail(
+                                                    __('admin.slug_already_in_use'),
+                                                );
+                                            }
+                                        },
+                                    ]),
+
+                                RichEditor::make($field('content'))
+                                    ->label(
+                                        $translatedLabel(
+                                            __('admin.content'),
+                                            $locale,
+                                        ),
+                                    )
                                     ->required()
                                     ->columnSpanFull()
                                     ->tools([
@@ -128,25 +241,44 @@ class PageForm
 
                 Section::make(__('admin.seo'))
                     ->schema([
-                        Textarea::make('meta_description')
-                            ->label(__('admin.meta_description'))
+                        Textarea::make($field('meta_description'))
+                            ->label(
+                                $translatedLabel(
+                                    __('admin.meta_description'),
+                                    $locale,
+                                ),
+                            )
                             ->rows(3)
                             ->maxLength(160)
                             ->columnSpanFull()
-                            ->placeholder(__('admin.page_content_meta_description_placeholder'))
+                            ->placeholder(
+                                __('admin.page_content_meta_description_placeholder'),
+                            )
                             ->helperText(__('admin.meta_description_helper'))
                             ->live()
-                            ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
+                            ->hint(
+                                fn (?string $state) => strlen($state ?? '') . ' / 160',
+                            ),
 
-                        TagsInput::make('meta_keywords')
-                            ->label(__('admin.meta_keywords'))
+                        TagsInput::make($field('meta_keywords'))
+                            ->label(
+                                $translatedLabel(
+                                    __('admin.meta_keywords'),
+                                    $locale,
+                                ),
+                            )
                             ->placeholder(__('admin.meta_keywords_placeholder'))
                             ->separator(',')
                             ->helperText(__('admin.meta_keywords_helper'))
                             ->columnSpanFull(),
 
-                        TextInput::make('canonical')
-                            ->label(__('admin.canonical_url'))
+                        TextInput::make($field('canonical'))
+                            ->label(
+                                $translatedLabel(
+                                    __('admin.canonical_url'),
+                                    $locale,
+                                ),
+                            )
                             ->url()
                             ->maxLength(255)
                             ->placeholder(__('admin.canonical_url_placeholder'))
@@ -173,23 +305,37 @@ class PageForm
 
                 Section::make(__('admin.og_tags'))
                     ->schema([
-                        TextInput::make('og_title')
-                            ->label(__('admin.open_graph_title'))
+                        TextInput::make($field('og_title'))
+                            ->label(
+                                $translatedLabel(
+                                    __('admin.open_graph_title'),
+                                    $locale,
+                                ),
+                            )
                             ->maxLength(60)
                             ->placeholder(__('admin.og_title_placeholder'))
                             ->helperText(__('admin.og_page_title_helper'))
                             ->live()
-                            ->hint(fn (?string $state) => strlen($state ?? '') . ' / 60'),
+                            ->hint(
+                                fn (?string $state) => strlen($state ?? '') . ' / 60',
+                            ),
 
-                        Textarea::make('og_description')
-                            ->label(__('admin.open_graph_description'))
+                        Textarea::make($field('og_description'))
+                            ->label(
+                                $translatedLabel(
+                                    __('admin.open_graph_description'),
+                                    $locale,
+                                ),
+                            )
                             ->rows(3)
                             ->maxLength(160)
                             ->columnSpanFull()
                             ->placeholder(__('admin.og_description_placeholder'))
                             ->helperText(__('admin.og_page_content_helper'))
                             ->live()
-                            ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
+                            ->hint(
+                                fn (?string $state) => strlen($state ?? '') . ' / 160',
+                            ),
 
                         TextInput::make('og_type')
                             ->label(__('admin.open_graph_type'))
@@ -202,6 +348,48 @@ class PageForm
                     ->columnSpanFull()
                     ->collapsible()
                     ->collapsed(),
-            ]);
+            ];
+        };
+
+        if (! $localizationEnabled) {
+            return $schema->components($buildSections());
+        }
+
+        $tabs = [];
+
+        foreach ($locales as $locale) {
+            $label = config(
+                "filament-translatable-fields.labels.{$locale}",
+                strtoupper($locale),
+            );
+
+            $flag = match ($locale) {
+                'en' => 'gb',
+                default => $locale,
+            };
+
+            $flagSvg = svg(
+                "flag-country-{$flag}",
+                'h-5 w-7',
+                [
+                    'title' => $label,
+                    'aria-label' => $label,
+                ],
+            );
+
+            $tabs[] = Tab::make($locale)
+                ->label(new HtmlString($flagSvg->toHtml()))
+                ->schema($buildSections($locale));
+        }
+
+        return $schema->components([
+            Tabs::make('translations')
+                ->tabs($tabs)
+                ->contained(false)
+                ->columnSpanFull()
+                ->extraAttributes([
+                    'class' => 'w-full [&_[role=tablist]]:justify-start [&_[role=tablist]]:ml-0',
+                ]),
+        ]);
     }
 }

@@ -187,5 +187,10 @@ return [
     'copyright_notice' => 'Pokémon en alle bijbehorende handelsmerken zijn © 1995-2025 Nintendo, Creatures en GAME FREAK. De Engelstalige kaartafbeeldingen op deze website zijn eigendom van The Pokémon Company International, Inc.',
     'independence_notice' => 'PkmnInsider is een onafhankelijke fansite. We zijn op geen enkele wijze officieel en zijn niet verbonden aan, gesponsord door of onderschreven door Nintendo, Creatures, GAME FREAK of TPCi.',
     'all_rights_reserved' => 'Alle rechten voorbehouden.',
+    'select_language' => 'Selecteer taal',
+    'available_languages' => 'Beschikbare talen',
+    'site_navigation' => 'Sitenavigatie',
+    'pokemon' => 'Pokémon',
+    'social_media' => 'Sociale media',
 
 ];

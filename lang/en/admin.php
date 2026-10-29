@@ -320,5 +320,9 @@ return [
     'select_image' => 'Select image',
     'all_time' => 'All time',
     'slug_already_in_use' => 'This slug is already in use for this language.',
-    'key' => 'Key',
+    'key' => 'Unique key',
+    'create_category' => 'Create category',
+    'create_article' => 'Create article',
+    'create_page' => 'Create page',
+    'create_asset' => 'Create asset',
 ];

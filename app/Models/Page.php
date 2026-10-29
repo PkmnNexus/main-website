@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Contracts\Seoable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Translatable\HasTranslations;
 
 class Page extends Model implements HasMedia, Seoable
 {
+    use HasTranslations;
     use InteractsWithMedia;
 
     /*
@@ -20,20 +21,32 @@ class Page extends Model implements HasMedia, Seoable
     */
 
     protected $fillable = [
+        'key',
         'hero_asset_id',
+        'page',
         'title',
         'slug',
         'content',
-        'meta_title',
         'meta_description',
         'meta_keywords',
+        'canonical',
         'robots_index',
         'robots_follow',
-        'canonical',
         'og_title',
         'og_description',
         'og_type',
         'is_active',
+    ];
+
+    public array $translatable = [
+        'slug',
+        'content',
+        'title',
+        'meta_description',
+        'meta_keywords',
+        'canonical',
+        'og_title',
+        'og_description',
     ];
 
     /*
@@ -71,7 +84,7 @@ class Page extends Model implements HasMedia, Seoable
     */
 
     /**
-     * Get the hero image that belongs to the article.
+     * Get the hero image that belongs to the page.
      */
     public function heroImage(): BelongsTo
     {
@@ -83,14 +96,6 @@ class Page extends Model implements HasMedia, Seoable
     | Helpers
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * Get the route key for the model.
-     */
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -135,7 +140,12 @@ class Page extends Model implements HasMedia, Seoable
      */
     public function getSeoRobotsSource(): ?string
     {
-        return $this->robots;
+        return $this->robots_index && $this->robots_follow
+            ? 'index, follow'
+            : implode(', ', array_filter([
+                $this->robots_index ? 'index' : 'noindex',
+                $this->robots_follow ? 'follow' : 'nofollow',
+            ]));
     }
 
     /**

@@ -18,6 +18,11 @@ class EditArticle extends EditRecord
 
     protected ?string $originalVideoUrl = null;
 
+    public function getTitle(): string
+    {
+        return __('admin.article');
+    }
+
     protected function authorizeAccess(): void
     {
         parent::authorizeAccess();

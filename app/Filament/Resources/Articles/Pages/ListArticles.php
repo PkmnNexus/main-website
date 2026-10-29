@@ -13,10 +13,15 @@ class ListArticles extends ListRecords
 {
     protected static string $resource = ArticleResource::class;
 
+    public function getTitle(): string
+    {
+        return __('admin.articles');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label(__('admin.create_article')),
         ];
     }
 

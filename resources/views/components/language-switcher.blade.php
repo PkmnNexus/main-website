@@ -8,7 +8,7 @@
         <button type="button"
                 @click="open = !open"
                 :aria-expanded="open.toString()"
-                aria-label="Select language"
+                aria-label="{{ __('general.select_language') }}"
                 class="inline-flex items-center rounded-md cursor-pointer transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] dark:hover:bg-gray-800">
 
             @svg($currentLanguage['icon'], 'h-5 w-7 shrink-0')
@@ -20,7 +20,7 @@
              x-transition.origin.top.right
              class="absolute right-0 top-full z-50 mt-2 min-w-44 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
              role="menu"
-             aria-label="Available languages">
+             aria-label="{{ __('general.available_languages') }}">
 
             <form action="{{ route('language.switch') }}" method="POST">
 

@@ -57,6 +57,7 @@ class UserSeeder extends Seeder
         }
 
         if (! app()->isProduction()) {
+            
             // Editor
             $editorPassword = '_8%b{raT7i;z|~8}CZ{aCUm?y7qZOmW%';
 

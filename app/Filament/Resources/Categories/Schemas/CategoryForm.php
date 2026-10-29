@@ -17,7 +17,7 @@ class CategoryForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $defaultLocale = config('localization.default', 'nl');
+        $defaultLocale = config('localization.default', 'en');
         $localizationEnabled = (bool) config('localization.enabled');
 
         $locales = $localizationEnabled
@@ -27,12 +27,48 @@ class CategoryForm
             )
             : [$defaultLocale];
 
+        $translatedLabel = function (string $label, string $locale) use (
+            $localizationEnabled,
+        ): string|HtmlString {
+            if (! $localizationEnabled) {
+                return $label;
+            }
+
+            $flag = match ($locale) {
+                'en' => 'gb',
+                default => $locale,
+            };
+
+            $localeLabel = config(
+                "filament-translatable-fields.labels.{$locale}",
+                strtoupper($locale),
+            );
+
+            $flagSvg = svg(
+                "flag-country-{$flag}",
+                'h-3.5 w-5',
+                [
+                    'title' => $localeLabel,
+                    'aria-label' => $localeLabel,
+                ],
+            );
+
+            return new HtmlString(
+                '<span class="inline-flex items-center gap-2">'
+                    . '<span>' . e($label) . '</span>'
+                    . '<span class="inline-flex items-center opacity-70">'
+                    . $flagSvg->toHtml()
+                    . '</span>'
+                    . '</span>',
+            );
+        };
+
         $translationFields = [];
 
         foreach ($locales as $locale) {
             $translationFields[$locale] = [
                 TextInput::make("name.{$locale}")
-                    ->label(__('admin.name'))
+                    ->label($translatedLabel(__('admin.name'), $locale))
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
@@ -44,7 +80,7 @@ class CategoryForm
                     ),
 
                 TextInput::make("slug.{$locale}")
-                    ->label(__('admin.slug'))
+                    ->label($translatedLabel(__('admin.slug'), $locale))
                     ->required()
                     ->maxLength(255)
                     ->disabled()
@@ -73,21 +109,14 @@ class CategoryForm
                     ]),
 
                 Textarea::make("description.{$locale}")
-                    ->label(__('admin.description'))
+                    ->label($translatedLabel(__('admin.description'), $locale))
                     ->required()
                     ->rows(5)
                     ->columnSpanFull(),
             ];
         }
 
-        $components = [
-            TextInput::make('key')
-                ->label(__('admin.key'))
-                ->required()
-                ->maxLength(255)
-                ->unique(ignoreRecord: true)
-                ->alphaDash(),
-        ];
+        $components = [];
 
         if ($localizationEnabled) {
             $tabs = [];
@@ -113,21 +142,30 @@ class CategoryForm
                 );
 
                 $tabs[] = Tab::make($locale)
-                    ->label(
-                        new HtmlString($flagSvg->toHtml()),
-                    )
+                    ->label(new HtmlString($flagSvg->toHtml()))
                     ->schema($translationFields[$locale]);
             }
 
             $components[] = Tabs::make('translations')
                 ->tabs($tabs)
-                ->columnSpanFull();
+                ->contained(false)
+                ->columnSpanFull()
+                ->extraAttributes([
+                    'class' => 'w-full [&_[role=tablist]]:justify-start [&_[role=tablist]]:ml-0',
+                ]);
         } else {
             $components = [
                 ...$components,
                 ...$translationFields[$defaultLocale],
             ];
         }
+
+        $components[] = TextInput::make('key')
+            ->label(__('admin.key'))
+            ->required()
+            ->maxLength(255)
+            ->unique(ignoreRecord: true)
+            ->alphaDash();
 
         return $schema->components($components);
     }

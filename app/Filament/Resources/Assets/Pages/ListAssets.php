@@ -10,10 +10,15 @@ class ListAssets extends ListRecords
 {
     protected static string $resource = AssetResource::class;
 
+    public function getTitle(): string
+    {
+        return __('admin.assets');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label(__('admin.create_asset')),
         ];
     }
 }

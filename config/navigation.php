@@ -1,3 +1,4 @@
+
 <?php
 
 return [
@@ -29,58 +30,58 @@ return [
             ],
         ],
     ],
+
     'subfooter' => [
         [
             'label' => 'navigation.about',
             'route' => 'page.about',
+            'page_key' => 'about',
         ],
         [
             'label' => 'navigation.disclaimer',
             'route' => 'page.disclaimer',
+            'page_key' => 'disclaimer',
         ],
         [
             'label' => 'navigation.privacy_policy',
             'route' => 'page.privacy-policy',
+            'page_key' => 'privacy-policy',
         ],
         [
             'label' => 'navigation.terms_and_conditions',
             'route' => 'page.terms-and-conditions',
+            'page_key' => 'terms-and-conditions',
         ],
         [
             'label' => 'navigation.cookie_policy',
             'route' => 'page.cookie-policy',
+            'page_key' => 'cookie-policy',
         ],
     ],
+
     'categories' => [
         [
             'label' => 'navigation.pokemon_tcg',
-            'route' => 'home',
+            'route' => 'articles.category',
+            'category_key' => 'pokemon-tcg',
         ],
         [
             'label' => 'navigation.pokemon_go',
-            'route' => 'home',
-        ],
-        [
-            'label' => 'navigation.pokemon_horizons',
-            'route' => 'home',
-        ],
-        [
-            'label' => 'navigation.pokemon_legends_za',
-            'route' => 'home',
-        ],
-        [
-            'label' => 'navigation.nintendo_switch',
-            'route' => 'home',
+            'route' => 'articles.category',
+            'category_key' => 'pokemon-go',
         ],
     ],
+
     'footer' => [
         [
             'label' => 'navigation.disclaimer',
             'route' => 'page.disclaimer',
+            'page_key' => 'disclaimer',
         ],
         [
             'label' => 'navigation.cookie_policy',
             'route' => 'page.cookie-policy',
+            'page_key' => 'cookie-policy',
         ],
         [
             'label' => 'navigation.sitemap',

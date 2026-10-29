@@ -320,5 +320,9 @@ return [
     'select_image' => 'Afbeelding selecteren',
     'all_time' => 'Alle tijden',
     'slug_already_in_use' => 'Deze slug is al in gebruik voor deze taal.',
-    'key' => 'Sleutel',
+    'key' => 'Unieke sleutel',
+    'create_category' => 'Maak categorie',
+    'create_article' => 'Maak artikel',
+    'create_page' => 'Maak pagina',
+    'create_asset' => 'Maak media',
 ];

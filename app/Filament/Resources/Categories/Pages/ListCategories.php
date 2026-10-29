@@ -10,10 +10,15 @@ class ListCategories extends ListRecords
 {
     protected static string $resource = CategoryResource::class;
 
+    public function getTitle(): string
+    {
+        return __('admin.categories');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label(__('admin.create_category')),
         ];
     }
 }

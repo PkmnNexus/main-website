@@ -13,6 +13,11 @@ class CreateArticle extends CreateRecord
 {
     protected static string $resource = ArticleResource::class;
 
+    public function getTitle(): string
+    {
+        return __('admin.article');
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $user = auth()->user();

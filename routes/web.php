@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\SitemapController;
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Page;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,9 +54,11 @@ $registerFrontendRoutes = function () {
 
 Route::post('/language', function (Request $request) {
 
-    abort_unless(config('localization.enabled'), 404);
+    abort_unless(config('localization.enabled', false), 404);
 
     $locales = array_keys(config('localization.locales', []));
+
+    abort_if(empty($locales), 404);
 
     $validated = $request->validate([
         'locale' => ['required', 'string', 'in:' . implode(',', $locales)],
@@ -120,6 +123,26 @@ Route::post('/language', function (Request $request) {
         }
     }
 
+    // Translate individual page URLs.
+    // The key fallback also supports the existing fixed page routes.
+    if (count($segments) === 1) {
+        $page = Page::query()
+            ->where(function ($query) use ($segments, $currentLocale) {
+                $query
+                    ->where("slug->{$currentLocale}", $segments[0])
+                    ->orWhere('key', $segments[0]);
+            })
+            ->first();
+
+        if ($page) {
+            $translatedSlug = $page->getTranslation('slug', $targetLocale, false);
+
+            if (filled($translatedSlug)) {
+                $segments[0] = $translatedSlug;
+            }
+        }
+    }
+
     $path = implode('/', $segments);
 
     $isAdminPath = isset($segments[0]) && $segments[0] === 'admin';
@@ -144,12 +167,10 @@ Route::post('/language', function (Request $request) {
 
 })->name('language.switch');
 
-if (config('localization.enabled')) {
+if (config('localization.enabled', false)) {
 
     Route::get('/', function () {
-
         return redirect('/' . config('localization.default', 'en'));
-
     });
 
     Route::prefix('{locale}')->group(function () use ($registerFrontendRoutes) {
@@ -158,6 +179,12 @@ if (config('localization.enabled')) {
 
         require base_path('vendor/laravel/fortify/routes/routes.php');
 
+        // Resolve translated page slugs after the explicit frontend and Fortify routes.
+        Route::middleware(['under-construction'])
+            ->get('/{pageSlug}', [PageController::class, 'show'])
+            ->where('pageSlug', '[A-Za-z0-9][A-Za-z0-9\-]*')
+            ->name('page.translated');
+
     });
 
 } else {
@@ -165,5 +192,11 @@ if (config('localization.enabled')) {
     $registerFrontendRoutes();
 
     require base_path('vendor/laravel/fortify/routes/routes.php');
+
+    // Without localization, resolve page slugs using the default app locale.
+    Route::middleware(['under-construction'])
+        ->get('/{pageSlug}', [PageController::class, 'show'])
+        ->where('pageSlug', '[A-Za-z0-9][A-Za-z0-9\-]*')
+        ->name('page.translated');
 
 }

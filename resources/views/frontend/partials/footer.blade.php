@@ -24,7 +24,7 @@
 
                     <li itemprop="name">
 
-                        <a href="{{ route($item['route']) }}"
+                        <a href="{{ app(\App\Support\NavigationUrl::class)->for($item) }}"
                            class="text-white text-sm md:text-xs"
                            itemprop="url">
 
