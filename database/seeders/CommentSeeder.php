@@ -37,9 +37,12 @@ class CommentSeeder extends Seeder
         for ($i = 0; $i < $rootCommentCount; $i++) {
             $article = $articles->random();
 
+            $locale = $this->getArticleLocale($article);
+
             $root = $this->createComment(
                 article: $article,
                 users: $users,
+                locale: $locale,
             );
 
             // Generate replies on level 2.
@@ -49,6 +52,7 @@ class CommentSeeder extends Seeder
                 $reply = $this->createComment(
                     article: $article,
                     users: $users,
+                    locale: $locale,
                     parent: $root,
                 );
 
@@ -59,6 +63,7 @@ class CommentSeeder extends Seeder
                     $this->createComment(
                         article: $article,
                         users: $users,
+                        locale: $locale,
                         parent: $reply,
                     );
                 }
@@ -71,21 +76,45 @@ class CommentSeeder extends Seeder
     }
 
     /**
+     * Determine the locale used for the article.
+     */
+    private function getArticleLocale(Article $article): string
+    {
+        $defaultLocale = config('localization.default', 'en');
+
+        $availableLocales = array_keys(
+            $article->getTranslations('title')
+        );
+
+        $availableLocales = array_values(array_intersect(
+            $availableLocales,
+            array_keys(config('localization.locales', [])),
+        ));
+
+        return $availableLocales
+            ? fake()->randomElement($availableLocales)
+            : $defaultLocale;
+    }
+
+    /**
      * Create a comment with a randomized timestamp.
      */
     private function createComment(
         Article $article,
         $users,
+        string $locale,
         ?Comment $parent = null,
     ): Comment {
         $createdAt = fake()->dateTimeBetween('-30 days', 'now');
 
-        return Comment::factory()->create([
-            'article_id' => $article->id,
-            'user_id' => $users->random()->id,
-            'parent_id' => $parent?->id,
-            'created_at' => $createdAt,
-            'updated_at' => $createdAt,
-        ]);
+        return Comment::factory()
+            ->state(Comment::factory()->forLocale($locale))
+            ->create([
+                'article_id' => $article->id,
+                'user_id' => $users->random()->id,
+                'parent_id' => $parent?->id,
+                'created_at' => $createdAt,
+                'updated_at' => $createdAt,
+            ]);
     }
 }

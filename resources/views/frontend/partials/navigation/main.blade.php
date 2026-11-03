@@ -63,7 +63,7 @@
                     @foreach (config('navigation.main') as $item)
 
                         @php
-                            $isActive = collect($item['active_routes'] ?? [$item['route']])->contains(fn ($pattern) => request()->routeIs($pattern));
+                            $isActive = app(\App\Support\NavigationUrl::class)->isActive($item);
                         @endphp
 
                         <li itemprop="name">

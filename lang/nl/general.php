@@ -192,5 +192,9 @@ return [
     'site_navigation' => 'Sitenavigatie',
     'pokemon' => 'Pokémon',
     'social_media' => 'Sociale media',
+    'min_read' => 'minuten leestijd',
+    'published_at' => 'Gepubliceerd op:',
+    'edited_at' => 'Bewerkt op:',
+    'share_this_article' => 'Deel dit artikel',
 
 ];

@@ -7,7 +7,7 @@
               itemtype="https://schema.org/Person"
               class="text-primary">
 
-            <a href="{{ route('articles.author', $article->user) }}" class="text-[var(--color-primary)] transition hover:text-[var(--color-secondary)]">
+            <a href="{{ localized_route('articles.author', ['user' => $article->user->slug]) }}" class="text-[var(--color-primary)] transition hover:text-[var(--color-secondary)]">
 
                 {{ $article->user->display_name }}
 
@@ -19,7 +19,7 @@
 
         <span class="text-secondary">
 
-            {{ $article->reading_time }} min read
+            {{ $article->reading_time }} {{ __('general.min_read') }}
 
         </span>
 
@@ -27,9 +27,9 @@
 
         <span class="text-secondary">
 
-            Published at:
+            {{ __('general.published_at') }}
 
-            <time itemprop="datePublished" datetime="{{ $article->published_at->toIso8601String() }}">{{ $article->published_at->format('F j, Y - h:i A') }}</time>
+            <time itemprop="datePublished" datetime="{{ $article->published_at->toIso8601String() }}">{{ localized_date($article->published_at) }}</time>
         
         </span>
 
@@ -39,9 +39,9 @@
 
             <span class="text-secondary">
 
-                Edited at:
+                {{ __('general.edited_at') }}
 
-                <time itemprop="dateModified" datetime="{{ $article->updated_at->toIso8601String() }}">{{ $article->updated_at->format('F j, Y - h:i A') }}</time>
+                <time itemprop="dateModified" datetime="{{ $article->updated_at->toIso8601String() }}">{{ localized_date($article->updated_at) }}</time>
 
             </span>
 

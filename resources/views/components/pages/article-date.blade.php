@@ -3,6 +3,6 @@
      itemprop="datePublished"
      datetime="{{ $date?->toAtomString() }}">
 
-    {{ $date?->format('F jS Y') }}
+    {{ localized_date($date, showTime: false) }}
     
 </time>

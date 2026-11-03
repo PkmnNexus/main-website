@@ -200,6 +200,7 @@ new class extends Component {
             'article_id' => $this->article->id,
             'user_id' => $user->id,
             'parent_id' => $parent?->id,
+            'locale' => app()->getLocale(),
             'body' => $validated['body'],
         ]);
 

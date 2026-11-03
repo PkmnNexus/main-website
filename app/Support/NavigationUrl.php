@@ -34,7 +34,44 @@ class NavigationUrl
             );
         }
 
-        return route($item['route']);
+        $routeName = $item['route'];
+
+        if (
+            $localizationEnabled
+            && $locale !== config('localization.default', 'en')
+            && Route::has($routeName . '.' . $locale)
+        ) {
+            $routeName .= '.' . $locale;
+        }
+
+        return route($routeName);
+    }
+
+    public function isActive(array $item): bool
+    {
+        $patterns = $item['active_routes'] ?? [$item['route'] ?? ''];
+
+        $locale = app()->getLocale();
+        $localizationEnabled = (bool) config('localization.enabled', false);
+        $defaultLocale = config('localization.default', 'en');
+
+        foreach ($patterns as $pattern) {
+
+            if (request()->routeIs($pattern)) {
+                return true;
+            }
+
+            if (
+                $localizationEnabled
+                && $locale !== $defaultLocale
+                && request()->routeIs($pattern . '.' . $locale)
+            ) {
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
     private function pageUrl(
@@ -108,8 +145,15 @@ class NavigationUrl
             );
         }
 
+        $articleRoutes = config("localization.routes.{$locale}", []);
+
+        $articlesPath = $articleRoutes['articles'] ?? 'articles';
+        $categoryPath = $articleRoutes['category'] ?? 'category';
+
         $prefix = $localizationEnabled ? '/' . $locale : '';
 
-        return url($prefix . '/articles/category/' . ltrim($slug, '/'));
+        return url(
+            $prefix . '/' . $articlesPath . '/' . $categoryPath . '/' . ltrim($slug, '/')
+        );
     }
 }

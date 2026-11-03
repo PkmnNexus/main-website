@@ -4,12 +4,12 @@ namespace App\Filament\Resources\Articles\Pages;
 
 use App\Enums\ArticleStatus;
 use App\Filament\Resources\Articles\ArticleResource;
+use App\Models\Tag;
 use App\Services\YouTubeService;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Str;
-use Spatie\Tags\Tag;
 use Throwable;
 
 class EditArticle extends EditRecord
@@ -17,6 +17,8 @@ class EditArticle extends EditRecord
     protected static string $resource = ArticleResource::class;
 
     protected ?string $originalVideoUrl = null;
+
+    protected array $pendingTags = [];
 
     public function getTitle(): string
     {
@@ -64,27 +66,7 @@ class EditArticle extends EditRecord
                 : $this->record->status;
         }
 
-        $tags = collect($data['tags'] ?? [])
-            ->flatMap(function ($value) {
-                return is_string($value)
-                    ? str_getcsv($value)
-                    : $value;
-            })
-            ->map(fn (string $name) => trim($name))
-            ->filter()
-            ->unique()
-            ->map(function (string $name) {
-                return Tag::firstOrCreate(
-                    [
-                        'name' => ['en' => $name],
-                    ],
-                    [
-                        'slug' => Str::slug($name),
-                    ],
-                );
-            });
-
-        $this->record->syncTags($tags);
+        $this->pendingTags = $data['tags'] ?? [];
 
         unset($data['tags']);
 
@@ -93,6 +75,8 @@ class EditArticle extends EditRecord
 
     protected function afterSave(): void
     {
+        $this->syncArticleTags();
+
         $videoUrl = $this->record->video_url;
 
         $urlChanged = $this->originalVideoUrl !== $videoUrl;
@@ -148,5 +132,47 @@ class EditArticle extends EditRecord
                 ->warning()
                 ->send();
         }
+    }
+
+    protected function syncArticleTags(): void
+    {
+        $tags = collect($this->pendingTags)
+            ->map(function (array $translations) {
+                $translations = collect($translations)
+                    ->map(fn ($name) => trim((string) $name))
+                    ->filter();
+
+                if ($translations->isEmpty()) {
+                    return null;
+                }
+
+                $tag = Tag::query()
+                    ->where(function ($query) use ($translations) {
+                        foreach ($translations as $locale => $name) {
+                            $query->orWhere("name->{$locale}", $name);
+                        }
+                    })
+                    ->first();
+
+                if (! $tag) {
+                    $tag = new Tag();
+                    $tag->slug = Str::slug(
+                        $translations->get('en') ?? $translations->first(),
+                    );
+                }
+
+                foreach ($translations as $locale => $name) {
+                    $tag->setTranslation('name', $locale, $name);
+                }
+
+                $tag->save();
+
+                return $tag;
+            })
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $this->record->syncTags($tags);
     }
 }

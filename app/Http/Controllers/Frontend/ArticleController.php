@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Cache;
 
 use App\Models\Article;
 use App\Models\Category;
@@ -17,7 +16,7 @@ class ArticleController extends Controller
 {
     public function index(): View
     {
-        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+        $pageSeo = $this->getArticlesPage();
 
         return view('frontend.article.index', compact('pageSeo'));
     }
@@ -30,14 +29,14 @@ class ArticleController extends Controller
             ->where("slug->{$locale}", $category)
             ->firstOrFail();
 
-        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+        $pageSeo = $this->getArticlesPage();
 
         return view('frontend.article.index', compact('pageSeo', 'category'));
     }
 
     public function tag(string $tag): View
     {
-        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+        $pageSeo = $this->getArticlesPage();
 
         return view('frontend.article.index', [
             'pageSeo' => $pageSeo,
@@ -47,15 +46,17 @@ class ArticleController extends Controller
 
     public function author(User $user): View
     {
-        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+        $pageSeo = $this->getArticlesPage();
 
         return view('frontend.article.index', compact('pageSeo', 'user'));
     }
 
     public function video(string $slug): View
     {
+        $locale = $this->contentLocale();
+
         $article = Article::query()
-            ->where('slug', $slug)
+            ->where("slug->{$locale}", $slug)
             ->whereNotNull('video_url')
             ->firstOrFail();
 
@@ -74,7 +75,7 @@ class ArticleController extends Controller
 
     public function videos(): View
     {
-        $pageSeo = Page::where('slug', 'articles')->firstOrFail();
+        $pageSeo = $this->getArticlesPage();
 
         return view('frontend.article.index', compact('pageSeo'));
     }
@@ -84,7 +85,7 @@ class ArticleController extends Controller
         $locale = $this->contentLocale();
 
         $article = Article::query()
-            ->where('slug', $slug)
+            ->where("slug->{$locale}", $slug)
             ->whereHas('category', function ($query) use ($category, $locale) {
                 $query->where("slug->{$locale}", $category);
             })
@@ -96,11 +97,21 @@ class ArticleController extends Controller
     }
 
     /**
+     * Get the articles CMS page.
+     */
+    private function getArticlesPage(): Page
+    {
+        return Page::query()
+            ->where('key', 'articles')
+            ->firstOrFail();
+    }
+
+    /**
      * Get the content locale, respecting the multilingual feature flag.
      */
     private function contentLocale(): string
     {
-        if (! config('localization.enabled')) {
+        if (! config('localization.enabled', false)) {
             return config('localization.default', config('app.locale', 'en'));
         }
 

@@ -14,7 +14,7 @@ class EnsureMemberLoginEnabled
     public function handle(Request $request, Closure $next): Response
     {
         if (
-            $request->is('login')
+            ($request->is('login') || $request->is('*/login'))
             && ! config('website.features.member_login')
         ) {
             abort(404);

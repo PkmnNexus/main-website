@@ -117,7 +117,7 @@ new class extends Component {
 
                                 <div class="absolute top-3 left-3 z-10 px-3 py-2 text-xs uppercase font-display font-black text-white rounded-sm bg-[var(--color-primary)]">
 
-                                    <x-pages.article-date :date="$article->published_at" />
+                                    <x-pages.article-date :date="$article->published_at" :show-time="false" />
 
                                 </div>
 

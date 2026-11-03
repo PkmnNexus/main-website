@@ -18,6 +18,7 @@ use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,22 @@ class FortifyServiceProvider extends ServiceProvider
     public function register(): void
     {
         Fortify::ignoreRoutes();
+
+        $this->app->singleton(LoginResponse::class, function () {
+            return new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    $locale = app()->getLocale();
+
+                    $profilePath = config(
+                        "localization.routes.{$locale}.account.profile",
+                        'account/profile'
+                    );
+
+                    return redirect('/' . $locale . '/' . ltrim($profilePath, '/'));
+                }
+            };
+        });
     }
 
     /**
@@ -55,7 +72,7 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureViews(): void
     {
         Fortify::loginView(fn () => view('frontend.auth.login', [
-            'pageSeo' => Page::where('slug', 'login')
+            'pageSeo' => Page::where('key', 'login')
                 ->where('is_active', true)
                 ->firstOrFail(),
         ]));
@@ -64,26 +81,26 @@ class FortifyServiceProvider extends ServiceProvider
             abort_unless(config('website.features.registration'), 404);
 
             return view('frontend.auth.register', [
-                'pageSeo' => Page::where('slug', 'register')
+                'pageSeo' => Page::where('key', 'register')
                     ->where('is_active', true)
                     ->firstOrFail(),
             ]);
         });
 
         Fortify::verifyEmailView(fn () => view('frontend.auth.verify-email', [
-            'pageSeo' => Page::where('slug', 'verify-email')
+            'pageSeo' => Page::where('key', 'verify-email')
                 ->where('is_active', true)
                 ->firstOrFail(),
         ]));
 
         Fortify::resetPasswordView(fn () => view('frontend.auth.reset-password', [
-            'pageSeo' => Page::where('slug', 'reset-password')
+            'pageSeo' => Page::where('key', 'reset-password')
                 ->where('is_active', true)
                 ->firstOrFail(),
         ]));
 
         Fortify::requestPasswordResetLinkView(fn () => view('frontend.auth.forgot-password', [
-            'pageSeo' => Page::where('slug', 'forgot-password')
+            'pageSeo' => Page::where('key', 'forgot-password')
                 ->where('is_active', true)
                 ->firstOrFail(),
         ]));

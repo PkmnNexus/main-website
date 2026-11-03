@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->foreignId('user_id')->constrained()->restrictOnDelete();
 
+            $table->string('locale', 10)->default(config('localization.default', 'en'));
+
             $table->foreignId('parent_id')->nullable()->constrained('comments')->restrictOnDelete();
 
             $table->text('body');

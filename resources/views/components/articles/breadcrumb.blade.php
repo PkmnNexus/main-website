@@ -27,7 +27,7 @@
             itemscope
             itemtype="https://schema.org/ListItem">
 
-            <a href="{{ route('article.index') }}"
+            <a href="{{ localized_route('article.index') }}"
                itemprop="item"
                class="text-primary transition-colors hover:opacity-80">
 
@@ -47,7 +47,7 @@
 
             @if (filled($article->video_url))
 
-                <a href="{{ route('articles.videos') }}"
+                <a href="{{ localized_route('articles.videos') }}"
                    itemprop="item"
                    class="text-primary transition-colors hover:opacity-80">
 
@@ -57,7 +57,7 @@
 
             @else
 
-                <a href="{{ route('articles.category', $article->category) }}"
+                <a href="{{ localized_route('articles.category', ['category' => $article->category->getTranslation('slug', app()->getLocale())]) }}"
                    itemprop="item"
                    class="text-primary transition-colors hover:opacity-80">
 

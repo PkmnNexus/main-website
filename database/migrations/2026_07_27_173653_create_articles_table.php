@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
 
             // Core content
-            $table->string('title');
-            $table->string('slug')->unique();
-            $table->text('excerpt')->nullable();
-            $table->text('summary')->nullable();
-            $table->longText('content')->nullable();
+            $table->json('title');
+            $table->json('slug');
+            $table->json('excerpt')->nullable();
+            $table->json('summary')->nullable();
+            $table->json('content')->nullable();
 
             $table->foreignId('category_id')
                 ->constrained()
@@ -41,16 +41,16 @@ return new class extends Migration
             $table->boolean('is_pokemon_go_featured')->default(false);
 
             // SEO
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
+            $table->json('meta_title')->nullable();
+            $table->json('meta_description')->nullable();
             $table->json('meta_keywords')->nullable();
-            $table->string('canonical')->nullable();
+            $table->json('canonical')->nullable();
             $table->boolean('robots_index')->default(true);
             $table->boolean('robots_follow')->default(true);
 
             // Open Graph
-            $table->string('og_title')->nullable();
-            $table->text('og_description')->nullable();
+            $table->json('og_title')->nullable();
+            $table->json('og_description')->nullable();
             $table->string('og_type')->default('article');
 
             // Publishing

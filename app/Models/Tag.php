@@ -2,21 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Tags\Tag as SpatieTag;
 
-class Tag extends Model
+class Tag extends SpatieTag
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Get the articles associated with the tag.
-     */
-    public function articles()
-    {
-        return $this->belongsToMany(Article::class);
-    }
+    //
 }

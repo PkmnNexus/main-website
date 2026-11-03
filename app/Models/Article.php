@@ -4,16 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Illuminate\Database\Eloquent\Builder;
-
-use Illuminate\Support\Facades\DB;
 
 use App\Contracts\Seoable;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
+use Spatie\Translatable\HasTranslations;
 
 use App\Enums\ArticleStatus;
 
@@ -23,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Article extends Model implements Seoable, HasMedia
 {
-    use HasFactory, InteractsWithMedia, HasTags;
+    use HasFactory, InteractsWithMedia, HasTags, HasTranslations;
 
     /*
     |--------------------------------------------------------------------------
@@ -37,8 +35,16 @@ class Article extends Model implements Seoable, HasMedia
     protected static function booted(): void
     {
         static::saving(function (Article $article): void {
-            $article->reading_time = filled($article->content)
-                ? self::calculateReadingTime($article->content)
+            $defaultLocale = config('localization.default', 'en');
+
+            $content = $article->getTranslation(
+                'content',
+                $defaultLocale,
+                false,
+            );
+
+            $article->reading_time = filled($content)
+                ? self::calculateReadingTime($content)
                 : null;
         });
     }
@@ -84,6 +90,25 @@ class Article extends Model implements Seoable, HasMedia
         'reading_time',
     ];
 
+    /**
+     * The attributes that are translatable.
+     *
+     * @var array<int, string>
+     */
+    public $translatable = [
+        'title',
+        'slug',
+        'excerpt',
+        'summary',
+        'content',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'canonical',
+        'og_title',
+        'og_description',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Casts
@@ -106,7 +131,6 @@ class Article extends Model implements Seoable, HasMedia
 
             'youtube_published_at' => 'datetime',
 
-            'meta_keywords' => 'array',
             'robots_index' => 'boolean',
             'robots_follow' => 'boolean',
 
@@ -279,7 +303,13 @@ class Article extends Model implements Seoable, HasMedia
      */
     public function getSeoKeywordsSource(): ?string
     {
-        return $this->meta_keywords;
+        $keywords = $this->meta_keywords;
+
+        if (is_array($keywords)) {
+            return implode(', ', $keywords);
+        }
+
+        return $keywords;
     }
 
     /**

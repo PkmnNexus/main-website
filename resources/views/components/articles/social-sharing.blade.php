@@ -6,11 +6,11 @@
 
     <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
 
-        <span class="font-display text-sm font-bold text-[var(--color-secondary)]">Share this article</span>
+        <span class="font-display text-sm font-bold text-[var(--color-secondary)]">{{ __('general.share_this_article') }}</span>
 
         <div class="flex flex-wrap items-center gap-3">
 
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('article.show', ['category' => $article->category->slug, 'slug' => $article->slug])) }}"
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(localized_route('article.show', ['category' => $article->category->getTranslation('slug', app()->getLocale()), 'slug' => $article->getTranslation('slug', app()->getLocale())])) }}"
                target="_blank"
                rel="noopener noreferrer"
                aria-label="Share on Facebook"
@@ -28,7 +28,7 @@
 
             </a>
 
-            <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('article.show', ['category' => $article->category->slug, 'slug' => $article->slug])) }}&text={{ urlencode($article->title) }}"
+            <a href="https://twitter.com/intent/tweet?url={{ urlencode(localized_route('article.show', ['category' => $article->category->getTranslation('slug', app()->getLocale()), 'slug' => $article->getTranslation('slug', app()->getLocale())])) }}&text={{ urlencode($article->title) }}"
                target="_blank"
                rel="noopener noreferrer"
                aria-label="Share on X"
@@ -46,7 +46,7 @@
 
             </a>
 
-            <a href="https://www.reddit.com/submit?url={{ urlencode(route('article.show', ['category' => $article->category->slug, 'slug' => $article->slug])) }}&title={{ urlencode($article->title) }}"
+            <a href="https://www.reddit.com/submit?url={{ urlencode(localized_route('article.show', ['category' => $article->category->getTranslation('slug', app()->getLocale()), 'slug' => $article->getTranslation('slug', app()->getLocale())])) }}&title={{ urlencode($article->title) }}"
                target="_blank"
                rel="noopener noreferrer"
                aria-label="Share on Reddit"
@@ -64,7 +64,7 @@
 
             </a>
 
-            <a href="https://api.whatsapp.com/send?text={{ urlencode($article->title . ' ' . route('article.show', ['category' => $article->category->slug, 'slug' => $article->slug])) }}"
+            <a href="https://api.whatsapp.com/send?text={{ urlencode($article->title . ' ' . localized_route('article.show', ['category' => $article->category->getTranslation('slug', app()->getLocale()), 'slug' => $article->getTranslation('slug', app()->getLocale())])) }}"
                target="_blank"
                rel="noopener noreferrer"
                aria-label="Share on WhatsApp"

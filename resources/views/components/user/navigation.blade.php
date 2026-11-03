@@ -1,14 +1,26 @@
+@php
+    $locale = app()->getLocale();
+
+    $profileRoute = $locale === config('localization.default', 'en')
+        ? 'account.profile'
+        : 'account.profile.' . $locale;
+
+    $editProfileRoute = $locale === config('localization.default', 'en')
+        ? 'account.profile.edit'
+        : 'account.profile.edit.' . $locale;
+@endphp
+
 <nav aria-label="{{ __('general.account_general') }}" class="w-full bg-white border-b border-gray-200 shadow-md xl:flex xl:w-[250px] xl:shrink-0 xl:border-b-0 xl:border-r xl:shadow-none">
 
     <ul class="flex flex-col items-stretch gap-1 w-full p-4 font-display font-bold text-sm">
 
         <li>
 
-            <a href="{{ route('account.profile') }}"
+            <a href="{{ route($profileRoute) }}"
                @class([
                    'flex items-center w-full rounded-sm px-4 py-2 transition-colors duration-200',
-                   'bg-gradient text-white' => request()->routeIs('account.profile'),
-                   'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' => ! request()->routeIs('account.profile'),
+                   'bg-gradient text-white' => request()->routeIs('account.profile', 'account.profile.nl'),
+                   'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' => ! request()->routeIs('account.profile', 'account.profile.nl'),
                ])>
 
                 {{ __('general.profile') }}
@@ -19,11 +31,11 @@
 
         <li>
 
-            <a href="{{ route('account.profile.edit') }}"
+            <a href="{{ route($editProfileRoute) }}"
                @class([
                    'flex items-center w-full rounded-sm px-4 py-2 transition-colors duration-200',
-                   'bg-gradient text-white' => request()->routeIs('account.profile.edit'),
-                   'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' => ! request()->routeIs('account.profile.edit'),
+                   'bg-gradient text-white' => request()->routeIs('account.profile.edit', 'account.profile.edit.nl'),
+                   'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' => ! request()->routeIs('account.profile.edit', 'account.profile.edit.nl'),
                ])>
 
                 {{ __('general.edit_profile') }}

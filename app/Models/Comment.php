@@ -37,6 +37,7 @@ class Comment extends Model
         'article_id',
         'user_id',
         'parent_id',
+        'locale',
         'body',
     ];
 
