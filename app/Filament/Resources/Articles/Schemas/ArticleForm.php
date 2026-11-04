@@ -14,11 +14,11 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\RichEditorTool;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
@@ -96,9 +96,11 @@ class ArticleForm
             $translatedLabel,
         ): array {
             $localized = $localizationEnabled;
-            $field = fn (string $name): string => $localized
-                ? "{$name}.{$locale}"
-                : $name;
+        $field = fn (string $name): string => $localized
+            ? "{$name}.{$locale}"
+            : $name;
+
+        $contentField = $field('content');
 
             return [
                 Section::make(__('admin.content'))
@@ -207,7 +209,7 @@ class ArticleForm
                                     })
                             ),
 
-                        RichEditor::make($field('content'))
+                        RichEditor::make($contentField)
                             ->label($translatedLabel(__('admin.content'), $locale))
                             ->required(fn (Get $get): bool => blank($get('video_url')))
                             ->columnSpanFull()
@@ -429,53 +431,94 @@ class ArticleForm
             ];
         };
 
-        $tagFields = [];
+        $buildTagsSection = function () use (
+            $locales,
+            $localizationEnabled,
+            $defaultLocale,
+        ): Section {
+            $buildTagField = function (?string $locale = null) use (
+                $localizationEnabled,
+                $defaultLocale,
+            ): TagsInput {
+                $field = $localizationEnabled ? "tags.{$locale}" : 'tags';
+                $tagLocale = $locale ?? $defaultLocale;
 
-        foreach ($locales as $locale) {
-            $tagFields[] = TextInput::make($locale)
-                ->label(config(
-                    "filament-translatable-fields.labels.{$locale}",
-                    strtoupper($locale),
-                ))
-                ->maxLength(255);
-        }
+                return TagsInput::make($field)
+                    ->placeholder(__('admin.add_a_tag'))
+                    ->afterStateHydrated(function (
+                        TagsInput $component,
+                        ?Article $record,
+                    ) use ($tagLocale): void {
+                        $component->state(
+                            $record?->tags
+                                ->flatMap(function (Tag $tag) use ($tagLocale): array {
+                                    $name = $tag->getTranslation('name', $tagLocale, false);
 
-        $buildTagsSection = function () use ($tagFields, $locales): Section {
+                                    if (blank($name)) {
+                                        return [];
+                                    }
+
+                                    return collect(preg_split('/\s*,\s*/u', trim((string) $name), -1, PREG_SPLIT_NO_EMPTY))
+                                        ->map(fn (string $value): string => trim($value))
+                                        ->filter()
+                                        ->all();
+                                })
+                                ->unique()
+                                ->values()
+                                ->all() ?? []
+                        );
+                    })
+                    ->columnSpanFull();
+            };
+
+            $schema = [];
+
+            if ($localizationEnabled) {
+                $tabs = [];
+
+                foreach ($locales as $locale) {
+                    $label = config(
+                        "filament-translatable-fields.labels.{$locale}",
+                        strtoupper($locale),
+                    );
+
+                    $flag = match ($locale) {
+                        'en' => 'gb',
+                        default => $locale,
+                    };
+
+                    $flagSvg = svg(
+                        "flag-country-{$flag}",
+                        'h-5 w-7',
+                        [
+                            'title' => $label,
+                            'aria-label' => $label,
+                        ],
+                    );
+
+                    $tabs[] = Tab::make($locale)
+                        ->label(new HtmlString($flagSvg->toHtml()))
+                        ->schema([
+                            $buildTagField($locale),
+                        ]);
+                }
+
+                $schema[] = Tabs::make('tag_translations')
+                    ->tabs($tabs)
+                    ->contained(false);
+            } else {
+                $schema[] = $buildTagField();
+            }
+
             return Section::make(__('admin.tags'))
-                ->schema([
-                    Repeater::make('tags')
-                        ->label(__('admin.tags'))
-                        ->schema($tagFields)
-                        ->columns(count($tagFields))
-                        ->defaultItems(0)
-                        ->addActionLabel(__('admin.add_a_tag'))
-                        ->reorderable(false)
-                        ->afterStateHydrated(function (
-                            Repeater $component,
-                            ?Article $record,
-                        ) use ($locales): void {
-                            $component->state(
-                                $record?->tags
-                                    ->map(function (Tag $tag) use ($locales): array {
-                                        $translations = $tag->getTranslations('name');
-
-                                        return collect($locales)
-                                            ->mapWithKeys(fn (string $locale) => [
-                                                $locale => $translations[$locale] ?? '',
-                                            ])
-                                            ->all();
-                                    })
-                                    ->values()
-                                    ->toArray() ?? []
-                            );
-                        }),
-                ])
+                ->schema($schema)
                 ->collapsible();
         };
 
         $buildMediaAndPublishing = function () use (
             $isAuthor,
             $canManagePublishing,
+            $buildTagsSection,
         ): array {
             return [
                 Section::make(__('admin.media'))
@@ -484,6 +527,8 @@ class ArticleForm
                             ->label(__('admin.hero_image')),
                     ])
                     ->collapsible(),
+
+                $buildTagsSection(),
 
                 Section::make(__('admin.publishing'))
                     ->schema([
@@ -566,7 +611,6 @@ class ArticleForm
         $buildLocaleSchema = function (string $locale) use (
             $buildTab,
             $buildMetadataTab,
-            $buildTagsSection,
             $buildMediaAndPublishing,
         ): array {
             return [
@@ -579,7 +623,6 @@ class ArticleForm
                         Grid::make(1)
                             ->schema([
                                 ...$buildTab($locale),
-                                $buildTagsSection(),
                             ])
                             ->columnSpan([
                                 'default' => 1,

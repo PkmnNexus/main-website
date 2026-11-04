@@ -24,6 +24,30 @@ class CreateArticle extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        if (! config('localization.enabled', false)) {
+            $defaultLocale = config('localization.default', 'en');
+
+            foreach ([
+                'title',
+                'slug',
+                'excerpt',
+                'summary',
+                'content',
+                'meta_title',
+                'meta_description',
+                'meta_keywords',
+                'canonical',
+                'og_title',
+                'og_description',
+            ] as $field) {
+                if (array_key_exists($field, $data)) {
+                    $data[$field] = [
+                        $defaultLocale => $data[$field],
+                    ];
+                }
+            }
+        }
+
         $user = auth()->user();
 
         if ($user->hasRole('author') && ! $user->hasAnyRole(['admin', 'editor'])) {
@@ -31,7 +55,7 @@ class CreateArticle extends CreateRecord
             $data['status'] = ArticleStatus::Pending->value;
         }
 
-        $this->pendingTags = $data['tags'] ?? [];
+        $this->pendingTags = $this->normalizePendingTags($data['tags'] ?? []);
 
         unset($data['tags']);
 
@@ -78,13 +102,65 @@ class CreateArticle extends CreateRecord
         }
     }
 
+    protected function normalizePendingTags(mixed $tags): array
+    {
+        $localizationEnabled = (bool) config('localization.enabled', false);
+
+        if (! is_array($tags)) {
+            $tags = $localizationEnabled
+                ? [config('localization.default', 'en') => $tags]
+                : [$tags];
+        }
+
+        $normalizeNames = function (mixed $names): array {
+            $names = is_array($names) ? $names : [$names];
+
+            return collect($names)
+                ->flatMap(function ($name): array {
+                    if (! is_string($name) || trim($name) === '') {
+                        return [];
+                    }
+
+                    return preg_split('/\s*,\s*/u', trim($name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+                })
+                ->map(fn (string $name): string => trim($name))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+        };
+
+        if ($localizationEnabled) {
+            return collect($tags)
+                ->mapWithKeys(fn ($names, $locale) => [
+                    $locale => $normalizeNames($names),
+                ])
+                ->all();
+        }
+
+        return $normalizeNames($tags);
+    }
+
     protected function syncArticleTags(): void
     {
-        $tags = collect($this->pendingTags)
-            ->map(function (array $translations) {
-                $translations = collect($translations)
-                    ->map(fn ($name) => trim((string) $name))
-                    ->filter();
+        $defaultLocale = config('localization.default', 'en');
+        $localizationEnabled = (bool) config('localization.enabled', false);
+
+        $tagNamesByLocale = $localizationEnabled
+            ? collect($this->pendingTags)
+            : collect([$defaultLocale => $this->pendingTags]);
+
+        $tagCount = $tagNamesByLocale->max(
+            fn ($names) => count((array) $names),
+        ) ?? 0;
+
+        $tags = collect(range(0, max(0, $tagCount - 1)))
+            ->map(function (int $index) use ($tagNamesByLocale, $defaultLocale) {
+                $translations = $tagNamesByLocale
+                    ->mapWithKeys(fn ($names, $locale) => [
+                        $locale => trim((string) ($names[$index] ?? '')),
+                    ])
+                    ->filter(fn (string $name) => $name !== '');
 
                 if ($translations->isEmpty()) {
                     return null;
@@ -101,7 +177,7 @@ class CreateArticle extends CreateRecord
                 if (! $tag) {
                     $tag = new Tag();
                     $tag->slug = Str::slug(
-                        $translations->get('en') ?? $translations->first(),
+                        $translations->get($defaultLocale) ?? $translations->first(),
                     );
                 }
 

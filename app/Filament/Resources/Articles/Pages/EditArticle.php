@@ -51,17 +51,62 @@ class EditArticle extends EditRecord
                 ->authorize(fn (): bool => auth()->user()?->hasRole('admin') ?? false),
         ];
     }
-public function updated(string $property, mixed $value): void
-{
-    logger()->debug('Article form state updated', [
-        'property' => $property,
-        'value' => $value,
-    ]);
-}
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        if (! config('localization.enabled', false)) {
+            $defaultLocale = config('localization.default', 'en');
+
+            foreach ([
+                'title',
+                'slug',
+                'excerpt',
+                'summary',
+                'content',
+                'meta_title',
+                'meta_description',
+                'meta_keywords',
+                'canonical',
+                'og_title',
+                'og_description',
+            ] as $field) {
+                $data[$field] = $this->record->getTranslation(
+                    $field,
+                    $defaultLocale,
+                    false,
+                );
+            }
+        }
+
+        return $data;
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Remember the original URL before the record is updated.
         $this->originalVideoUrl = $this->record->video_url;
+
+        if (! config('localization.enabled', false)) {
+            $defaultLocale = config('localization.default', 'en');
+
+            foreach ([
+                'title',
+                'slug',
+                'excerpt',
+                'summary',
+                'content',
+                'meta_title',
+                'meta_description',
+                'meta_keywords',
+                'canonical',
+                'og_title',
+                'og_description',
+            ] as $field) {
+                $data[$field] = [
+                    $defaultLocale => $data[$field] ?? null,
+                ];
+            }
+        }
 
         $user = auth()->user();
 
@@ -72,7 +117,7 @@ public function updated(string $property, mixed $value): void
                 : $this->record->status;
         }
 
-        $this->pendingTags = $data['tags'] ?? [];
+        $this->pendingTags = $this->normalizePendingTags($data['tags'] ?? []);
 
         unset($data['tags']);
 
@@ -140,13 +185,65 @@ public function updated(string $property, mixed $value): void
         }
     }
 
+    protected function normalizePendingTags(mixed $tags): array
+    {
+        $localizationEnabled = (bool) config('localization.enabled', false);
+
+        if (! is_array($tags)) {
+            $tags = $localizationEnabled
+                ? [config('localization.default', 'en') => $tags]
+                : [$tags];
+        }
+
+        $normalizeNames = function (mixed $names): array {
+            $names = is_array($names) ? $names : [$names];
+
+            return collect($names)
+                ->flatMap(function ($name): array {
+                    if (! is_string($name) || trim($name) === '') {
+                        return [];
+                    }
+
+                    return preg_split('/\s*,\s*/u', trim($name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+                })
+                ->map(fn (string $name): string => trim($name))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+        };
+
+        if ($localizationEnabled) {
+            return collect($tags)
+                ->mapWithKeys(fn ($names, $locale) => [
+                    $locale => $normalizeNames($names),
+                ])
+                ->all();
+        }
+
+        return $normalizeNames($tags);
+    }
+
     protected function syncArticleTags(): void
     {
-        $tags = collect($this->pendingTags)
-            ->map(function (array $translations) {
-                $translations = collect($translations)
-                    ->map(fn ($name) => trim((string) $name))
-                    ->filter();
+        $defaultLocale = config('localization.default', 'en');
+        $localizationEnabled = (bool) config('localization.enabled', false);
+
+        $tagNamesByLocale = $localizationEnabled
+            ? collect($this->pendingTags)
+            : collect([$defaultLocale => $this->pendingTags]);
+
+        $tagCount = $tagNamesByLocale->max(
+            fn ($names) => count((array) $names),
+        ) ?? 0;
+
+        $tags = collect(range(0, max(0, $tagCount - 1)))
+            ->map(function (int $index) use ($tagNamesByLocale, $defaultLocale) {
+                $translations = $tagNamesByLocale
+                    ->mapWithKeys(fn ($names, $locale) => [
+                        $locale => trim((string) ($names[$index] ?? '')),
+                    ])
+                    ->filter(fn (string $name) => $name !== '');
 
                 if ($translations->isEmpty()) {
                     return null;
@@ -163,7 +260,7 @@ public function updated(string $property, mixed $value): void
                 if (! $tag) {
                     $tag = new Tag();
                     $tag->slug = Str::slug(
-                        $translations->get('en') ?? $translations->first(),
+                        $translations->get($defaultLocale) ?? $translations->first(),
                     );
                 }
 

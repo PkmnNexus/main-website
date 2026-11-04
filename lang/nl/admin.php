@@ -325,4 +325,5 @@ return [
     'create_article' => 'Maak artikel',
     'create_page' => 'Maak pagina',
     'create_asset' => 'Maak media',
+    'open_graph_type_helper' => 'Bepaal hoe sociale-mediaplatforms je gedeelde inhoud moeten categoriseren.',
 ];

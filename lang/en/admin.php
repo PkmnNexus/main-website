@@ -325,4 +325,5 @@ return [
     'create_article' => 'Create article',
     'create_page' => 'Create page',
     'create_asset' => 'Create asset',
+    'open_graph_type_helper' => 'Define how social media platforms should classify your shared content.',
 ];
