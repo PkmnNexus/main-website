@@ -35,7 +35,7 @@ class SetLocale
         if (! in_array($locale, $locales, true)) {
             $locale = $default;
         }
-
+        
         App::setLocale($locale);
 
         return $next($request);

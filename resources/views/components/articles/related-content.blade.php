@@ -18,8 +18,7 @@
                              itemtype="https://schema.org/Article"
                              itemprop="itemListElement">
 
-                        <x-pages.links.article-link :article="$article"
-                                                    class="block">
+                        <x-pages.links.article-link :article="$article" class="block">
 
                             <figure class="relative h-40 overflow-hidden rounded-lg transition-all duration-300 group-hover:shadow-xl">
 

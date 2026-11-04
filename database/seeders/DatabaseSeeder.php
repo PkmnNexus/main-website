@@ -18,14 +18,17 @@ class DatabaseSeeder extends Seeder
 
             PageSeeder::class,
             CategorySeeder::class,
-            MediaFolderSeeder::class,
+
+            MediaFolderSeeder::class
         ]);
 
         if (! app()->isProduction()) {
-            $this->call([
-                SourceSeeder::class,
 
+            $this->call([
+                TagSeeder::class,
+                SourceSeeder::class,
                 AssetSeeder::class,
+
                 ArticleSeeder::class,
                 ArticleDailyViewSeeder::class,
 

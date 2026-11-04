@@ -22,7 +22,7 @@
 
                         <meta itemprop="position" content="{{ $loop->iteration }}">
 
-                        <a href="{{ route('articles.category', $category) }}"
+                        <a href="{{ localized_route('articles.category', ['category' => $category->getTranslation('slug', app()->getLocale())]) }}"
                            itemprop="item"
                            itemscope
                            itemtype="https://schema.org/Thing"

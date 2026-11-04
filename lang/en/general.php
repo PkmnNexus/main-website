@@ -190,7 +190,7 @@ return [
     'site_navigation' => 'Site Navigation',
     'pokemon' => 'Pokémon',
     'social_media' => 'Social Media',
-    'min_read' => 'Min read',
+    'min_read' => 'minute read',
     'published_at' => 'Published at:',
     'edited_at' => 'Edited at:',
     'share_this_article' => 'Share this article',

@@ -17,9 +17,9 @@ return [
         ],
     ],
 
-    'default' => env('APP_DEFAULT_LANGUAGE', 'en'),
 
     'enabled' => env('APP_LOCALIZATION_ENABLED', false),
+    'default' => env('APP_DEFAULT_LANGUAGE', 'en'),
 
     'routes' => [
         'en' => [

@@ -13,7 +13,7 @@
 
                 <p class="mt-2 text-sm leading-relaxed text-[var(--color-secondary)]">{{ __('general.cookie_consent_description') }}</p>
 
-                <a href="{{ route('page.cookie-policy') }}" class="mt-2 inline-block text-sm font-bold text-[var(--color-primary)] underline underline-offset-2">{{ __('general.read_cookie_policy') }}</a>
+                <a href="{{ route('cookie-policy') }}" class="mt-2 inline-block text-sm font-bold text-[var(--color-primary)] underline underline-offset-2">{{ __('general.read_cookie_policy') }}</a>
 
             </div>
 

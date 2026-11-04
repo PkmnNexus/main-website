@@ -51,7 +51,13 @@ class EditArticle extends EditRecord
                 ->authorize(fn (): bool => auth()->user()?->hasRole('admin') ?? false),
         ];
     }
-
+public function updated(string $property, mixed $value): void
+{
+    logger()->debug('Article form state updated', [
+        'property' => $property,
+        'value' => $value,
+    ]);
+}
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Remember the original URL before the record is updated.
