@@ -197,4 +197,9 @@ return [
     'edited_at' => 'Bewerkt op:',
     'share_this_article' => 'Deel dit artikel',
 
+    'email_verification_heading' => 'Verifieer je e-mailadres',
+    'email_verification_description' => 'Verifieer je e-mailadres door op de link te klikken die we naar je inbox hebben gestuurd.',
+    'characters_remaining' => ':count tekens resterend',
+    'profile_picture_updated' => 'Profielfoto succesvol bijgewerkt.',
+
 ];

@@ -41,6 +41,10 @@ new class extends Component
     #[Validate('nullable|image|max:2048')]
     public $avatar = null;
 
+    public string $avatarUrl = '';
+
+    public ?string $avatarStatus = null;
+
     public function mount(): void
     {
         /** @var User $user */
@@ -57,6 +61,9 @@ new class extends Component
         $this->social_link_2 = $user->social_link_2;
         $this->social_link_3 = $user->social_link_3;
         $this->social_link_4 = $user->social_link_4;
+
+        $this->avatarUrl = $user->getFirstMediaUrl('user_avatar')
+            ?: asset('images/default_avatar.png');
     }
 
     protected function rules(): array
@@ -89,6 +96,36 @@ new class extends Component
         ];
     }
 
+    public function updatedAvatar(): void
+    {
+        if (! $this->avatar) {
+            return;
+        }
+
+        $this->validateOnly('avatar');
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->addMedia($this->avatar->getRealPath())
+            ->usingFileName($this->avatar->getClientOriginalName())
+            ->toMediaCollection('user_avatar');
+
+        $this->reset('avatar');
+
+        $this->avatarUrl = $user->fresh()->getFirstMediaUrl('user_avatar')
+            ?: asset('images/default_avatar.png');
+
+        $this->avatarUrl .= '?v=' . now()->timestamp;
+
+        $this->avatarStatus = __('general.profile_picture_updated');
+
+        $this->dispatch(
+            'profile-updated',
+            avatarUrl: $this->avatarUrl
+        );
+    }
+
     public function save(): void
     {
         /** @var User $user */
@@ -112,28 +149,33 @@ new class extends Component
             $user->password = $validated['password'];
         }
 
-        if ($this->avatar) {
-            $user->addMedia($this->avatar->getRealPath())
-                ->usingFileName($this->avatar->getClientOriginalName())
-                ->toMediaCollection('user_avatar');
-        }
-
         $user->forceFill([
             'last_activity_at' => now(),
         ])->save();
 
         app(UserActivityRecorder::class)->record($user, 'Updated profile');
 
-        $this->reset('password', 'password_confirmation', 'avatar');
+        $this->reset('password', 'password_confirmation');
 
         session()->flash('status', __('general.profile_updated_successfully'));
 
-        $this->dispatch('profile-updated');
+        $this->avatarUrl = $user->fresh()->getFirstMediaUrl('user_avatar')
+            ?: asset('images/default_avatar.png');
+
+        $this->avatarUrl .= '?v=' . now()->timestamp;
+
+        $this->dispatch(
+            'profile-updated',
+            avatarUrl: $this->avatarUrl
+        );
+
+        $this->dispatch('profile-saved');
     }
 };
 ?>
 
-<div class="max-w-3xl" x-on:profile-updated.window="window.scrollTo({ top: 0, behavior: 'smooth' })">
+<div class="max-w-3xl"
+     x-on:profile-saved.window="window.scrollTo({ top: 0, behavior: 'smooth' })">
 
     <form wire:submit="save" class="space-y-8">
 
@@ -387,23 +429,21 @@ new class extends Component
 
             </div>
 
+            @if ($avatarStatus)
+
+                <div class="mt-4 rounded-sm bg-[var(--color-primary)] p-3 text-sm font-display font-bold text-white shadow-md">
+                    {{ $avatarStatus }}
+                </div>
+
+            @endif
+
             <div class="flex flex-col sm:flex-row sm:items-center gap-6">
 
                 <div class="w-[150px] h-[150px] shrink-0 rounded-sm border border-gray-200 p-1">
 
-                    @if ($avatar)
-
-                        <img src="{{ $avatar->temporaryUrl() }}"
-                             alt="{{ __('general.profile_picture_preview') }}"
-                             class="w-full h-full object-cover rounded-sm">
-
-                    @else
-
-                        <img src="{{ Auth::user()->getFirstMediaUrl('user_avatar') ?: asset('images/default_avatar.png') }}"
-                             alt="{{ __('general.users_profile_picture', ['name' => Auth::user()->display_name]) }}"
-                             class="w-full h-full object-cover rounded-sm">
-
-                    @endif
+                    <img src="{{ $avatarUrl }}"
+                         alt="{{ __('general.users_profile_picture', ['name' => Auth::user()->display_name]) }}"
+                         class="w-full h-full object-cover rounded-sm">
 
                 </div>
 

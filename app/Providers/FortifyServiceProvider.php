@@ -34,13 +34,18 @@ class FortifyServiceProvider extends ServiceProvider
                 public function toResponse($request)
                 {
                     $locale = app()->getLocale();
+                    $localizationEnabled = (bool) config('localization.enabled', false);
 
                     $profilePath = config(
                         "localization.routes.{$locale}.account.profile",
                         'account/profile'
                     );
 
-                    return redirect('/' . $locale . '/' . ltrim($profilePath, '/'));
+                    if ($localizationEnabled) {
+                        return redirect('/' . $locale . '/' . ltrim($profilePath, '/'));
+                    }
+
+                    return redirect('/' . ltrim($profilePath, '/'));
                 }
             };
         });

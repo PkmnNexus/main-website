@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
     const articleBody = document.querySelector(
         '[itemprop="articleBody"]'
     );
@@ -6,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightbox = document.querySelector(
         '#article-lightbox'
     );
+
+    if (lightbox && lightbox.parentElement !== document.body) {
+        document.body.appendChild(lightbox);
+    }
 
     if (!articleBody || !lightbox) {
         return;

@@ -195,4 +195,9 @@ return [
     'edited_at' => 'Edited at:',
     'share_this_article' => 'Share this article',
 
+    'email_verification_heading' => 'Verify your email address',
+    'email_verification_description' => 'Please verify your email address by clicking the link we sent to your inbox.',
+    'characters_remaining' => ':count characters remaining',
+    'profile_picture_updated' => 'Profile picture updated successfully.',
+    
 ];
