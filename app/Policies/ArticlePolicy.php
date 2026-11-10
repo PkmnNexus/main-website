@@ -1,62 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Article;
-use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ArticlePolicy
 {
-    /**
-     * Determine whether the user can view any articles.
-     */
-    public function viewAny(User $user): bool
+    use HandlesAuthorization;
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['admin', 'editor', 'author']);
+        return $authUser->can('ViewAny:Article');
     }
 
-    /**
-     * Determine whether the user can view the article.
-     */
-    public function view(User $user, Article $article): bool
+    public function view(AuthUser $authUser, Article $article): bool
     {
-        return $user->hasAnyRole(['admin', 'editor', 'author']);
+        return $authUser->can('View:Article');
     }
 
-    /**
-     * Determine whether the user can create articles.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['admin', 'editor', 'author']);
+        return $authUser->can('Create:Article');
     }
 
-    /**
-     * Determine whether the user can update the article.
-     */
-    public function update(User $user, Article $article): bool
+    public function update(AuthUser $authUser, Article $article): bool
     {
-        if ($user->hasAnyRole(['admin', 'editor'])) {
-            return true;
-        }
-
-        return $user->hasRole('author')
-            && $article->user_id === $user->id;
+        return $authUser->can('Update:Article');
     }
 
-    /**
-     * Determine whether the user can delete the article.
-     */
-    public function delete(User $user, Article $article): bool
+    public function delete(AuthUser $authUser, Article $article): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('Delete:Article');
     }
 
-    /**
-     * Determine whether the user can delete any articles.
-     */
-    public function deleteAny(User $user): bool
+    public function deleteAny(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('DeleteAny:Article');
     }
+
+    public function restore(AuthUser $authUser, Article $article): bool
+    {
+        return $authUser->can('Restore:Article');
+    }
+
+    public function forceDelete(AuthUser $authUser, Article $article): bool
+    {
+        return $authUser->can('ForceDelete:Article');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:Article');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:Article');
+    }
+
+    public function replicate(AuthUser $authUser, Article $article): bool
+    {
+        return $authUser->can('Replicate:Article');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:Article');
+    }
+
 }

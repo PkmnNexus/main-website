@@ -1,71 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\CommentReport;
-use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CommentReportPolicy
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Authorization
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Determine whether the user may view the reports overview.
-     */
-    public function viewAny(User $user): bool
+    use HandlesAuthorization;
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('ViewAny:CommentReport');
     }
 
-    /**
-     * Determine whether the user may view a report.
-     */
-    public function view(User $user, CommentReport $commentReport): bool
+    public function view(AuthUser $authUser, CommentReport $commentReport): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('View:CommentReport');
     }
 
-    /**
-     * Reports may only be submitted through the public reporting form.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return false;
+        return $authUser->can('Create:CommentReport');
     }
 
-    /**
-     * Determine whether the user may moderate a report.
-     */
-    public function update(User $user, CommentReport $commentReport): bool
+    public function update(AuthUser $authUser, CommentReport $commentReport): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('Update:CommentReport');
     }
 
-    /**
-     * Reports cannot be deleted through the admin panel.
-     */
-    public function delete(User $user, CommentReport $commentReport): bool
+    public function delete(AuthUser $authUser, CommentReport $commentReport): bool
     {
-        return false;
+        return $authUser->can('Delete:CommentReport');
     }
 
-    /**
-     * Reports cannot be restored through the admin panel.
-     */
-    public function restore(User $user, CommentReport $commentReport): bool
+    public function deleteAny(AuthUser $authUser): bool
     {
-        return false;
+        return $authUser->can('DeleteAny:CommentReport');
     }
 
-    /**
-     * Reports cannot be permanently deleted through the admin panel.
-     */
-    public function forceDelete(User $user, CommentReport $commentReport): bool
+    public function restore(AuthUser $authUser, CommentReport $commentReport): bool
     {
-        return false;
+        return $authUser->can('Restore:CommentReport');
     }
+
+    public function forceDelete(AuthUser $authUser, CommentReport $commentReport): bool
+    {
+        return $authUser->can('ForceDelete:CommentReport');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:CommentReport');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:CommentReport');
+    }
+
+    public function replicate(AuthUser $authUser, CommentReport $commentReport): bool
+    {
+        return $authUser->can('Replicate:CommentReport');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:CommentReport');
+    }
+
 }

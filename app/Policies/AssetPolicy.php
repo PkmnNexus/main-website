@@ -1,57 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Asset;
-use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AssetPolicy
 {
-    /**
-     * Determine whether the user can view any assets.
-     */
-    public function viewAny(User $user): bool
+    use HandlesAuthorization;
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('ViewAny:Asset');
     }
 
-    /**
-     * Determine whether the user can view the asset.
-     */
-    public function view(User $user, Asset $asset): bool
+    public function view(AuthUser $authUser, Asset $asset): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('View:Asset');
     }
 
-    /**
-     * Determine whether the user can create assets.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('Create:Asset');
     }
 
-    /**
-     * Determine whether the user can update the asset.
-     */
-    public function update(User $user, Asset $asset): bool
+    public function update(AuthUser $authUser, Asset $asset): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('Update:Asset');
     }
 
-    /**
-     * Determine whether the user can delete the asset.
-     */
-    public function delete(User $user, Asset $asset): bool
+    public function delete(AuthUser $authUser, Asset $asset): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('Delete:Asset');
     }
 
-    /**
-     * Determine whether the user can delete any assets.
-     */
-    public function deleteAny(User $user): bool
+    public function deleteAny(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['admin', 'editor']);
+        return $authUser->can('DeleteAny:Asset');
     }
+
+    public function restore(AuthUser $authUser, Asset $asset): bool
+    {
+        return $authUser->can('Restore:Asset');
+    }
+
+    public function forceDelete(AuthUser $authUser, Asset $asset): bool
+    {
+        return $authUser->can('ForceDelete:Asset');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:Asset');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:Asset');
+    }
+
+    public function replicate(AuthUser $authUser, Asset $asset): bool
+    {
+        return $authUser->can('Replicate:Asset');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:Asset');
+    }
+
 }

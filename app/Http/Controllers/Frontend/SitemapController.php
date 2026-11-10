@@ -24,7 +24,7 @@ class SitemapController extends Controller
     public function show(): View
     {
         $page = Page::query()
-            ->where('slug', 'sitemap')
+            ->where('key', 'sitemap')
             ->where('is_active', true)
             ->firstOrFail();
 

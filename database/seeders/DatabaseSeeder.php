@@ -34,6 +34,9 @@ class DatabaseSeeder extends Seeder
 
                 UserSeeder::class,
                 CommentSeeder::class,
+
+                PollSeeder::class,
+                TriviaSeeder::class,
             ]);
         }
     }

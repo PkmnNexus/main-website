@@ -202,4 +202,16 @@ return [
     'characters_remaining' => ':count tekens resterend',
     'profile_picture_updated' => 'Profielfoto succesvol bijgewerkt.',
 
+    'poll' => 'Poll',
+    'poll_vote' => 'Stemmen',
+    'poll_votes' => '{1} :count stem|[2,*] :count stemmen',
+    'poll_total_votes' => '{1} :count stem in totaal|[2,*] :count stemmen in totaal',
+    'poll_thank_you' => 'Bedankt voor je stem!',
+    'poll_closed' => 'Deze poll is gesloten.',
+    'poll_invalid_option' => 'Selecteer een geldig antwoord.',
+    'loading' => 'Laden...',
+    'poll_total' => 'Totaal aantal stemmen',
+
+    'trivia' => 'Wist je dat?',
+
 ];

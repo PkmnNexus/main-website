@@ -200,4 +200,15 @@ return [
     'characters_remaining' => ':count characters remaining',
     'profile_picture_updated' => 'Profile picture updated successfully.',
     
+    'poll' => 'Poll',
+    'poll_vote' => 'Vote',
+    'poll_votes' => '{1} :count vote|[2,*] :count votes',
+    'poll_total_votes' => '{1} :count vote in total|[2,*] :count votes in total',
+    'poll_thank_you' => 'Thank you for voting!',
+    'poll_closed' => 'This poll is closed.',
+    'poll_invalid_option' => 'Please select a valid answer.',
+    'loading' => 'Loading...',
+    'poll_total' => 'Total votes',
+
+    'trivia' => 'Did you know?',
 ];

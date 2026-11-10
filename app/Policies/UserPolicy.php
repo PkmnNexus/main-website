@@ -2,55 +2,71 @@
 
 namespace App\Policies;
 
-use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
 {
-    /**
-     * Determine whether the user can view any categories.
-     */
-    public function viewAny(User $user): bool
+    use HandlesAuthorization;
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('ViewAny:User');
     }
 
-    /**
-     * Determine whether the user can view the category.
-     */
-    public function view(User $user, User $category): bool
+    public function view(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('View:User');
     }
 
-    /**
-     * Determine whether the user can create categories.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('Create:User');
     }
 
-    /**
-     * Determine whether the user can update the category.
-     */
-    public function update(User $user, User $category): bool
+    public function update(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('Update:User');
     }
 
-    /**
-     * Determine whether the user can delete the category.
-     */
-    public function delete(User $user, User $category): bool
+    public function delete(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('Delete:User');
     }
 
-    /**
-     * Determine whether the user can delete any categories.
-     */
-    public function deleteAny(User $user): bool
+    public function deleteAny(AuthUser $authUser): bool
     {
-        return $user->hasRole('admin');
+        return $authUser->can('DeleteAny:User');
     }
+
+    public function restore(AuthUser $authUser): bool
+    {
+        return $authUser->can('Restore:User');
+    }
+
+    public function forceDelete(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDelete:User');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:User');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:User');
+    }
+
+    public function replicate(AuthUser $authUser): bool
+    {
+        return $authUser->can('Replicate:User');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:User');
+    }
+
 }

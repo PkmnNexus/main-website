@@ -1,4 +1,4 @@
-<div class="news-side bg-[#FAFAFA] p-6 flex flex-col gap-3 md:col-span-2 xl:col-span-1">
+<div class="news-side bg-[#FAFAFA] rounded-lg p-6 flex flex-col gap-3 md:col-span-2 xl:col-span-1">
 
     @foreach($articles as $index => $article)
 
