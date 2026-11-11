@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PagesTable
 {
@@ -23,7 +24,13 @@ class PagesTable
                 TextColumn::make('title')
                     ->label(__('admin.title'))
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(
+                        query: fn (Builder $query, string $search): Builder => $query
+                            ->whereRaw(
+                                'JSON_UNQUOTE(JSON_EXTRACT(title, ?)) COLLATE utf8mb4_unicode_ci LIKE ?',
+                                ['$."'.app()->getLocale().'"', "%{$search}%"],
+                            ),
+                    ),
 
                 IconColumn::make('robots_index')
                     ->label(__('admin.allow_indexing'))
@@ -32,10 +39,6 @@ class PagesTable
                 IconColumn::make('robots_follow')
                     ->label(__('admin.follow_links'))
                     ->boolean(),
-
-                TextColumn::make('canonical')
-                    ->label(__('admin.canonical_url'))
-                    ->searchable(),
 
                 IconColumn::make('is_active')
                     ->label(__('admin.published'))

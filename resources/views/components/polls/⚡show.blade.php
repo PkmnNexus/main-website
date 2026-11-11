@@ -288,7 +288,7 @@ new class extends Component
 
 ?>
 
-<div class="poll bg-[#FAFAFA] rounded-lg p-6 flex flex-col gap-6 md:col-span-2 xl:col-span-1 shadow-lg transition duration-300 hover:shadow-xl">
+<div class="poll w-full min-w-0 self-stretch bg-[#FAFAFA] rounded-lg p-6 flex flex-col gap-6 shadow-lg transition duration-300 hover:shadow-xl">
 
     @if ($poll)
 

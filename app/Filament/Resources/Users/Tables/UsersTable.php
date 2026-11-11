@@ -8,7 +8,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Filament\Actions\EditAction;
 
 class UsersTable
@@ -91,6 +90,9 @@ class UsersTable
                 SelectFilter::make('roles')
                     ->label(__('admin.role'))
                     ->relationship('roles', 'name')
+                    ->getOptionLabelFromRecordUsing(
+                        fn ($record): string => str($record->name)->replace('_', ' ')->title()->toString(),
+                    )
                     ->multiple(),
 
                 TernaryFilter::make('is_active')
@@ -129,8 +131,7 @@ class UsersTable
                     ->nullable(),
             ])
             ->recordActions([
-                EditAction::make()
-                    ->visible(fn ($record): bool => $record->id !== Auth::id()),
+                EditAction::make(),
             ]);
     }
 }

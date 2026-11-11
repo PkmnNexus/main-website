@@ -65,20 +65,6 @@ class CommentReportResource extends Resource
 
     /*
     |--------------------------------------------------------------------------
-    | Authorization
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Only users authorized by the policy may access comment reports.
-     */
-    public static function canViewAny(): bool
-    {
-        return auth()->user()?->can('viewAny', CommentReport::class) ?? false;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Schemas
     |--------------------------------------------------------------------------
     */

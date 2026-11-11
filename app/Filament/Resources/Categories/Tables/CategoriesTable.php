@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class CategoriesTable
 {
@@ -23,13 +24,27 @@ class CategoriesTable
 
                 TranslatableColumn::make('name')
                     ->label(__('admin.name'))
-                    ->searchAcrossLocales()
+                    ->searchable(
+                        query: fn (Builder $query, string $search): Builder => $query
+                            ->where(
+                                'name->'.app()->getLocale(),
+                                'like',
+                                "%{$search}%",
+                            ),
+                    )
                     ->sortableByLocale()
                     ->weight('medium'),
 
                 TranslatableColumn::make('slug')
                     ->label(__('admin.slug'))
-                    ->searchAcrossLocales()
+                    ->searchable(
+                        query: fn (Builder $query, string $search): Builder => $query
+                            ->where(
+                                'slug->'.app()->getLocale(),
+                                'like',
+                                "%{$search}%",
+                            ),
+                    )
                     ->sortableByLocale()
                     ->copyable()
                     ->copyMessage(__('admin.slug_copied'))

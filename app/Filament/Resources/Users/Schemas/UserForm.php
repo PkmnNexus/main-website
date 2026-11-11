@@ -76,11 +76,15 @@ class UserForm
                                     ->orderBy('name'),
                             )
                             ->getOptionLabelFromRecordUsing(
-                                fn ($record): string => ucfirst($record->name),
+                                fn ($record): string => str($record->name)->replace('_', ' ')->title()->toString(),
                             )
                             ->searchable()
                             ->preload()
                             ->required()
+                            ->disabled(
+                                fn ($record): bool => ! auth()->user()?->hasRole('super_admin')
+                                    || $record?->is(auth()->user()),
+                            )
                             ->helperText(__('admin.assign_user_roles')),
                     ])
                     ->columnSpanFull(),

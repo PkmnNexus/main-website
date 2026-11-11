@@ -20,11 +20,11 @@ new class extends Component
 
 @if ($trivia)
 
-    <article class="trivia group h-full bg-[#FAFAFA] rounded-lg overflow-hidden shadow-lg transition duration-300 hover:shadow-xl">
+    <article class="trivia group w-full min-w-0 h-full self-stretch bg-[#FAFAFA] rounded-lg overflow-hidden shadow-lg transition duration-300 hover:shadow-xl">
 
         @if ($trivia->heroImage?->getFirstMediaUrl('asset'))
 
-            <figure class="relative overflow-hidden leading-none h-full min-h-[320px]">
+            <figure class="relative overflow-hidden leading-none w-full h-full min-h-[320px]">
 
                 <img src="{{ $trivia->heroImage->getFirstMediaUrl('asset') }}"
                      alt=""
@@ -53,7 +53,7 @@ new class extends Component
 
         @else
 
-            <div class="p-6 flex flex-col gap-3">
+            <div class="w-full p-6 flex flex-col gap-3">
 
                 <div class="flex items-center gap-2 text-xs uppercase font-display font-black tracking-wider text-[var(--color-primary)]">
 

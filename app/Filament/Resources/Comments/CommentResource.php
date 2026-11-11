@@ -66,20 +66,6 @@ class CommentResource extends Resource
 
     /*
     |--------------------------------------------------------------------------
-    | Authorization
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Only administrators and editors may access comment moderation.
-     */
-    public static function canViewAny(): bool
-    {
-        return auth()->user()?->hasAnyRole(['admin', 'editor']) ?? false;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Record Titles
     |--------------------------------------------------------------------------
     */

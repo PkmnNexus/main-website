@@ -45,7 +45,7 @@ class PokemonTcgCardForm
                         Section::make(__('admin.image'))
                             ->schema([
                                 Placeholder::make('card_preview')
-                                    ->label('')
+                                    ->hiddenLabel()
                                     ->content(function ($record): HtmlString|string {
                                         $imageUrl = $record?->display_image_url;
 
@@ -238,12 +238,12 @@ class PokemonTcgCardForm
                     ->columns(2)
                     ->collapsed()
                     ->columnSpanFull(),
-
+      
                 Section::make(__('admin.current_prices'))
                     ->schema([
                         Placeholder::make('current_prices')
-                            ->label(__('admin.current_prices'))
-                            ->content(function ($record): string {
+                            ->hiddenLabel()
+                            ->content(function ($record): HtmlString|string {
                                 if (! $record) {
                                     return __('admin.no_price_information');
                                 }
@@ -254,30 +254,116 @@ class PokemonTcgCardForm
                                     return __('admin.no_price_information');
                                 }
 
-                                return $record->prices
-                                    ->map(function ($price): string {
-                                        $variant = $price->variant_key === 'card'
-                                            ? __('admin.general')
-                                            : trim(implode(' / ', array_filter([
-                                                $price->variant_type,
-                                                $price->variant_subtype,
-                                            ])));
+                                $html = '';
 
-                                        $details = self::formatPriceData(
-                                            $price->price_data ?? []
-                                        );
+                                foreach ($record->prices as $price) {
+                                    $variant = $price->variant_key === 'card'
+                                        ? __('admin.general')
+                                        : trim(implode(' / ', array_filter([
+                                            $price->variant_type,
+                                            $price->variant_subtype,
+                                        ])));
 
-                                        return implode(' | ', array_filter([
-                                            ucfirst($price->source),
-                                            $variant,
-                                            $price->currency,
-                                            $details,
-                                        ]));
-                                    })
-                                    ->implode("\n");
+                                    $currency = match (strtoupper($price->currency ?? '')) {
+                                        'EUR' => '€',
+                                        'USD' => '$',
+                                        'GBP' => '£',
+                                        default => $price->currency.' ',
+                                    };
+
+                                    $labels = [
+                                        'avg' => 'Average price',
+                                        'low' => 'Lowest price',
+                                        'avg1' => 'Average (1 day)',
+                                        'avg7' => 'Average (7 days)',
+                                        'avg30' => 'Average (30 days)',
+                                        'trend' => 'Trend price',
+                                        'avg1-holo' => 'Average (1 day)',
+                                        'avg7-holo' => 'Average (7 days)',
+                                        'avg30-holo' => 'Average (30 days)',
+                                        'trend-holo' => 'Trend price',
+                                    ];
+
+                                    $details = [];
+
+                                    foreach ($price->price_data ?? [] as $key => $value) {
+                                        if (! isset($labels[$key]) || ! is_numeric($value)) {
+                                            continue;
+                                        }
+
+                                        $details[] = [
+                                            'label' => $labels[$key],
+                                            'value' => $currency.number_format(
+                                                (float) $value,
+                                                2,
+                                                ',',
+                                                '.',
+                                            ),
+                                            'holo' => str_contains($key, 'holo'),
+                                        ];
+                                    }
+
+                                    if (empty($details)) {
+                                        continue;
+                                    }
+
+                                    $normalPrices = array_filter(
+                                        $details,
+                                        fn (array $item): bool => ! $item['holo'],
+                                    );
+
+                                    $holoPrices = array_filter(
+                                        $details,
+                                        fn (array $item): bool => $item['holo'],
+                                    );
+
+                                    $html .= '<div style="overflow: hidden; border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 16px;">';
+
+                                    $html .= '<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 16px; background: rgba(156, 163, 175, 0.10); border-bottom: 1px solid #e5e7eb;">';
+                                    $html .= '<div>';
+                                    $html .= '<div style="font-weight: 600;">'.e(ucfirst($price->source)).'</div>';
+                                    $html .= '<div style="font-size: 13px; color: #9ca3af;">'.e($variant).'</div>';
+                                    $html .= '</div>';
+                                    $html .= '<span style="font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; background: rgba(59, 130, 246, 0.10);">'.e($price->currency).'</span>';
+                                    $html .= '</div>';
+
+                                    $renderPrices = function (array $items, string $heading): string {
+                                        if (empty($items)) {
+                                            return '';
+                                        }
+
+                                        $section = '<div style="min-width: 0; flex: 1 1 0;">';
+                                        $section .= '<div style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">'.e($heading).'</div>';
+                                        $section .= '<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">';
+
+                                        foreach ($items as $item) {
+                                            $section .= '<div style="min-width: 0; padding: 12px; border-radius: 8px; background: rgba(156, 163, 175, 0.10);">';
+                                            $section .= '<div style="font-size: 12px; color: #9ca3af;">'.e($item['label']).'</div>';
+                                            $section .= '<div style="font-size: 16px; font-weight: 600; margin-top: 4px;">'.e($item['value']).'</div>';
+                                            $section .= '</div>';
+                                        }
+
+                                        $section .= '</div>';
+                                        $section .= '</div>';
+
+                                        return $section;
+                                    };
+
+                                    $html .= '<div style="display: flex; flex-direction: row; align-items: flex-start; gap: 24px; padding: 16px;">';
+                                    $html .= $renderPrices($normalPrices, 'Standard prices');
+                                    $html .= $renderPrices($holoPrices, 'Holo prices');
+                                    $html .= '</div>';
+
+                                    $html .= '</div>';
+                                }
+
+                                return $html !== ''
+                                    ? new HtmlString($html)
+                                    : __('admin.no_price_information');
                             }),
                     ])
                     ->columnSpanFull(),
+
             ]);
     }
 

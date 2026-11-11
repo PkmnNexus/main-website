@@ -24,40 +24,72 @@ class ArticlesTable
             ->columns([
                 TextColumn::make('title')
                     ->label(__('admin.articles'))
-                    ->searchable()
+                    ->searchable(
+                        query: fn (Builder $query, string $search): Builder => $query
+                            ->where(function (Builder $query) use ($search): void {
+                                $locale = app()->getLocale();
+
+                                $query
+                                    ->whereRaw(
+                                        "LOWER(JSON_UNQUOTE(JSON_EXTRACT(title, '$.\"{$locale}\"'))) LIKE LOWER(?)",
+                                        ["%{$search}%"],
+                                    )
+                                    ->orWhereRaw(
+                                        "LOWER(JSON_UNQUOTE(JSON_EXTRACT(slug, '$.\"{$locale}\"'))) LIKE LOWER(?)",
+                                        ["%{$search}%"],
+                                    );
+                            }),
+                    )
                     ->sortable()
                     ->weight(FontWeight::Bold)
                     ->description(fn (Article $record) => $record->slug)
                     ->limit(70),
+
                 IconColumn::make('is_featured')
                     ->label('')
                     ->boolean()
                     ->trueIcon('heroicon-m-star')
                     ->falseIcon('')
                     ->trueColor('primary'),
+
                 TextColumn::make('category.name')
                     ->label(__('admin.category'))
                     ->badge()
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(
+                        query: fn (Builder $query, string $search): Builder => $query
+                            ->whereHas(
+                                'category',
+                                fn (Builder $categoryQuery): Builder => $categoryQuery
+                                    ->whereRaw(
+                                        "LOWER(JSON_UNQUOTE(JSON_EXTRACT(name, '$.\"".app()->getLocale()."\"'))) LIKE LOWER(?)",
+                                        ["%{$search}%"],
+                                    ),
+                            ),
+                    ),
+
                 TextColumn::make('user.name')
                     ->label(__('admin.author'))
                     ->sortable()
                     ->searchable(),
+
                 TextColumn::make('status')
                     ->badge()
                     ->sortable()
                     ->formatStateUsing(fn ($state) => $state?->getLabel())
                     ->color(fn ($state) => $state?->getColor()),
+
                 TextColumn::make('published_at')
                     ->label(__('admin.published'))
                     ->since()
                     ->sortable(),
+
                 TextColumn::make('views')
                     ->label(__('admin.views'))
                     ->numeric()
                     ->alignEnd()
                     ->sortable(),
+
                 TextColumn::make('updated_at')
                     ->label(__('admin.updated'))
                     ->since()

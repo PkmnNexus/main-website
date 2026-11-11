@@ -5,7 +5,7 @@ namespace Database\Seeders\Admin;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -14,7 +14,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Admin
+        // Ensure Super Admin role exists
+        Role::findOrCreate('super_admin', 'web');
+
+        // Admin / Super Admin
         $admin = User::updateOrCreate(
             [
                 'email' => env('ADMIN_EMAIL'),
@@ -31,9 +34,7 @@ class UserSeeder extends Seeder
             ]
         );
 
-        if (! $admin->hasRole('admin')) {
-            $admin->assignRole('admin');
-        }
+        $admin->syncRoles(['super_admin']);
 
         // Bassie
         $bassie = User::updateOrCreate(
@@ -57,7 +58,7 @@ class UserSeeder extends Seeder
         }
 
         if (! app()->isProduction()) {
-            
+
             // Editor
             $editorPassword = '_8%b{raT7i;z|~8}CZ{aCUm?y7qZOmW%';
 
@@ -133,8 +134,8 @@ class UserSeeder extends Seeder
             $this->command->info('Author login: author@pkmnnexus.com');
             $this->command->info("Author password: {$authorPassword}");
 
-            $this->command->info('Author login: member@pkmnnexus.com');
-            $this->command->info("Author password: {$memberPassword}");
+            $this->command->info('Member login: member@pkmnnexus.com');
+            $this->command->info("Member password: {$memberPassword}");
         }
     }
 }

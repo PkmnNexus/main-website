@@ -262,7 +262,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser, Fila
 
         return $this->is_active
             && ! $this->isSuspended()
-            && $this->hasAnyRole(['author', 'editor', 'admin']);
+            && $this->hasAnyRole(['author', 'editor', 'admin', 'super_admin']);
     }
 
     /**

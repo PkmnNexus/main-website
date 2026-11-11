@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\PokemonTcgCard;
 use App\Models\PokemonTcgSyncRun;
 use App\Services\PokemonTcg\TcgDexService;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -47,39 +48,47 @@ class SyncPokemonTcgCard implements ShouldQueue
 
             $isNew = ! $card->exists;
 
-            $card->fill([
-                'set_id' => $this->setId,
-                'api_local_id' => $cardData['localId'] ?? '',
-                'api_name' => $cardData['name'],
-                'api_image_url' => $cardData['image'] ?? null,
-                'api_category' => $cardData['category'] ?? null,
-                'api_illustrator' => $cardData['illustrator'] ?? null,
-                'api_rarity' => $cardData['rarity'] ?? null,
-                'api_hp' => $cardData['hp'] ?? null,
-                'api_types' => $cardData['types'] ?? null,
-                'api_dex_ids' => $cardData['dexId'] ?? null,
-                'api_evolve_from' => $cardData['evolveFrom'] ?? null,
-                'api_description' => $cardData['description'] ?? null,
-                'api_level' => $cardData['level'] ?? null,
-                'api_stage' => $cardData['stage'] ?? null,
-                'api_suffix' => $cardData['suffix'] ?? null,
-                'api_trainer_type' => $cardData['trainerType'] ?? null,
-                'api_energy_type' => $cardData['energyType'] ?? null,
-                'api_effect' => $cardData['effect'] ?? null,
-                'api_retreat' => $cardData['retreat'] ?? null,
-                'api_regulation_mark' => $cardData['regulationMark'] ?? null,
-                'api_variants' => $cardData['variants'] ?? null,
-                'api_variants_detailed' => $cardData['variants_detailed'] ?? null,
-                'api_abilities' => $cardData['abilities'] ?? null,
-                'api_attacks' => $cardData['attacks'] ?? null,
-                'api_weaknesses' => $cardData['weaknesses'] ?? null,
-                'api_resistances' => $cardData['resistances'] ?? null,
-                'api_legal' => $cardData['legal'] ?? null,
-                'api_updated_at' => $cardData['updated'] ?? null,
-                'api_data' => $cardData,
-            ]);
+            $cardDataChanged = $this->shouldUpdateCardData(
+                $card,
+                $cardData,
+                $isNew
+            );
 
-            $card->save();
+            if ($cardDataChanged) {
+                $card->fill([
+                    'set_id' => $this->setId,
+                    'api_local_id' => $cardData['localId'] ?? '',
+                    'api_name' => $cardData['name'],
+                    'api_image_url' => $cardData['image'] ?? null,
+                    'api_category' => $cardData['category'] ?? null,
+                    'api_illustrator' => $cardData['illustrator'] ?? null,
+                    'api_rarity' => $cardData['rarity'] ?? null,
+                    'api_hp' => $cardData['hp'] ?? null,
+                    'api_types' => $cardData['types'] ?? null,
+                    'api_dex_ids' => $cardData['dexId'] ?? null,
+                    'api_evolve_from' => $cardData['evolveFrom'] ?? null,
+                    'api_description' => $cardData['description'] ?? null,
+                    'api_level' => $cardData['level'] ?? null,
+                    'api_stage' => $cardData['stage'] ?? null,
+                    'api_suffix' => $cardData['suffix'] ?? null,
+                    'api_trainer_type' => $cardData['trainerType'] ?? null,
+                    'api_energy_type' => $cardData['energyType'] ?? null,
+                    'api_effect' => $cardData['effect'] ?? null,
+                    'api_retreat' => $cardData['retreat'] ?? null,
+                    'api_regulation_mark' => $cardData['regulationMark'] ?? null,
+                    'api_variants' => $cardData['variants'] ?? null,
+                    'api_variants_detailed' => $cardData['variants_detailed'] ?? null,
+                    'api_abilities' => $cardData['abilities'] ?? null,
+                    'api_attacks' => $cardData['attacks'] ?? null,
+                    'api_weaknesses' => $cardData['weaknesses'] ?? null,
+                    'api_resistances' => $cardData['resistances'] ?? null,
+                    'api_legal' => $cardData['legal'] ?? null,
+                    'api_updated_at' => $cardData['updated'] ?? null,
+                    'api_data' => $cardData,
+                ]);
+
+                $card->save();
+            }
 
             $pricesChanged = $this->syncPrices($card, $cardData);
 
@@ -87,7 +96,7 @@ class SyncPokemonTcgCard implements ShouldQueue
                 return 'created';
             }
 
-            if ($card->wasChanged() || $pricesChanged) {
+            if ($cardDataChanged || $pricesChanged) {
                 return 'updated';
             }
 
@@ -95,6 +104,33 @@ class SyncPokemonTcgCard implements ShouldQueue
         });
 
         $this->markProcessed($result);
+    }
+
+    /**
+     * Determine whether the card information needs updating.
+     */
+    protected function shouldUpdateCardData(
+        PokemonTcgCard $card,
+        array $cardData,
+        bool $isNew
+    ): bool {
+        if ($isNew) {
+            return true;
+        }
+
+        if ((int) $card->set_id !== $this->setId) {
+            return true;
+        }
+
+        $apiUpdatedAt = $cardData['updated'] ?? null;
+
+        if (! $apiUpdatedAt || ! $card->api_updated_at) {
+            return true;
+        }
+
+        return ! Carbon::parse($apiUpdatedAt)->equalTo(
+            $card->api_updated_at
+        );
     }
 
     protected function syncPrices(
