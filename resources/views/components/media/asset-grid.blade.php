@@ -1,5 +1,6 @@
 @props([
     'assets',
+    'selectionEvent' => 'asset-selected',
 ])
 
 <div class="grid grid-cols-3 gap-5 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
@@ -41,7 +42,10 @@
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
             >
-                <x-media.asset-card :asset="$asset" />
+                <x-media.asset-card
+                    :asset="$asset"
+                    :selection-event="$selectionEvent"
+                />
             </div>
 
         </div>

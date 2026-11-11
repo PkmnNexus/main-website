@@ -3,6 +3,7 @@
 namespace App\Services\PokemonTcg;
 
 use App\Jobs\SyncPokemonTcgSet;
+use App\Models\PokemonTcgSet;
 use App\Models\PokemonTcgSyncRun;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -44,6 +45,35 @@ class PokemonTcgSetSync
                     (string) $setId
                 );
             }
+        } catch (Throwable $exception) {
+            $syncRun->update([
+                'status' => 'failed',
+                'error_message' => $exception->getMessage(),
+                'completed_at' => now(),
+            ]);
+
+            throw $exception;
+        }
+
+        return $syncRun->fresh();
+    }
+
+    public function dispatchSet(PokemonTcgSet $set): PokemonTcgSyncRun
+    {
+        $syncRun = DB::transaction(function () {
+            return PokemonTcgSyncRun::create([
+                'sync_type' => 'sets',
+                'status' => 'running',
+                'total' => 1,
+                'started_at' => now(),
+            ]);
+        });
+
+        try {
+            SyncPokemonTcgSet::dispatch(
+                $syncRun->id,
+                $set->external_id
+            );
         } catch (Throwable $exception) {
             $syncRun->update([
                 'status' => 'failed',

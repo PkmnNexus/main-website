@@ -18,15 +18,9 @@ class PokemonTcgSeriesTable
             ->columns([
                 ImageColumn::make('display_logo_url')
                     ->label(__('admin.logo'))
-                    ->height(40)
-                    ->width(80)
+                    ->height(20)
+                    ->width(40)
                     ->state(fn (PokemonTcgSeries $record): ?string => $record->display_logo_url),
-
-                TextColumn::make('external_id')
-                    ->label(__('admin.external_id'))
-                    ->searchable()
-                    ->sortable()
-                    ->copyable(),
 
                 TextColumn::make('display_name')
                     ->label(__('admin.name'))
@@ -38,6 +32,12 @@ class PokemonTcgSeriesTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('external_id')
+                    ->label(__('admin.external_id'))
+                    ->searchable()
+                    ->sortable()
+                    ->copyable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()

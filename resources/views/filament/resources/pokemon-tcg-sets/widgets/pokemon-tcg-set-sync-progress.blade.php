@@ -56,15 +56,14 @@
                     </div>
 
                     <div
-                        class="h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
                         role="progressbar"
                         aria-valuenow="{{ $percentage }}"
                         aria-valuemin="0"
                         aria-valuemax="100"
+                        style="height: 10px; width: 100%; overflow: hidden; border-radius: 9999px; background-color: #e5e7eb;"
                     >
                         <div
-                            class="h-full rounded-full bg-primary-600 transition-all duration-500"
-                            style="width: {{ $percentage }}%"
+                            style="height: 100%; width: {{ $percentage }}%; border-radius: 9999px; background-color: #2563eb; transition: width 500ms ease;"
                         ></div>
                     </div>
                 </div>

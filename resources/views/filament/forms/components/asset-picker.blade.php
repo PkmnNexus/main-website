@@ -12,6 +12,10 @@
         'mime_type' => $asset->mime_type,
         'thumb' => $asset->getFirstMediaUrl('asset', 'thumb'),
     ])->values();
+
+    $fieldId = preg_replace('/[^A-Za-z0-9_-]/', '-', $getId());
+    $modalId = 'asset-browser-'.$fieldId;
+    $selectionEvent = 'asset-selected-'.$fieldId;
 @endphp
 
 <x-dynamic-component
@@ -28,9 +32,9 @@
                 return this.assets.find(asset => asset.id == this.state) ?? null
             },
         }"
-        x-on:asset-selected.window="
+        x-on:{{ $selectionEvent }}.window="
             state = $event.detail.id;
-            $dispatch('close-modal', { id: 'asset-browser' });
+            $dispatch('close-modal', { id: '{{ $modalId }}' });
         "
     >
         <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
@@ -39,7 +43,7 @@
                     <img
                         :src="selectedAsset.thumb"
                         :alt="selectedAsset.title"
-                        class="w-full max-w-sm rounded-xl object-cover border-2 border-primary-500 ring-4 ring-primary-500/15 shadow-xl transition-all duration-300"
+                        class="w-full max-w-sm rounded-xl border-2 border-primary-500 object-cover shadow-xl ring-4 ring-primary-500/15 transition-all duration-300"
                     >
 
                     <div>
@@ -54,14 +58,25 @@
                         </div>
                     </div>
 
-                    <x-filament::button
-                        type="button"
-                        color="primary"
-                        icon="heroicon-m-photo"
-                        x-on:click="$dispatch('open-modal', { id: 'asset-browser' })"
-                    >
-                        {{ __('admin.change_image') }}
-                    </x-filament::button>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <x-filament::button
+                            type="button"
+                            color="primary"
+                            icon="heroicon-m-photo"
+                            x-on:click="$dispatch('open-modal', { id: '{{ $modalId }}' })"
+                        >
+                            {{ __('admin.change_image') }}
+                        </x-filament::button>
+
+                        <x-filament::button
+                            type="button"
+                            color="danger"
+                            icon="heroicon-m-trash"
+                            x-on:click="state = null"
+                        >
+                            {{ __('admin.remove_image') }}
+                        </x-filament::button>
+                    </div>
                 </div>
             </template>
 
@@ -75,7 +90,7 @@
                         <x-filament::button
                             type="button"
                             color="gray"
-                            x-on:click="$dispatch('open-modal', { id: 'asset-browser' })"
+                            x-on:click="$dispatch('open-modal', { id: '{{ $modalId }}' })"
                         >
                             {{ __('admin.select_image') }}
                         </x-filament::button>
@@ -88,7 +103,7 @@
             <div class="mt-6">
                 <x-media.asset-grid
                     :assets="$assets"
-                    :selectedAssetId="$getState()"
+                    :selection-event="$selectionEvent"
                 />
             </div>
         </template>
@@ -99,6 +114,8 @@
         [
             'assets' => $assets,
             'selectedAssetId' => $getState(),
+            'modalId' => $modalId,
+            'selectionEvent' => $selectionEvent,
         ]
     )
 </x-dynamic-component>

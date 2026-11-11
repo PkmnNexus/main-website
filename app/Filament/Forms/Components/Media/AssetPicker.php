@@ -31,4 +31,11 @@ class AssetPicker extends Field
 
         return $this;
     }
+
+    public function clearSelectedAsset(): static
+    {
+        $this->state(null);
+
+        return $this;
+    }
 }

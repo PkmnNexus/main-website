@@ -9,13 +9,19 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('pokemon-tcg:sync-series')
-    ->weekly()
+    ->monthly()
     ->sundays()
     ->at('03:00')
     ->withoutOverlapping();
 
 Schedule::command('pokemon-tcg:sync-sets')
-    ->weekly()
+    ->monthly()
     ->sundays()
     ->at('03:15')
+    ->withoutOverlapping();
+
+Schedule::command('pokemon-tcg:sync-cards')
+    ->monthly()
+    ->sundays()
+    ->at('03:30')
     ->withoutOverlapping();

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PokemonTcgSet extends Model
 {
@@ -80,6 +81,17 @@ class PokemonTcgSet extends Model
         );
     }
 
+    /**
+     * Get all cards belonging to this set.
+     */
+    public function cards(): HasMany
+    {
+        return $this->hasMany(
+            PokemonTcgCard::class,
+            'set_id'
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Attributes
@@ -103,7 +115,7 @@ class PokemonTcgSet extends Model
     {
         return Attribute::get(
             fn (): ?string => $this->logoAsset?->getFirstMediaUrl('asset')
-                ?: $this->api_logo_url
+                ?: $this->formatApiAssetUrl($this->api_logo_url)
         );
     }
 
@@ -114,7 +126,31 @@ class PokemonTcgSet extends Model
     {
         return Attribute::get(
             fn (): ?string => $this->symbolAsset?->getFirstMediaUrl('asset')
-                ?: $this->api_symbol_url
+                ?: $this->formatApiAssetUrl($this->api_symbol_url, true)
         );
+    }
+
+    /**
+     * Format a TCGdex logo or symbol URL.
+     */
+    protected function formatApiAssetUrl(
+        ?string $url,
+        bool $useEnglishPath = false
+    ): ?string {
+        if (! $url) {
+            return null;
+        }
+
+        $url = rtrim($url, '/');
+
+        if ($useEnglishPath) {
+            $url = str_replace('/univ/', '/en/', $url);
+        }
+
+        if (! preg_match('/\.(png|webp|jpg)$/i', $url)) {
+            $url .= '.png';
+        }
+
+        return $url;
     }
 }

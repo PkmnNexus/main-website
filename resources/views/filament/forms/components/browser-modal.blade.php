@@ -1,3 +1,9 @@
+@props([
+    'assets',
+    'selectedAssetId' => null,
+    'modalId' => 'asset-browser',
+    'selectionEvent' => 'asset-selected',
+])
 
 @php
     $folders = app(\App\Services\MediaFolderService::class)->tree();
@@ -22,7 +28,7 @@
 @endphp
 
 <x-filament::modal
-    id="asset-browser"
+    :id="$modalId"
     slide-over
     width="8xl"
     heading="Asset Browser"
@@ -91,7 +97,7 @@
                 return crumbs
             },
         }"
-        @asset-selected.window="selectedAssetId = $event.detail.id"
+        x-on:{{ $selectionEvent }}.window="selectedAssetId = $event.detail.id"
         @pkmnexus-asset-picked.window="
             const editor = window.__pkmNexusAssetEditor;
             const position = window.__pkmNexusAssetPosition;
@@ -116,7 +122,7 @@
 
             if (inserted) {
                 window.dispatchEvent(new CustomEvent('close-modal', {
-                    detail: { id: 'asset-browser' },
+                    detail: { id: '{{ $modalId }}' },
                 }));
 
                 window.__pkmNexusAssetPosition = null;
@@ -163,6 +169,7 @@
 
                 <x-media.asset-grid
                     :assets="$assets"
+                    :selection-event="$selectionEvent"
                 />
 
             </section>

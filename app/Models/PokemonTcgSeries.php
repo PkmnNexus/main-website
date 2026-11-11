@@ -74,7 +74,25 @@ class PokemonTcgSeries extends Model
     {
         return Attribute::get(
             fn (): ?string => $this->logoAsset?->getFirstMediaUrl('asset')
-                ?: $this->api_logo_url
+                ?: $this->formatApiLogoUrl($this->api_logo_url)
         );
+    }
+
+    /**
+     * Format a TCGdex logo URL.
+     */
+    protected function formatApiLogoUrl(?string $url): ?string
+    {
+        if (! $url) {
+            return null;
+        }
+
+        $url = rtrim($url, '/');
+
+        if (! preg_match('/\.(png|webp|jpg)$/i', $url)) {
+            $url .= '.png';
+        }
+
+        return $url;
     }
 }

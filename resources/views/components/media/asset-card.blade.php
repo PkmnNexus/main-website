@@ -1,6 +1,7 @@
 @props([
     'asset',
     'selectable' => true,
+    'selectionEvent' => 'asset-selected',
 ])
 
 <button
@@ -9,7 +10,13 @@
 
     x-on:click="
         selectedAssetId = {{ $asset->id }};
-        selectedAsset = assets.find(asset => asset.id === {{ $asset->id }});
+        selectedAsset = assets.find(asset => asset.id == {{ $asset->id }});
+
+        window.dispatchEvent(new CustomEvent('{{ $selectionEvent }}', {
+            detail: {
+                id: {{ $asset->id }},
+            }
+        }));
 
         if (selectedAsset) {
             window.dispatchEvent(new CustomEvent('pkmnexus-asset-picked', {
