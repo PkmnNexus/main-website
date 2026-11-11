@@ -2,8 +2,10 @@
 
 namespace App\Services\PokemonTcg;
 
-use App\Models\PokemonTcgSeries;
+use App\Jobs\SyncPokemonTcgSeries;
+use App\Models\PokemonTcgSyncRun;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PokemonTcgSeriesSync
 {
@@ -18,52 +20,45 @@ class PokemonTcgSeriesSync
     */
 
     /**
-     * Synchronize all series from TCGdex.
-     *
-     * @return array{total: int, created: int, updated: int, skipped: int}
+     * Dispatch all series synchronization jobs.
      */
-    public function sync(): array
+    public function dispatch(): PokemonTcgSyncRun
     {
         $series = $this->tcgDex->getSeries();
 
-        return DB::transaction(function () use ($series) {
-            $created = 0;
-            $updated = 0;
-            $skipped = 0;
+        $seriesItems = $series->values();
 
-            foreach ($series as $item) {
-                if (empty($item['id']) || empty($item['name'])) {
-                    $skipped++;
-
-                    continue;
-                }
-
-                $model = PokemonTcgSeries::query()->firstOrNew([
-                    'external_id' => $item['id'],
-                ]);
-
-                $isNew = ! $model->exists;
-
-                $model->fill([
-                    'api_name' => $item['name'],
-                    'api_logo_url' => $item['logo'] ?? null,
-                ]);
-
-                $model->save();
-
-                if ($isNew) {
-                    $created++;
-                } elseif ($model->wasChanged(['api_name', 'api_logo_url'])) {
-                    $updated++;
-                }
-            }
-
-            return [
-                'total' => $series->count(),
-                'created' => $created,
-                'updated' => $updated,
-                'skipped' => $skipped,
-            ];
+        $syncRun = DB::transaction(function () use ($seriesItems) {
+            return PokemonTcgSyncRun::create([
+                'sync_type' => 'series',
+                'status' => $seriesItems->isEmpty() ? 'completed' : 'running',
+                'total' => $seriesItems->count(),
+                'started_at' => now(),
+                'completed_at' => $seriesItems->isEmpty() ? now() : null,
+            ]);
         });
+
+        if ($seriesItems->isEmpty()) {
+            return $syncRun;
+        }
+
+        try {
+            foreach ($seriesItems as $item) {
+                SyncPokemonTcgSeries::dispatch(
+                    $syncRun->id,
+                    (array) $item
+                );
+            }
+        } catch (Throwable $exception) {
+            $syncRun->update([
+                'status' => 'failed',
+                'error_message' => $exception->getMessage(),
+                'completed_at' => now(),
+            ]);
+
+            throw $exception;
+        }
+
+        return $syncRun->fresh();
     }
 }

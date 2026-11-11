@@ -2,7 +2,6 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -13,4 +12,10 @@ Schedule::command('pokemon-tcg:sync-series')
     ->weekly()
     ->sundays()
     ->at('03:00')
+    ->withoutOverlapping();
+
+Schedule::command('pokemon-tcg:sync-sets')
+    ->weekly()
+    ->sundays()
+    ->at('03:15')
     ->withoutOverlapping();

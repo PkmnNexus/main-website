@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\PokemonTcg\PokemonTcgSeriesSync;
 use Illuminate\Console\Command;
+use Throwable;
 
 class SyncPokemonTcgSeries extends Command
 {
@@ -25,24 +26,31 @@ class SyncPokemonTcgSeries extends Command
 
     public function handle(PokemonTcgSeriesSync $sync): int
     {
-        $this->info('Synchronizing Pokémon TCG series...');
+        try {
+            $syncRun = $sync->dispatch();
 
-        $result = $sync->sync();
+            $this->info('Pokémon TCG series synchronization dispatched successfully.');
 
-        $this->newLine();
+            $this->newLine();
 
-        $this->info('Series synchronization completed.');
+            $this->table(
+                ['Sync run', 'Total series', 'Status'],
+                [[
+                    $syncRun->id,
+                    $syncRun->total,
+                    $syncRun->status,
+                ]]
+            );
 
-        $this->table(
-            ['Total', 'Created', 'Updated', 'Skipped'],
-            [[
-                $result['total'],
-                $result['created'],
-                $result['updated'],
-                $result['skipped'],
-            ]]
-        );
+            return self::SUCCESS;
+        } catch (Throwable $exception) {
+            report($exception);
 
-        return self::SUCCESS;
+            $this->error(
+                'Pokémon TCG series synchronization failed: '.$exception->getMessage()
+            );
+
+            return self::FAILURE;
+        }
     }
 }
