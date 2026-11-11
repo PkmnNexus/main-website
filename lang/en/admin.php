@@ -346,4 +346,17 @@ return [
     'edit_trivia' => 'Edit trivia',
     'sort_order' => 'Sort order',
     'settings' => 'Settings',
+
+    'pokemon_tcg' => 'Pokémon TCG',
+    'series' => 'Series',
+    'create_series' => 'Create series',
+    'pokemon_tcg_series_name_helper' => 'Leave empty to use the name from TCGdex.',
+    'api_information' => 'API information',
+    'external_id' => 'External ID',
+    'api_name' => 'API name',
+    'api_logo_url' => 'API logo URL',
+    'synchronize_series' => 'Synchronize series',
+    'synchronize_series_confirmation' => 'Are you sure you want to synchronize all Pokémon TCG series from TCGdex?',
+    'series_synchronization_completed' => 'Series synchronization completed',
+    'series_synchronization_result' => 'Total: :total | Created: :created | Updated: :updated | Skipped: :skipped',
 ];

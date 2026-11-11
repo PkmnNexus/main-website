@@ -346,4 +346,17 @@ return [
     'edit_trivia' => 'Trivia bewerken',
     'sort_order' => 'Sorteervolgorde',
     'settings' => 'Instellingen',
+
+    'pokemon_tcg' => 'Pokémon TCG',
+    'series' => 'Series',
+    'create_series' => 'Series aanmaken',
+    'pokemon_tcg_series_name_helper' => 'Laat leeg om de naam van TCGdex te gebruiken.',
+    'api_information' => 'API-informatie',
+    'external_id' => 'Externe ID',
+    'api_name' => 'API-naam',
+    'api_logo_url' => 'API-logo-URL',
+    'synchronize_series' => 'Series synchroniseren',
+    'synchronize_series_confirmation' => 'Wil je alle Pokémon TCG-series vanuit TCGdex synchroniseren?',
+    'series_synchronization_completed' => 'Series synchronisatie voltooid',
+    'series_synchronization_result' => 'Totaal: :total | Aangemaakt: :created | Bijgewerkt: :updated | Overgeslagen: :skipped',
 ];
