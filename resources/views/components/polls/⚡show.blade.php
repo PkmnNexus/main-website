@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 new class extends Component
@@ -18,6 +19,9 @@ new class extends Component
     public bool $showResults = false;
 
     public bool $justVoted = false;
+
+    #[Locked]
+    public ?string $voterHash = null;
 
     /*
     |--------------------------------------------------------------------------
@@ -41,11 +45,13 @@ new class extends Component
             return;
         }
 
+        $this->getVoterHash(true);
+
         $existingVote = $this->existingVote();
 
         if (auth()->check() && $existingVote && ! $existingVote->voter_hash) {
             $existingVote->update([
-                'voter_hash' => $this->getVoterHash(true),
+                'voter_hash' => $this->getVoterHash(),
             ]);
         }
 
@@ -161,6 +167,10 @@ new class extends Component
 
     protected function getVoterHash(bool $persistCookie = false): string
     {
+        if ($this->voterHash !== null) {
+            return $this->voterHash;
+        }
+
         $voterId = request()->cookie('poll_voter_id');
 
         if (! is_string($voterId) || $voterId === '') {
@@ -177,11 +187,13 @@ new class extends Component
             );
         }
 
-        return hash_hmac(
+        $this->voterHash = hash_hmac(
             'sha256',
             $voterId,
             config('app.key'),
         );
+
+        return $this->voterHash;
     }
 
     protected function existingVote(): ?PollVote
@@ -370,7 +382,7 @@ new class extends Component
                                 wire:click="vote({{ $option->id }})"
                                 wire:loading.attr="disabled"
                                 wire:target="vote"
-                                class="poll__option group cursor-pointerw-full flex items-center justify-between gap-4 px-4 py-3 text-left bg-white border border-gray-200 rounded-md transition duration-300 hover:border-[var(--color-primary)] hover:shadow-md hover:bg-[var(--color-primary)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-wait">
+                                class="poll__option group cursor-pointer w-full flex items-center justify-between gap-4 px-4 py-3 text-left bg-white border border-gray-200 rounded-md transition duration-300 hover:border-[var(--color-primary)] hover:shadow-md hover:bg-[var(--color-primary)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-wait">
 
                             <span class="poll__option-label text-sm font-bold text-[var(--color-secondary)] transition duration-300 group-hover:text-[var(--color-primary)]">{{ $option->label }}</span>
 
