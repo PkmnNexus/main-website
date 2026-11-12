@@ -129,7 +129,7 @@ new class extends Component {
                wire:model.live.debounce.400ms="search"
                placeholder="Search articles..."
                aria-label="Search articles"
-               class="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-4 text-sm shadow-sm transition focus:border-primary focus:ring-2 focus:ring-primary/20">
+               class="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-4 text-base md:text-sm shadow-sm transition focus:border-primary focus:ring-2 focus:ring-primary/20">
 
     </div>
 
