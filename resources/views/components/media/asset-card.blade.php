@@ -2,6 +2,7 @@
     'asset',
     'selectable' => true,
     'selectionEvent' => 'asset-selected',
+    'editorInsert' => false,
 ])
 
 <button
@@ -18,15 +19,17 @@
             }
         }));
 
-        if (selectedAsset) {
-            window.dispatchEvent(new CustomEvent('pkmnexus-asset-picked', {
-                detail: {
-                    id: selectedAsset.id,
-                    url: selectedAsset.url,
-                    alt: selectedAsset.alt || selectedAsset.title || '',
-                }
-            }));
-        }
+        @if ($editorInsert)
+            if (selectedAsset) {
+                window.dispatchEvent(new CustomEvent('pkmnexus-asset-picked', {
+                    detail: {
+                        id: selectedAsset.id,
+                        url: selectedAsset.url,
+                        alt: selectedAsset.alt || selectedAsset.title || '',
+                    }
+                }));
+            }
+        @endif
     "
 
     data-asset-id="{{ $asset->id }}"

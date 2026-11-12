@@ -49,6 +49,8 @@
 
                 @endif
 
+                <x-articles.card-gallery :article="$article" />
+
                 <div class="flex flex-wrap items-center justify-between gap-4 mt-4 border-t border-gray-200">
 
                     <x-articles.tag-cloud :article="$article" :showHeading="false" />
@@ -73,5 +75,7 @@
         <x-articles.latest-videos :article="$article" />
 
     </div>
+
+    <x-articles.lightbox />
 
 </x-app>

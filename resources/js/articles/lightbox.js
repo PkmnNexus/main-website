@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
     const articleBody = document.querySelector(
         '[itemprop="articleBody"]'
     );
@@ -12,17 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(lightbox);
     }
 
-    if (!articleBody || !lightbox) {
+    if (!lightbox) {
         return;
     }
 
-    const images = Array.from(
-        articleBody.querySelectorAll('img')
-    );
+    const articleImages = articleBody
+        ? Array.from(articleBody.querySelectorAll('img'))
+        : [];
 
-    if (!images.length) {
-        return;
-    }
+    let images = articleImages;
 
     const lightboxImage = lightbox.querySelector(
         '[data-lightbox-image]'
@@ -51,10 +48,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0;
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchCurrentX = 0;
     let isTouching = false;
 
     const swipeThreshold = 50;
+
+    const getImageSource = (image) => {
+        return image.dataset.lightboxSrc
+            || image.currentSrc
+            || image.src;
+    };
+
+    const getImageAlt = (image) => {
+        return image.dataset.lightboxAlt
+            || image.alt
+            || image.querySelector('img')?.alt
+            || '';
+    };
 
     const centerActiveThumbnail = () => {
         const activeThumbnail =
@@ -143,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             button.className = [
                 'lightbox-thumbnail',
-                'is-active',
                 'shrink-0',
                 'overflow-hidden',
                 'rounded-md',
@@ -159,11 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.createElement('img');
 
             thumbnail.src =
-                image.currentSrc ||
-                image.src;
+                image.dataset.lightboxThumb ||
+                getImageSource(image);
 
             thumbnail.alt =
-                image.alt || '';
+                getImageAlt(image);
 
             thumbnail.className = [
                 'h-14',
@@ -198,23 +206,23 @@ document.addEventListener('DOMContentLoaded', () => {
             images[index];
 
         lightboxImage.src =
-            image.currentSrc ||
-            image.src;
+            getImageSource(image);
 
         lightboxImage.alt =
-            image.alt || '';
+            getImageAlt(image);
     };
 
     const showImage = (
         index,
         animate = false
     ) => {
+        if (!images.length) {
+            return;
+        }
+
         currentIndex =
             (index + images.length) %
             images.length;
-
-        const image =
-            images[currentIndex];
 
         previousButton.hidden =
             images.length <= 1;
@@ -251,7 +259,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     };
 
-    const open = (index) => {
+    const open = (
+        index,
+        imageGroup = articleImages
+    ) => {
+        if (!imageGroup.length) {
+            return;
+        }
+
+        images = imageGroup;
+
         createThumbnails();
 
         showImage(index);
@@ -303,6 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
             lightboxImage.alt = '';
 
             thumbnails.innerHTML = '';
+
+            images = articleImages;
         }, 250);
     };
 
@@ -331,9 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
         touchStartY =
             event.touches[0].clientY;
 
-        touchCurrentX =
-            touchStartX;
-
         isTouching = true;
     };
 
@@ -344,9 +360,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
             return;
         }
-
-        touchCurrentX =
-            event.touches[0].clientX;
     };
 
     const handleTouchEnd = (event) => {
@@ -393,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    images.forEach((image, index) => {
+    articleImages.forEach((image, index) => {
         image.addEventListener(
             'click',
             () => {
@@ -401,6 +414,61 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         );
     });
+
+    document.addEventListener(
+        'click',
+        (event) => {
+            const target = event.target;
+
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            const item = target.closest(
+                '[data-lightbox-item]'
+            );
+
+            if (!item) {
+                return;
+            }
+
+            const group = item.closest(
+                '[data-lightbox-group]'
+            );
+
+            if (!group) {
+                return;
+            }
+
+            let groupContainer = group;
+
+            if (group === item) {
+                groupContainer = item.closest(
+                    '[aria-label="Pokémon TCG card gallery"]'
+                ) || item.parentElement;
+            }
+
+            const groupImages = Array.from(
+                groupContainer.querySelectorAll(
+                    '[data-lightbox-item]'
+                )
+            );
+
+            if (groupContainer === item) {
+                groupImages.unshift(item);
+            }
+
+            const index =
+                groupImages.indexOf(item);
+
+            if (index !== -1) {
+                open(
+                    index,
+                    groupImages
+                );
+            }
+        }
+    );
 
     closeButton.addEventListener(
         'click',

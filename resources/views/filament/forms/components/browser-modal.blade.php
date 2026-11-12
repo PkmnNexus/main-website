@@ -170,6 +170,7 @@
                 <x-media.asset-grid
                     :assets="$assets"
                     :selection-event="$selectionEvent"
+                    :editor-insert="$modalId === 'asset-browser'"
                 />
 
             </section>

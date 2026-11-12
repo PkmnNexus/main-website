@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PokemonTcgSet extends Model
 {
@@ -90,6 +91,15 @@ class PokemonTcgSet extends Model
             PokemonTcgCard::class,
             'set_id'
         );
+    }
+
+    /**
+     * Get all articles associated with this set.
+     */
+    public function articles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class)
+            ->withTimestamps();
     }
 
     /*

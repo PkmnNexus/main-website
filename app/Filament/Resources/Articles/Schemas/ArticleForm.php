@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Filament\Resources\Articles\Schemas;
-
 use App\Enums\ArticleStatus;
 use App\Filament\Forms\Components\Media\AssetPicker;
 use App\Models\Article;
+use App\Models\Asset;
+use App\Models\PokemonTcgSet;
 use App\Models\Source;
 use App\Models\Tag;
 use App\Services\ArticleKeywordGenerator;
@@ -26,6 +26,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -33,26 +34,22 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-
 class ArticleForm
 {
     public static function configure(Schema $schema): Schema
     {
         $user = Filament::auth()->user();
         $isAuthor = $user?->hasRole('author') ?? false;
-        $canManagePublishing = $user?->hasAnyRole(['admin', 'editor']) ?? false;
+        $canManagePublishing = $user?->hasAnyRole(['super_admin', 'admin', 'editor']) ?? false;
         $canCreateSources = $canManagePublishing;
-
         $defaultLocale = config('localization.default', 'en');
         $localizationEnabled = (bool) config('localization.enabled', false);
-
         $locales = $localizationEnabled
             ? (
                 config('filament-translatable-fields.locales')
                 ?: array_keys(config('localization.locales', []))
             )
             : [$defaultLocale];
-
         $translatedLabel = function (
             string $label,
             ?string $locale,
@@ -60,17 +57,14 @@ class ArticleForm
             if (! $localizationEnabled || $locale === null) {
                 return $label;
             }
-
             $flag = match ($locale) {
                 'en' => 'gb',
                 default => $locale,
             };
-
             $localeLabel = config(
                 "filament-translatable-fields.labels.{$locale}",
                 strtoupper($locale),
             );
-
             $flagSvg = svg(
                 "flag-country-{$flag}",
                 'h-3.5 w-5',
@@ -79,7 +73,6 @@ class ArticleForm
                     'aria-label' => $localeLabel,
                 ],
             );
-
             return new HtmlString(
                 '<span class="inline-flex items-center gap-2">'
                     . '<span>' . e($label) . '</span>'
@@ -89,7 +82,6 @@ class ArticleForm
                     . '</span>',
             );
         };
-
         $buildTab = function (string $locale) use (
             $localizationEnabled,
             $defaultLocale,
@@ -99,9 +91,7 @@ class ArticleForm
         $field = fn (string $name): string => $localized
             ? "{$name}.{$locale}"
             : $name;
-
         $contentField = $field('content');
-
             return [
                 Section::make(__('admin.content'))
                     ->schema([
@@ -117,7 +107,6 @@ class ArticleForm
                                     Str::slug($state ?? ''),
                                 ),
                             ),
-
                         TextInput::make($field('slug'))
                             ->label($translatedLabel(__('admin.slug'), $locale))
                             ->required()
@@ -138,10 +127,8 @@ class ArticleForm
                                     $slugLocale = $localized
                                         ? $locale
                                         : $defaultLocale;
-
                                     $query = Article::query()
                                         ->where("slug->{$slugLocale}", $value);
-
                                     if ($record) {
                                         $query->where(
                                             $record->getKeyName(),
@@ -149,13 +136,11 @@ class ArticleForm
                                             $record->getKey(),
                                         );
                                     }
-
                                     if ($query->exists()) {
                                         $fail(__('admin.slug_already_in_use'));
                                     }
                                 },
                             ]),
-
                         Textarea::make($field('excerpt'))
                             ->label($translatedLabel(__('admin.excerpt'), $locale))
                             ->required()
@@ -166,7 +151,6 @@ class ArticleForm
                             ->helperText(__('admin.excerpt_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 225'),
-
                         Textarea::make($field('summary'))
                             ->label($translatedLabel(__('admin.summary'), $locale))
                             ->rows(4)
@@ -188,7 +172,6 @@ class ArticleForm
                                         $title = $get($field('title')) ?? '';
                                         $excerpt = $get($field('excerpt')) ?? '';
                                         $content = $get($field('content')) ?? '';
-
                                         if (
                                             blank($title)
                                             && blank($excerpt)
@@ -198,17 +181,14 @@ class ArticleForm
                                                 __('admin.first_fill_in_article_information')
                                             );
                                         }
-
                                         $summary = $generator->generate(
                                             title: $title,
                                             excerpt: $excerpt,
                                             content: strip_tags($content),
                                         );
-
                                         $set($field('summary'), $summary);
                                     })
                             ),
-
                         RichEditor::make($contentField)
                             ->label($translatedLabel(__('admin.content'), $locale))
                             ->required(fn (Get $get): bool => blank($get('video_url')))
@@ -220,18 +200,14 @@ class ArticleForm
                                     ->jsHandler(<<<'JS'
                                         (() => {
                                             const editor = $getEditor();
-
                                             if (! editor) {
                                                 return;
                                             }
-
                                             window.__pkmNexusAssetEditor = editor;
-
                                             window.__pkmNexusAssetPosition = {
                                                 from: editor.state.selection.from,
                                                 to: editor.state.selection.to,
                                             };
-
                                             window.dispatchEvent(new CustomEvent('open-modal', {
                                                 detail: { id: 'asset-browser' },
                                             }));
@@ -259,7 +235,6 @@ class ArticleForm
                     ->collapsible(),
             ];
         };
-
         $buildMetadataTab = function (string $locale) use (
             $localizationEnabled,
             $defaultLocale,
@@ -269,7 +244,6 @@ class ArticleForm
             $field = fn (string $name): string => $localized
                 ? "{$name}.{$locale}"
                 : $name;
-
             return [
                 Section::make(__('admin.seo'))
                     ->schema([
@@ -293,7 +267,6 @@ class ArticleForm
                                         $excerpt = $get($field('excerpt')) ?? '';
                                         $content = $get($field('content')) ?? '';
                                         $keywords = $get($field('meta_keywords')) ?? [];
-
                                         if (
                                             blank($title)
                                             && blank($excerpt)
@@ -303,21 +276,18 @@ class ArticleForm
                                                 __('admin.please_enter_article_content_first')
                                             );
                                         }
-
                                         $metadata = $generator->generate(
                                             title: $title,
                                             excerpt: $excerpt,
                                             content: strip_tags($content),
                                             keywords: $keywords,
                                         );
-
                                         $set($field('meta_title'), $metadata['meta_title']);
                                         $set($field('meta_description'), $metadata['meta_description']);
                                         $set($field('og_title'), $metadata['meta_title']);
                                         $set($field('og_description'), $metadata['meta_description']);
                                     })
                             ),
-
                         Textarea::make($field('meta_description'))
                             ->label($translatedLabel(__('admin.meta_description'), $locale))
                             ->rows(3)
@@ -327,7 +297,6 @@ class ArticleForm
                             ->helperText(__('admin.meta_description_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
-
                         \Filament\Forms\Components\TagsInput::make($field('meta_keywords'))
                             ->label($translatedLabel(__('admin.meta_keywords'), $locale))
                             ->placeholder(__('admin.meta_keywords_placeholder'))
@@ -345,31 +314,26 @@ class ArticleForm
                                         $title = $get($field('title')) ?? '';
                                         $excerpt = $get($field('excerpt')) ?? '';
                                         $content = $get($field('content')) ?? '';
-
                                         if (blank($title) && blank($excerpt) && blank($content)) {
                                             throw new \RuntimeException(
                                                 __('admin.first_fill_in_article_information')
                                             );
                                         }
-
                                         $keywords = $generator->generate(
                                             title: $title,
                                             excerpt: $excerpt,
                                             content: strip_tags($content),
                                         );
-
                                         $set($field('meta_keywords'), $keywords);
                                     })
                             )
                             ->columnSpanFull(),
-
                         TextInput::make($field('canonical'))
                             ->label($translatedLabel(__('admin.canonical_url'), $locale))
                             ->url()
                             ->maxLength(255)
                             ->placeholder('https://pkmnnexus.com/articles/example')
                             ->helperText(__('admin.canonical_url_helper')),
-
                         ...($locale === $defaultLocale ? [
                             Fieldset::make(__('admin.robots'))
                                 ->schema([
@@ -378,7 +342,6 @@ class ArticleForm
                                         ->default(true)
                                         ->inline(false)
                                         ->helperText(__('admin.allow_indexing_helper')),
-
                                     Toggle::make('robots_follow')
                                         ->label(__('admin.follow_links'))
                                         ->default(true)
@@ -390,7 +353,6 @@ class ArticleForm
                     ->columnSpanFull()
                     ->collapsible()
                     ->collapsed(),
-
                 Section::make(__('admin.og_tags'))
                     ->schema([
                         TextInput::make($field('og_title'))
@@ -400,7 +362,6 @@ class ArticleForm
                             ->helperText(__('admin.og_title_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 60'),
-
                         Textarea::make($field('og_description'))
                             ->label($translatedLabel(__('admin.open_graph_description'), $locale))
                             ->rows(3)
@@ -410,7 +371,6 @@ class ArticleForm
                             ->helperText(__('admin.og_description_helper'))
                             ->live()
                             ->hint(fn (?string $state) => strlen($state ?? '') . ' / 160'),
-
                         ...($locale === $defaultLocale ? [
                             Select::make('og_type')
                                 ->label(__('admin.open_graph_type'))
@@ -430,7 +390,6 @@ class ArticleForm
                     ->collapsed(),
             ];
         };
-
         $buildTagsSection = function () use (
             $locales,
             $localizationEnabled,
@@ -442,7 +401,6 @@ class ArticleForm
             ): TagsInput {
                 $field = $localizationEnabled ? "tags.{$locale}" : 'tags';
                 $tagLocale = $locale ?? $defaultLocale;
-
                 return TagsInput::make($field)
                     ->placeholder(__('admin.add_a_tag'))
                     ->afterStateHydrated(function (
@@ -453,11 +411,9 @@ class ArticleForm
                             $record?->tags
                                 ->flatMap(function (Tag $tag) use ($tagLocale): array {
                                     $name = $tag->getTranslation('name', $tagLocale, false);
-
                                     if (blank($name)) {
                                         return [];
                                     }
-
                                     return collect(preg_split('/\s*,\s*/u', trim((string) $name), -1, PREG_SPLIT_NO_EMPTY))
                                         ->map(fn (string $value): string => trim($value))
                                         ->filter()
@@ -470,23 +426,18 @@ class ArticleForm
                     })
                     ->columnSpanFull();
             };
-
             $schema = [];
-
             if ($localizationEnabled) {
                 $tabs = [];
-
                 foreach ($locales as $locale) {
                     $label = config(
                         "filament-translatable-fields.labels.{$locale}",
                         strtoupper($locale),
                     );
-
                     $flag = match ($locale) {
                         'en' => 'gb',
                         default => $locale,
                     };
-
                     $flagSvg = svg(
                         "flag-country-{$flag}",
                         'h-5 w-7',
@@ -495,26 +446,22 @@ class ArticleForm
                             'aria-label' => $label,
                         ],
                     );
-
                     $tabs[] = Tab::make($locale)
                         ->label(new HtmlString($flagSvg->toHtml()))
                         ->schema([
                             $buildTagField($locale),
                         ]);
                 }
-
                 $schema[] = Tabs::make('tag_translations')
                     ->tabs($tabs)
                     ->contained(false);
             } else {
                 $schema[] = $buildTagField();
             }
-
             return Section::make(__('admin.tags'))
                 ->schema($schema)
                 ->collapsible();
         };
-
         $buildMediaAndPublishing = function () use (
             $isAuthor,
             $canManagePublishing,
@@ -527,9 +474,7 @@ class ArticleForm
                             ->label(__('admin.hero_image')),
                     ])
                     ->collapsible(),
-
                 $buildTagsSection(),
-
                 Section::make(__('admin.publishing'))
                     ->schema([
                         TextInput::make('video_url')
@@ -539,18 +484,16 @@ class ArticleForm
                             ->live(onBlur: true)
                             ->placeholder('https://www.youtube.com/watch?v=...')
                             ->maxLength(255)
-                            ->rule('regex:/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]{11}.*$/')
+                            ->rule('regex:/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]{11}(&.*)?$/')
                             ->validationMessages([
                                 'regex' => __('admin.valid_youtube_url'),
                             ]),
-
                         Select::make('category_id')
                             ->label(__('admin.category'))
                             ->relationship('category', 'name')
                             ->searchable()
                             ->preload()
                             ->required(),
-
                         Select::make('user_id')
                             ->label(__('admin.author'))
                             ->relationship(
@@ -560,7 +503,6 @@ class ArticleForm
                                     $query->whereHas('roles', function (Builder $query) {
                                         $query->whereIn('name', ['admin', 'editor', 'author']);
                                     });
-
                                     if ($isAuthor) {
                                         $query->whereKey(Filament::auth()->id());
                                     }
@@ -571,7 +513,6 @@ class ArticleForm
                             ->required()
                             ->hidden(fn () => $isAuthor)
                             ->dehydrated(),
-
                         Select::make('status')
                             ->label(__('admin.status'))
                             ->options(ArticleStatus::class)
@@ -579,27 +520,22 @@ class ArticleForm
                             ->required()
                             ->hidden(fn () => ! $canManagePublishing)
                             ->dehydrated(),
-
                         DateTimePicker::make('published_at')
                             ->label(__('admin.published_at'))
                             ->seconds(false)
                             ->visible(fn () => $canManagePublishing),
-
                         DateTimePicker::make('expires_at')
                             ->label(__('admin.expires_at'))
                             ->seconds(false)
                             ->helperText(__('admin.expires_at_helper'))
                             ->rule('after:published_at')
                             ->visible(fn () => $canManagePublishing),
-
                         Toggle::make('is_breaking')
                             ->label(__('admin.breaking_news'))
                             ->visible(fn () => $canManagePublishing),
-
                         Toggle::make('is_featured')
                             ->label(__('admin.featured'))
                             ->visible(fn () => $canManagePublishing),
-
                         Toggle::make('is_pokemon_go_featured')
                             ->label(__('admin.pokemon_go_featured'))
                             ->visible(fn () => $canManagePublishing),
@@ -607,7 +543,6 @@ class ArticleForm
                     ->collapsible(),
             ];
         };
-
         $buildLocaleSchema = function (string $locale) use (
             $buildTab,
             $buildMetadataTab,
@@ -628,35 +563,28 @@ class ArticleForm
                                 'default' => 1,
                                 'xl' => 2,
                             ]),
-
                         Grid::make(1)
                             ->schema($buildMediaAndPublishing())
                             ->columnSpan([
                                 'default' => 1,
                                 'xl' => 1,
                             ]),
-
                         ...$buildMetadataTab($locale),
                     ]),
             ];
         };
-
         $tabComponents = [];
-
         if ($localizationEnabled) {
             $tabs = [];
-
             foreach ($locales as $locale) {
                 $label = config(
                     "filament-translatable-fields.labels.{$locale}",
                     strtoupper($locale),
                 );
-
                 $flag = match ($locale) {
                     'en' => 'gb',
                     default => $locale,
                 };
-
                 $flagSvg = svg(
                     "flag-country-{$flag}",
                     'h-5 w-7',
@@ -665,27 +593,42 @@ class ArticleForm
                         'aria-label' => $label,
                     ],
                 );
-
                 $tabs[] = Tab::make($locale)
                     ->label(new HtmlString($flagSvg->toHtml()))
                     ->schema($buildLocaleSchema($locale));
             }
-
             $tabComponents[] = Tabs::make('translations')
                 ->tabs($tabs)
                 ->contained(false)
                 ->columnSpanFull()
                 ->extraAttributes([
-                    'class' => 'w-full [&_[role=tablist]]:justify-start [&_[role=tablist]]:ml-0',
+                    'class' => 'w-full [&\_[role=tablist]]:justify-start [&\_[role=tablist]]:ml-0',
                 ]);
         } else {
             $tabComponents = $buildLocaleSchema($defaultLocale);
         }
-
         return $schema
             ->components([
                 ...$tabComponents,
-
+                Section::make(__('admin.pokemon_tcg_sets'))
+                    ->schema([
+                        Select::make('pokemonTcgSets')
+                            ->label(__('admin.pokemon_tcg_sets'))
+                            ->relationship(
+                                name: 'pokemonTcgSets',
+                                titleAttribute: 'api_name',
+                            )
+                            ->getOptionLabelFromRecordUsing(
+                                fn (PokemonTcgSet $record): string => $record->display_name
+                                    .' ('.$record->external_id.')',
+                            )
+                            ->multiple()
+                            ->searchable(['name', 'api_name', 'external_id'])
+                            ->preload(false)
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull()
+                    ->collapsible(),
                 Section::make(__('admin.sources'))
                     ->schema([
                         Select::make('sources')
@@ -699,7 +642,6 @@ class ArticleForm
                                     ->label(__('admin.name'))
                                     ->required()
                                     ->maxLength(255),
-
                                 TextInput::make('url')
                                     ->label(__('admin.url'))
                                     ->url()
@@ -711,28 +653,33 @@ class ArticleForm
                                     Filament::auth()->user()?->hasAnyRole(['admin', 'editor']),
                                     403,
                                 );
-
                                 $baseSlug = Str::slug($data['name']);
                                 $slug = $baseSlug;
                                 $suffix = 2;
-
                                 while (Source::query()->where('slug', $slug)->exists()) {
                                     $slug = $baseSlug . '-' . $suffix++;
                                 }
-
                                 $source = Source::query()->create([
                                     'name' => $data['name'],
                                     'slug' => $slug,
                                     'url' => $data['url'],
                                 ]);
-
                                 return (int) $source->getKey();
                             })
                             ->helperText(__('admin.sources_helper')),
                     ])
                     ->columnSpanFull()
                     ->collapsible(),
-
+                View::make('filament.forms.components.browser-modal')
+                    ->viewData([
+                        'assets' => Asset::query()
+                            ->with('media')
+                            ->latest()
+                            ->get(),
+                        'selectedAssetId' => null,
+                        'modalId' => 'asset-browser',
+                        'selectionEvent' => 'asset-selected',
+                    ]),
             ]);
     }
 }

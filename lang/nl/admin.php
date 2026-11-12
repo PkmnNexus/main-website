@@ -442,5 +442,6 @@ return [
     'synchronize_set_cards' => 'Setkaarten synchroniseren',
     'synchronize_set_cards_confirmation' => 'Weet je zeker dat je alle kaarten van deze set vanuit TCGdex wilt synchroniseren?',
     'remove_image' => 'Afbeelding verwijderen',
-
+    'pokemon_tcg_sets' => 'Pokémon TCG-sets',
+    
 ];

@@ -250,6 +250,13 @@ class Article extends Model implements Seoable, HasMedia
         return $this->belongsToMany(Source::class);
     }
 
+    /**
+     * Get the Pokémon TCG sets associated with the article.
+     */
+    public function pokemonTcgSets(): BelongsToMany
+    {
+        return $this->belongsToMany(PokemonTcgSet::class)->withTimestamps();
+    }
     /*
     |--------------------------------------------------------------------------
     | Helpers

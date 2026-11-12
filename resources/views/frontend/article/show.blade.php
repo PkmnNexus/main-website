@@ -17,6 +17,8 @@
 
                     <x-articles.content :article="$article" />
 
+                    <x-articles.card-gallery :article="$article" />
+
                     <x-articles.social-sharing :article="$article" />
 
                     <x-articles.meta :article="$article" />
