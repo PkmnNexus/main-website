@@ -501,7 +501,7 @@ class ArticleForm
                                 titleAttribute: 'name',
                                 modifyQueryUsing: function (Builder $query) use ($isAuthor) {
                                     $query->whereHas('roles', function (Builder $query) {
-                                        $query->whereIn('name', ['admin', 'editor', 'author']);
+                                        $query->whereIn('name', ['admin', 'editor', 'author', 'super_admin']);
                                     });
                                     if ($isAuthor) {
                                         $query->whereKey(Filament::auth()->id());

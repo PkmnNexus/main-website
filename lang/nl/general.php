@@ -141,7 +141,7 @@ return [
     'select_a_reason' => 'Selecteer een reden',
     'send_password_reset_link' => 'Link voor wachtwoordherstel versturen',
     'sending' => 'Bezig met verzenden...',
-    'sign_in' => 'inloggen',
+    'sign_in' => 'Inloggen',
     'sign_in_to_account' => 'Log in op je PkmnNexus-account.',
     'sign_out' => 'Uitloggen',
     'social' => 'Sociale media',
@@ -164,6 +164,7 @@ return [
     'website' => 'Website',
     'write_a_comment' => 'Schrijf een reactie',
     'your_reply' => 'Je antwoord',
+    'comment_sign_in_prompt' => 'Je hebt een account nodig om een reactie te plaatsen.',
 
     'site_logo_alt' => 'PkmnNexus-logo',
     'site_meta_description' => 'Blijf op de hoogte van het laatste Pokémon-nieuws, Pokémon TCG-releases, Pokémon GO-evenementen, game-updates, gidsen, lekken en communitycontent. Ontdek alles over Pokémon op PkmnNexus.',

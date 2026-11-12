@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Models\Article;
@@ -17,6 +18,7 @@ new class extends Component {
     public ?User $user = null;
     public ?string $tag = null;
     public bool $videosOnly = false;
+    public string $search = '';
 
     public function mount(?Category $category = null, ?User $user = null, ?string $tag = null): void
     {
@@ -24,6 +26,11 @@ new class extends Component {
         $this->user = $user;
         $this->tag = $tag;
         $this->videosOnly = request()->routeIs('articles.videos');
+    }
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
     }
 
     public function updatingPage()
@@ -74,6 +81,23 @@ new class extends Component {
                         }
                     }
                 )
+                ->when(
+                    filled($this->search),
+                    function ($query) {
+                        $search = '%' . mb_strtolower(trim($this->search)) . '%';
+
+                        $query->where(function ($query) use ($search) {
+                            $query->whereRaw('LOWER(title) LIKE ?', [$search])
+                                ->orWhereRaw('LOWER(excerpt) LIKE ?', [$search])
+                                ->orWhereHas('category', function ($query) use ($search) {
+                                    $query->whereRaw('LOWER(name) LIKE ?', [$search]);
+                                })
+                                ->orWhereHas('user', function ($query) use ($search) {
+                                    $query->whereRaw('LOWER(name) LIKE ?', [$search]);
+                                });
+                        });
+                    }
+                )
                 ->latest('published_at')
                 ->paginate(15),
 
@@ -89,11 +113,31 @@ new class extends Component {
 
     <x-pages.section-heading :title="$title" id="article-heading" />
 
-    @if($articles->isNotEmpty())
+    <div class="relative mb-8">
 
-        <div wire:loading.class="opacity-50"
-             wire:target="gotoPage,previousPage,nextPage"
-             class="transition-opacity duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary pointer-events-none">
+            <circle cx="11" cy="11" r="8" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35" />
+        </svg>
+
+        <input type="search"
+               wire:model.live.debounce.400ms="search"
+               placeholder="Search articles..."
+               aria-label="Search articles"
+               class="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-4 text-sm shadow-sm transition focus:border-primary focus:ring-2 focus:ring-primary/20">
+
+    </div>
+
+    <div wire:loading.class="opacity-50"
+         wire:target="search,gotoPage,previousPage,nextPage"
+         class="transition-opacity duration-300">
+
+        @if($articles->isNotEmpty())
 
             <div id="articles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -169,18 +213,18 @@ new class extends Component {
 
             </div>
 
-        </div>
+            <div class="mt-10">
+                {{ $articles->links() }}
+            </div>
 
-        <div class="mt-10">
-            {{ $articles->links() }}
-        </div>
+        @else
 
-    @else
+            <div class="px-4 py-3 text-white text-sm font-display font-black uppercase rounded" style="background: linear-gradient(115deg, rgba(85, 65, 240, 1) 10%, rgba(71, 204, 189, 1) 100%);">
+                {{ __('general.no_articles_available') }}
+            </div>
 
-        <div class="px-4 py-3 text-white text-sm font-display font-black uppercase rounded" style="background: linear-gradient(115deg, rgba(85, 65, 240, 1) 10%, rgba(71, 204, 189, 1) 100%);">
-            {{ __('general.no_articles_available') }}
-        </div>
+        @endif
 
-    @endif
+    </div>
 
 </section>

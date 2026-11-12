@@ -138,7 +138,7 @@ return [
     'select_a_reason' => 'Select a reason',
     'send_password_reset_link' => 'Send Password Reset Link',
     'sending' => 'Sending...',
-    'sign_in' => 'sign in',
+    'sign_in' => 'Sign in',
     'sign_in_to_account' => 'Sign in to your PkmnNexus account.',
     'sign_out' => 'Sign Out',
     'social' => 'Social',
@@ -161,6 +161,7 @@ return [
     'website' => 'Website',
     'write_a_comment' => 'Write a comment',
     'your_reply' => 'Your reply',
+    'comment_sign_in_prompt' => 'You need an account to leave a comment.',
 
     'site_logo_alt' => 'PkmnNexus logo',
     'site_meta_description' => 'Stay up to date with the latest Pokémon news, Pokémon TCG releases, Pokémon GO events, game updates, guides, leaks, and community content. Discover everything Pokémon on PkmnNexus.',
