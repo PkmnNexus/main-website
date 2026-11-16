@@ -18,6 +18,8 @@ new class extends Component
 };
 ?>
 
+<div class="w-full min-w-0 h-full">
+
 @if ($trivia)
 
     <article class="trivia group w-full min-w-0 h-full self-stretch bg-[#FAFAFA] rounded-lg overflow-hidden shadow-lg transition duration-300 hover:shadow-xl">
@@ -74,3 +76,5 @@ new class extends Component
     </article>
 
 @endif
+
+</div>
