@@ -34,6 +34,8 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use App\Services\ArticleContentImprover;
+
 class ArticleForm
 {
     public static function configure(Schema $schema): Schema
@@ -190,46 +192,75 @@ class ArticleForm
                                     })
                             ),
                         RichEditor::make($contentField)
-                            ->label($translatedLabel(__('admin.content'), $locale))
-                            ->required(fn (Get $get): bool => blank($get('video_url')))
-                            ->columnSpanFull()
-                            ->tools([
-                                RichEditorTool::make('assetBrowser')
-                                    ->label(__('admin.asset_browser'))
-                                    ->icon(Heroicon::Photo)
-                                    ->jsHandler(<<<'JS'
-                                        (() => {
-                                            const editor = $getEditor();
-                                            if (! editor) {
-                                                return;
-                                            }
-                                            window.__pkmNexusAssetEditor = editor;
-                                            window.__pkmNexusAssetPosition = {
-                                                from: editor.state.selection.from,
-                                                to: editor.state.selection.to,
-                                            };
-                                            window.dispatchEvent(new CustomEvent('open-modal', {
-                                                detail: { id: 'asset-browser' },
-                                            }));
-                                        })()
-                                    JS),
-                            ])
-                            ->toolbarButtons([
-                                'bold',
-                                'italic',
-                                'underline',
-                                'strike',
-                                'link',
-                                'h2',
-                                'h3',
-                                'bulletList',
-                                'orderedList',
-                                'blockquote',
-                                'codeBlock',
-                                'undo',
-                                'redo',
-                                'assetBrowser',
-                            ]),
+                        ->label($translatedLabel(__('admin.content'), $locale))
+                        ->required(fn (Get $get): bool => blank($get('video_url')))
+                        ->columnSpanFull()
+                        ->hintAction(
+                            Action::make('improveContent')
+                                ->label(__('admin.improve_with_ai'))
+                                ->icon(Heroicon::Sparkles)
+                                ->requiresConfirmation()
+                                ->modalHeading(__('admin.improve_article_content'))
+                                ->modalDescription(__('admin.improve_article_content_confirmation'))
+                                ->action(function (
+                                    Get $get,
+                                    Set $set,
+                                    ArticleContentImprover $improver,
+                                ) use ($contentField): void {
+                                    $content = $get($contentField) ?? '';
+
+                                    if (blank($content)) {
+                                        throw new \RuntimeException(
+                                            __('admin.please_enter_article_content_first')
+                                        );
+                                    }
+
+                                    $improvedContent = $improver->improve($content);
+
+                                    $set($contentField, $improvedContent);
+                                })
+                        )
+                        ->tools([
+                            RichEditorTool::make('assetBrowser')
+                                ->label(__('admin.asset_browser'))
+                                ->icon(Heroicon::Photo)
+                                ->jsHandler(<<<'JS'
+                                    (() => {
+                                        const editor = $getEditor();
+
+                                        if (! editor) {
+                                            return;
+                                        }
+
+                                        window.__pkmNexusAssetEditor = editor;
+
+                                        window.__pkmNexusAssetPosition = {
+                                            from: editor.state.selection.from,
+                                            to: editor.state.selection.to,
+                                        };
+
+                                        window.dispatchEvent(new CustomEvent('open-modal', {
+                                            detail: { id: 'asset-browser' },
+                                        }));
+                                    })()
+                                JS),
+                        ])
+                        ->toolbarButtons([
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike',
+                            'link',
+                            'h2',
+                            'h3',
+                            'bulletList',
+                            'orderedList',
+                            'blockquote',
+                            'codeBlock',
+                            'undo',
+                            'redo',
+                            'assetBrowser',
+                        ]),
                     ])
                     ->columnSpanFull()
                     ->collapsible(),

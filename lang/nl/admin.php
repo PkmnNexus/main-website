@@ -444,4 +444,7 @@ return [
     'remove_image' => 'Afbeelding verwijderen',
     'pokemon_tcg_sets' => 'Pokémon TCG-sets',
     'preview' => 'Voorbeeld',
+    'improve_with_ai' => 'Verbeteren met AI',
+    'improve_article_content' => 'Artikel verbeteren',
+    'improve_article_content_confirmation' => 'AI zal subtiele verbeteringen aanbrengen in het bestaande artikel zonder bewust nieuwe informatie toe te voegen. De huidige inhoud wordt vervangen.',
 ];

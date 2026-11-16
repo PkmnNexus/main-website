@@ -443,4 +443,7 @@ return [
     'remove_image' => 'Remove image',
     'pokemon_tcg_sets' => 'Pokémon TCG Sets',
     'preview' => 'Preview',
+    'improve_with_ai' => 'Improve with AI',
+    'improve_article_content' => 'Improve article content',
+    'improve_article_content_confirmation' => 'AI will make subtle improvements to the existing article without intentionally adding new information. The current content will be replaced.',
 ];
