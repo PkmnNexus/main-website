@@ -21,23 +21,5 @@ class DatabaseSeeder extends Seeder
 
             MediaFolderSeeder::class
         ]);
-
-        if (! app()->isProduction()) {
-
-            $this->call([
-                TagSeeder::class,
-                SourceSeeder::class,
-                AssetSeeder::class,
-
-                ArticleSeeder::class,
-                ArticleDailyViewSeeder::class,
-
-                UserSeeder::class,
-                CommentSeeder::class,
-
-                PollSeeder::class,
-                TriviaSeeder::class,
-            ]);
-        }
     }
 }
