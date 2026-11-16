@@ -10,6 +10,16 @@ return [
             ],
         ],
         [
+            'label' => 'navigation.pokemon_go',
+            'route' => 'articles.category',
+            'category_key' => 'pokemon-go',
+        ],
+        [
+            'label' => 'navigation.pokemon_tcg',
+            'route' => 'articles.category',
+            'category_key' => 'pokemon-tcg',
+        ],
+        [
             'label' => 'navigation.articles',
             'route' => 'article.index',
             'active_routes' => [

@@ -60,6 +60,14 @@ class ArticleController extends Controller
             ->whereNotNull('video_url')
             ->firstOrFail();
 
+        if (auth()->user()?->hasAnyRole(['super_admin', 'admin'])) {
+            $article = $query->firstOrFail();
+        } else {
+            $article = $query
+                ->published()
+                ->firstOrFail();
+        }
+
         $pageSeo = $article;
 
         $description = $article->meta_description ?: $article->excerpt;
@@ -84,12 +92,19 @@ class ArticleController extends Controller
     {
         $locale = $this->contentLocale();
 
-        $article = Article::query()
+        $query = Article::query()
             ->where("slug->{$locale}", $slug)
             ->whereHas('category', function ($query) use ($category, $locale) {
                 $query->where("slug->{$locale}", $category);
-            })
-            ->firstOrFail();
+            });
+
+        if (auth()->user()?->hasAnyRole(['super_admin', 'admin'])) {
+            $article = $query->firstOrFail();
+        } else {
+            $article = $query
+                ->published()
+                ->firstOrFail();
+        }
 
         $pageSeo = $article;
 

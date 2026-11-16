@@ -72,16 +72,15 @@ class PopularArticles extends TableWidget
                 SelectFilter::make('period')
                     ->label(__('admin.period'))
                     ->options([
-                        'all' => __('admin.all_time'),
                         'today' => __('admin.today'),
                         'week' => __('admin.this_week'),
                         'month' => __('admin.this_month'),
                     ])
                     ->default('week')
                     ->query(function (Builder $query, array $data): Builder {
-                        $period = $data['value'] ?? 'week';
+                        $period = $data['value'] ?? null;
 
-                        if ($period === 'all') {
+                        if (blank($period)) {
                             return $query;
                         }
 

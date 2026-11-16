@@ -5,75 +5,36 @@ return [
     [
         'key' => 'news',
         'name' => 'News',
-        'description' => 'General Pokémon news and announcements.',
+        'description' => 'Discover the latest Pokémon news, official announcements, releases, events, and updates from across the Pokémon world.',
     ],
     [
         'key' => 'games',
         'name' => 'Games',
-        'description' => 'News, features, and updates about Pokémon games.',
+        'description' => 'Explore the latest Pokémon video game news, game releases, updates, features, gameplay guides, and announcements.',
     ],
     [
-        'key' => 'pokemon-championship',
-        'name' => 'Pokémon Championship',
-        'description' => 'Coverage of Pokémon events, tournaments, and special occasions.',
+        'key' => 'nintendo',
+        'name' => 'Nintendo',
+        'description' => 'Stay up to date with Nintendo news, Pokémon releases, console updates, gaming announcements, and developments across Nintendo platforms.',
     ],
-    [
-        'key' => 'pokemon-day',
-        'name' => 'Pokémon Day',
-        'description' => 'Updates, patches, announcements, and changes across Pokémon games and services.',
-    ],
-
-    // Pokémon Sub-franchises
     [
         'key' => 'pokemon-go',
         'name' => 'Pokémon GO',
-        'description' => 'News, updates, events, raids, and guides for Pokémon GO.',
+        'description' => 'Get the latest Pokémon GO news, event schedules, Community Days, raids, research tasks, updates, and gameplay guides.',
     ],
     [
         'key' => 'pokemon-tcg',
         'name' => 'Pokémon TCG',
-        'description' => 'News, sets, cards, products, and updates about the Pokémon Trading Card Game.',
-    ],
-    [
-        'key' => 'pokemon-tcg-pocket',
-        'name' => 'Pokémon TCG Pocket',
-        'description' => 'News, updates, cards, events, and guides for Pokémon Trading Card Game Pocket.',
-    ],
-    [
-        'key' => 'pokemon-anime',
-        'name' => 'Pokémon Anime',
-        'description' => 'News, episodes, characters, and updates about the Pokémon anime.',
-    ],
-    [
-        'key' => 'pokemon-sleep',
-        'name' => 'Pokémon Sleep',
-        'description' => 'News, updates, events, and guides for Pokémon Sleep.',
-    ],
-    [
-        'key' => 'pokemon-center',
-        'name' => 'Pokémon Center',
-        'description' => 'News about Pokémon Center products, merchandise, and offers.',
-    ],
-
-    // Content types (SEO structuur)
-    [
-        'key' => 'reviews',
-        'name' => 'Reviews',
-        'description' => 'Reviews and evaluations of Pokémon games, products, cards, and related content.',
-    ],
-    [
-        'key' => 'rumours-and-leaks',
-        'name' => 'Rumours and Leaks',
-        'description' => 'Reported leaks and leaked information related to Pokémon and Nintendo.',
+        'description' => 'Discover Pokémon Trading Card Game news, upcoming expansions, new card releases, set lists, card reveals, products, and collecting guides.',
     ],
     [
         'key' => 'deep-dive',
         'name' => 'Deep Dive',
-        'description' => 'In-depth analysis and detailed explorations of Pokémon and related topics.',
+        'description' => 'Explore in-depth Pokémon articles covering Pokémon lore, history, game mechanics, characters, strategies, and detailed analysis of the Pokémon universe.',
     ],
     [
-        'key' => 'card-gallery',
-        'name' => 'Card Gallery',
-        'description' => 'Card galleries featuring Pokémon Trading Card Game cards and collections.',
+        'key' => 'pokemon-day',
+        'name' => 'Pokémon Day',
+        'description' => 'Follow Pokémon Day announcements, annual celebrations, special events, game reveals, new releases, and official updates from The Pokémon Company.',
     ],
 ];

@@ -442,4 +442,5 @@ return [
     'synchronize_set_cards_confirmation' => 'Are you sure you want to synchronize all cards belonging to this set from TCGdex?',
     'remove_image' => 'Remove image',
     'pokemon_tcg_sets' => 'Pokémon TCG Sets',
+    'preview' => 'Preview',
 ];

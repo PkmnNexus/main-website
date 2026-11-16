@@ -63,7 +63,19 @@
                     @foreach (config('navigation.main') as $item)
 
                         @php
-                            $isActive = app(\App\Support\NavigationUrl::class)->isActive($item);
+                            $categoryKeys = collect(config('navigation.main'))
+                                ->pluck('category_key')
+                                ->filter()
+                                ->all();
+
+                            $isCategoryNavigation = request()->routeIs(['articles.category', 'article.show'])
+                                && in_array(request()->route('category'), $categoryKeys, true);
+
+                            $isActive = isset($item['category_key'])
+                                ? request()->routeIs(['articles.category', 'article.show'])
+                                    && request()->route('category') === $item['category_key']
+                                : app(\App\Support\NavigationUrl::class)->isActive($item)
+                                    && ! $isCategoryNavigation;
                         @endphp
 
                         <li itemprop="name">
@@ -151,10 +163,26 @@
 
                 @foreach (config('navigation.main') as $item)
 
+                    @php
+                        $categoryKeys = collect(config('navigation.main'))
+                            ->pluck('category_key')
+                            ->filter()
+                            ->all();
+
+                        $isCategoryNavigation = request()->routeIs(['articles.category', 'article.show'])
+                            && in_array(request()->route('category'), $categoryKeys, true);
+
+                        $isActive = isset($item['category_key'])
+                            ? request()->routeIs(['articles.category', 'article.show'])
+                                && request()->route('category') === $item['category_key']
+                            : app(\App\Support\NavigationUrl::class)->isActive($item)
+                                && ! $isCategoryNavigation;
+                    @endphp
+
                     <li>
                         <a href="{{ app(\App\Support\NavigationUrl::class)->for($item) }}"
                            class="w-full flex px-4 py-3
-                           {{ request()->routeIs($item['active_routes'] ?? [$item['route']])
+                           {{ $isActive
                                 ? 'bg-[var(--color-primary)] text-white'
                                 : 'text-[var(--color-secondary)] hover:text-[var(--color-primary)]' }}"
                             @click="open = false">

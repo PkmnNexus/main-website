@@ -46,4 +46,4 @@ yarn-error.log
 !/storage/app/
 
 # Database seed images
-# /public/database/
+/public/database/

@@ -47,7 +47,7 @@ if (! function_exists('localized_date')) {
         $date = $date->setTimezone($timezone);
 
         if ($formatterLocale === 'en_US') {
-            $formattedDate = $date->format('F jS - Y');
+            $formattedDate = $date->format('F jS, Y');
 
             if ($showTime) {
                 $formattedDate .= ', ' . $date->format('g:i A');

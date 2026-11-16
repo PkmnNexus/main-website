@@ -14,6 +14,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\Action;
 
 class ArticlesTable
 {
@@ -83,18 +84,6 @@ class ArticlesTable
                     ->label(__('admin.published'))
                     ->since()
                     ->sortable(),
-
-                TextColumn::make('views')
-                    ->label(__('admin.views'))
-                    ->numeric()
-                    ->alignEnd()
-                    ->sortable(),
-
-                TextColumn::make('updated_at')
-                    ->label(__('admin.updated'))
-                    ->since()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -128,6 +117,16 @@ class ArticlesTable
                     ->query(fn (Builder $query): Builder => $query->where('is_pokemon_go_featured', true)),
             ])
             ->recordActions([
+                Action::make('preview')
+                    ->label(__('admin.preview'))
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->url(fn (Article $record): string => route('article.show', [
+                        'category' => $record->category->slug,
+                        'slug' => $record->slug,
+                    ]))
+                    ->openUrlInNewTab(),
+
                 EditAction::make(),
             ])
             ->toolbarActions([
