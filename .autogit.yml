@@ -1,4 +1,3 @@
-
 #######################################################################################
 # Autogit - config and deploy hooks
 #######################################################################################
@@ -17,7 +16,7 @@ shared_files:
 #######################################################################################
 
 shared_folders:
-  - storage
+  - storage/app/public
 
 
 hooks:
@@ -82,9 +81,7 @@ hooks:
   sharedsymlink_after: |
     echo "Creating public storage symlink..."
 
-    # Link public/storage to the shared storage directory.
-    # storage is already shared between releases.
-
+    # Link public/storage to shared storage.
     ln -sfn "$3/storage/app/public" "$3/public/storage"
 
     exit 0
