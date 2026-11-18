@@ -75,6 +75,13 @@ hooks:
   #####################################################################################
 
   sharedsymlink_before: |
+    echo "Preparing shared public storage..."
+
+    if [ -d "$3/storage/app/public" ] && [ ! -L "$3/storage/app/public" ]; then
+      rm -f "$3/storage/app/public/.gitignore"
+      rm -f "$3/storage/app/public/.gitkeep"
+    fi
+
     exit 0
 
 
