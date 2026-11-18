@@ -29,21 +29,20 @@ yarn-error.log
 
 # Storage (alles)
 # Storage: ignore generated files, keep required Laravel directories
+# Storage
 /storage/*
 !/storage/framework/
 /storage/framework/*
 !/storage/framework/cache/
 /storage/framework/cache/*
 !/storage/framework/cache/data/
-/storage/framework/cache/data/*
-!/storage/framework/sessions/
-/storage/framework/sessions/*
-!/storage/framework/testing/
-/storage/framework/testing/*
-!/storage/framework/views/
-/storage/framework/views/*
-!/storage/logs/
-!/storage/app/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+/storage/logs/
+
+# Public uploads are stored in shared storage
+/storage/app/public/
 
 # Database seed images
 /public/database/
