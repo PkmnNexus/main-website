@@ -27,8 +27,6 @@ yarn-error.log
 .DS_Store
 **/.DS_Store
 
-# Storage (alles)
-# Storage: ignore generated files, keep required Laravel directories
 # Storage
 /storage/*
 !/storage/framework/
@@ -41,8 +39,11 @@ yarn-error.log
 /storage/framework/views/
 /storage/logs/
 
-# Public uploads are stored in shared storage
-/storage/app/public/
+# Public uploads
+!/storage/app/
+!/storage/app/public/
+/storage/app/public/*
+!/storage/app/public/.gitkeep
 
 # Database seed images
 /public/database/
