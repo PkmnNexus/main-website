@@ -45,7 +45,7 @@ new class extends Component
 
                     </div>
 
-                    <p class="text-2xl md:text-4xl leading-ease font-light font-display !font-black !text-white">
+                    <p class="text-2xl leading-ease font-light font-display !font-black !text-white">
                         {{ $trivia->fact }}
                     </p>
 
