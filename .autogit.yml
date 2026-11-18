@@ -1,43 +1,30 @@
+
 #######################################################################################
-# Autogit - config and deploy hooks                                                   #
+# Autogit - config and deploy hooks
 #######################################################################################
-# Laravel deployment configuration for TransIP AutoGit                                #
+# Laravel deployment configuration for TransIP AutoGit
 #######################################################################################
 
 # Shared files are preserved between deployments.
 # These files are not stored in Git.
-#
-# The .env file contains:
-# - database credentials
-# - APP_KEY
-# - production settings
-#
-# Never commit .env to Git.
 
 shared_files:
   - .env
 
 
 #######################################################################################
-# Laravel webroot                                                                      #
+# Laravel webroot
 #######################################################################################
-#
-# Laravel uses /public as the document root.
-# TransIP AutoGit expects a /www folder.
-#
-# We create:
-#
-# www -> public
-#
-# This keeps the Laravel structure intact.
+
+shared_folders:
+  - storage
+
 
 hooks:
 
-
-#######################################################################################
-# SETUP                                                                                 #
-# Create folder structure for newest release                                            #
-#######################################################################################
+  #####################################################################################
+  # SETUP
+  #####################################################################################
 
   setup_before: |
     # Nothing required before setup
@@ -46,19 +33,16 @@ hooks:
 
   setup_after: |
     # Create Laravel public webroot symlink
-    #
     # $3 = current release folder
-    #
+
     ln -sfn "$3/public" "$3/www"
 
     exit 0
 
 
-
-#######################################################################################
-# INSTALL                                                                               #
-# Install application code and dependencies                                             #
-#######################################################################################
+  #####################################################################################
+  # INSTALL
+  #####################################################################################
 
   install_before: |
     # Nothing required before install
@@ -72,62 +56,43 @@ hooks:
       --no-dev \
       --optimize-autoloader
 
-
     echo "Installing frontend dependencies..."
 
     npm ci
-
 
     echo "Building frontend assets..."
 
     npm run build
 
-
     echo "Running database migrations..."
 
-    # IMPORTANT:
-    # migrate only runs NEW migrations.
-    #
-    # It does NOT:
-    # - delete tables
-    # - remove data
-    # - reset database
-    #
-    # Never use migrate:fresh in production.
-
     php artisan migrate --force
-
-
-    echo "Creating storage link..."
-
-    php artisan storage:link || true
-
 
     exit 0
 
 
-
-#######################################################################################
-# SHAREDSYMLINK                                                                         #
-# Link shared files/folders into every release                                          #
-#######################################################################################
+  #####################################################################################
+  # SHAREDSYMLINK
+  #####################################################################################
 
   sharedsymlink_before: |
     exit 0
 
 
-
   sharedsymlink_after: |
-    # Link public storage to the persistent shared storage directory.
-    ln -sfn "/data/sites/web/pkmnnexuscom/checkout/main/shared/storage/app/public" "$3/public/storage"
+    echo "Creating public storage symlink..."
+
+    # Link public/storage to the shared storage directory.
+    # storage is already shared between releases.
+
+    ln -sfn "$3/storage/app/public" "$3/public/storage"
 
     exit 0
 
 
-#######################################################################################
-# SYMLINK                                                                               #
-# Switch current release to newest release                                              #
-#######################################################################################
+  #####################################################################################
+  # SYMLINK
+  #####################################################################################
 
   symlink_before: |
     exit 0
@@ -136,26 +101,14 @@ hooks:
   symlink_after: |
     echo "Optimizing Laravel..."
 
-
-    # Rebuild Laravel caches:
-    #
-    # - config cache
-    # - route cache
-    # - view cache
-    # - events cache
-
     php artisan optimize
-
 
     exit 0
 
 
-
-#######################################################################################
-# CLEANUP                                                                               #
-# Remove old releases                                                                   #
-# AutoGit keeps the newest releases                                                     #
-#######################################################################################
+  #####################################################################################
+  # CLEANUP
+  #####################################################################################
 
   cleanup_before: |
     exit 0
