@@ -55,30 +55,28 @@ class ArticleController extends Controller
     {
         $locale = $this->contentLocale();
 
-        $article = Article::query()
+        $query = Article::query()
             ->where("slug->{$locale}", $slug)
-            ->whereNotNull('video_url')
-            ->firstOrFail();
+            ->whereNotNull('video_url');
 
-        if (auth()->user()?->hasAnyRole(['super_admin', 'admin'])) {
-            $article = $query->firstOrFail();
-        } else {
-            $article = $query
-                ->published()
-                ->firstOrFail();
-        }
+        $article = $query->firstOrFail();
 
         $pageSeo = $article;
 
         $description = $article->meta_description ?: $article->excerpt;
 
         $duration = filled($article->youtube_duration)
-            ? CarbonInterval::create($article->youtube_duration)->cascade()->format('%H:%I:%S')
+            ? CarbonInterval::create($article->youtube_duration)
+                ->cascade()
+                ->format('%H:%I:%S')
             : null;
 
         $duration = $duration ? ltrim($duration, '0:') : null;
 
-        return view('frontend.article.video', compact('article', 'pageSeo', 'description', 'duration'));
+        return view(
+            'frontend.article.video',
+            compact('article', 'pageSeo', 'description', 'duration')
+        );
     }
 
     public function videos(): View
@@ -98,13 +96,7 @@ class ArticleController extends Controller
                 $query->where("slug->{$locale}", $category);
             });
 
-        if (auth()->user()?->hasAnyRole(['super_admin', 'admin'])) {
-            $article = $query->firstOrFail();
-        } else {
-            $article = $query
-                ->published()
-                ->firstOrFail();
-        }
+        $article = $query->firstOrFail();
 
         $pageSeo = $article;
 
