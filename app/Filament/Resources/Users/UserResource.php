@@ -30,7 +30,7 @@ class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'display_name';
 
-    protected static ?int $navigationSort = 0;
+    protected static ?int $navigationSort = -2;
 
     public static function getNavigationGroup(): string|UnitEnum|null
     {

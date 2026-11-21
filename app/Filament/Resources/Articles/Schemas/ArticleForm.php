@@ -529,7 +529,7 @@ class ArticleForm
                             ->label(__('admin.author'))
                             ->relationship(
                                 name: 'user',
-                                titleAttribute: 'name',
+                                titleAttribute: 'display_name',
                                 modifyQueryUsing: function (Builder $query) use ($isAuthor) {
                                     $query->whereHas('roles', function (Builder $query) {
                                         $query->whereIn('name', ['admin', 'editor', 'author', 'super_admin']);

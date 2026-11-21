@@ -31,7 +31,7 @@ class CommentResource extends Resource
 
     protected static ?string $navigationLabel = null;
 
-    protected static ?int $navigationSort = -2;
+    protected static ?int $navigationSort = 0;
 
     protected static ?string $modelLabel = null;
 
