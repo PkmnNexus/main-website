@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->homeUrl(url('/'))
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->favicon(asset('favicon/favicon.ico'))
+            ->favicon(asset('favicon/admin/favicon.ico'))
             ->brandLogo(asset('images/PkmnNexus-Logo.svg'))
             ->renderHook(
                 PanelsRenderHook::GLOBAL_SEARCH_AFTER,
