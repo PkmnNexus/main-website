@@ -33,11 +33,17 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->homeUrl(url('/'))
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->favicon(asset('favicon/admin/favicon.ico'))
+            ->favicon(asset('favicon/admin/favicon.png'))
             ->brandLogo(asset('images/PkmnNexus-Logo.svg'))
             ->renderHook(
                 PanelsRenderHook::GLOBAL_SEARCH_AFTER,
                 fn (): string => Blade::render('<x-language-switcher />'),
+            )
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => Blade::render(
+                    '<link rel="apple-touch-icon" sizes="180x180" href="{{ asset("favicon/admin/apple-touch-icon.png") }}">'
+                ),
             )
             ->login()
             ->databaseNotifications()
